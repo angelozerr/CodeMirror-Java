@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CodeMirror: Velocity Hint Demo</title>
+    
+    <!-- CodeMirror -->
+    <link rel="stylesheet" href="codemirror/lib/codemirror.css">
+    <script src="codemirror/lib/codemirror.js"></script>
+    <script src="codemirror/mode/velocity/velocity.js"></script>
+    <link rel="stylesheet" href="codemirror/doc/docs.css">
+    <script src="codemirror/addon/selection/active-line.js"></script>
+    <script src="codemirror/addon/edit/closebrackets.js"></script>
+    <script src="codemirror/addon/edit/matchbrackets.js"></script>
+    <link rel="stylesheet" href="codemirror/theme/eclipse.css">
+	<script src="codemirror/addon/lint/lint.js"></script>
+    <link rel="stylesheet" href="codemirror/addon/lint/lint.css">
+            
+    <!-- CodeMirror-XQuery-->
+    <script src="codemirror-xquery/addon/lint/remoting-lint.js"></script>
+    <script src="codemirror-xquery/addon/lint/status-lint.js"></script>
+    <link rel="stylesheet" href="codemirror-xquery/addon/lint/status-lint.css">
+    
+    <!-- jQuery-->
+    <script src="jquery/jquery-1.9.0.js"></script>
+        
+    <style type="text/css">
+	  body {
+ 		 font-family: Droid Sans, Arial, sans-serif;
+  		 line-height: 1.5;
+  		 max-width: none;
+  		 margin: 0;
+  		 padding: 0 1em;
+      }
+      .CodeMirror {
+        height:500px;
+      }
+      .CodeMirror-lint-status {font-size:11px;font-weight: bold;display:inline;vertical-align: bottom;}
+    </style>
+  </head>
+  <body>
+    <h1>CodeMirror: Velocity Hint demo</h1>
+<span>Status:</span><span id="hintStatus" ></span>     
+<textarea id="code" name="code">
+## Velocity Code Demo
+#*
+   based on PL/SQL mode by Peter Raganitsch, adapted to Velocity by Steve O'Hara ( http://www.pivotal-solutions.co.uk )
+   August 2011
+*#
+
+#*
+   This is a multiline comment.
+   This is the second line
+*#
+
+#[[ hello steve
+   This has invalid syntax that would normally need "poor man's escaping" like:
+
+   #define()
+
+   ${blah
+]]#
+
+#if(
+ error
+ 
+#include( "disclaimer.txt" "opinion.txt" )
+#include( $foo $bar )
+
+#parse( "lecorbusier.vm" )
+#parse( $foo )
+
+#evaluate( 'string with VTL #if(true)will be displayed#end' )
+
+#define( $hello ) Hello $who #end #set( $who = "World!") $hello ## displays Hello World!
+
+#foreach( $customer in $customerList )
+
+    $foreach.count $customer.Name
+
+    #if( $foo == ${bar})
+        it's true!
+        #break
+    #{else}
+        it's not!
+        #stop
+    #end
+
+    #if ($foreach.parent.hasNext)
+        $velocityCount
+    #end
+#end
+
+$someObject.getValues("this is a string split
+        across lines")
+
+#macro( tablerows $color $somelist )
+    #foreach( $something in $somelist )
+        <tr><td bgcolor=$color>$something</td></tr>
+    #end
+#end
+
+#tablerows("red" ["dadsdf","dsa"])
+
+   Variable reference: #set( $monkey = $bill )
+   String literal: #set( $monkey.Friend = 'monica' )
+   Property reference: #set( $monkey.Blame = $whitehouse.Leak )
+   Method reference: #set( $monkey.Plan = $spindoctor.weave($web) )
+   Number literal: #set( $monkey.Number = 123 )
+   Range operator: #set( $monkey.Numbers = [1..3] )
+   Object list: #set( $monkey.Say = ["Not", $my, "fault"] )
+   Object map: #set( $monkey.Map = {"banana" : "good", "roast beef" : "bad"})
+
+The RHS can also be a simple arithmetic expression, such as:
+Addition: #set( $value = $foo + 1 )
+   Subtraction: #set( $value = $bar - 1 )
+   Multiplication: #set( $value = $foo * $bar )
+   Division: #set( $value = $foo / $bar )
+   Remainder: #set( $value = $foo % $bar )
+</textarea>
+ 
+    <script> 
+
+	  function displayHintStatus(annotations, annotationsGroupedByLine, cm) {
+	    CodeMirror.statusLint(annotations, 'hintStatus', cm);
+	  }
+    
+      var editor1 = CodeMirror.fromTextArea(document.getElementById("code"), {
+        mode: "text/velocity",
+        lineNumbers: true,
+        theme: "eclipse",
+        styleActiveLine: true,
+        lineNumbers: true,
+        lineWrapping: true,
+        autoCloseBrackets: true,
+        matchBrackets: true,        
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-lint-markers"],
+        lintWith : {
+			"getAnnotations" : CodeMirror.remotingValidator,
+			"onUpdateLinting" : displayHintStatus,
+			"async" : true,
+			"url" : "jaxrs/lint/annotations"
+		}        
+      });
+           
+    </script> 
+ 
+  </body> 
+</html>
