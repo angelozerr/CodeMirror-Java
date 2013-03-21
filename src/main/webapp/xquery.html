@@ -15,7 +15,9 @@
 	<script src="codemirror/addon/lint/lint.js"></script>
     <link rel="stylesheet" href="codemirror/addon/lint/lint.css">
 	<script src="codemirror/addon/hint/show-hint.js"></script>
-        
+	<script src="codemirror/addon/fold/brace-fold.js"></script>  
+	<script src="codemirror/addon/fold/xml-fold.js"></script>
+	        
     <!-- CodeMirror-XQuery -->        
     <script src="codemirror-xquery/addon/hint/xquery/xquery-hint.js"></script>
     <link rel="stylesheet" href="codemirror-xquery/addon/hint/show-hint-eclipse.css">    
@@ -24,15 +26,18 @@
 	<script src="codemirror-xquery/addon/lint/remoting-lint.js"></script>
 	<script src="codemirror-xquery/addon/lint/status-lint.js"></script>
     <link rel="stylesheet" href="codemirror-xquery/addon/lint/status-lint.css">
-    
+    <script src="codemirror-xquery/addon/fold/comment-fold.js"></script>            
+	<script src="codemirror-xquery/addon/fold/autofolding.js"></script>
+	<script src="codemirror-xquery/addon/fold/autofolding-xquery.js"></script>
+	<link rel="stylesheet" href="codemirror-xquery/addon/fold/autofolding.css">
+	    
     <!-- jQuery-->
     <script src="jquery/jquery-1.9.0.js"></script>
     
     <style type="text/css">
       .CodeMirror {
         height:500px;
-      }
-      .CodeMirror-lint-status {font-size:11px;font-weight: bold;display:inline;vertical-align: bottom;}
+      }      
     </style>    
   </head>
   <body>
@@ -294,13 +299,14 @@ declare function oauth2:loginAsMarkLogicUser($username)
             "'$'": passAndHint,
             "Ctrl-Space": "autocomplete"
         },
-        gutters: ["CodeMirror-linenumbers", "CodeMirror-lint-markers"],
+        gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-folding-markers"],
         lintWith : {
 			"getAnnotations" : CodeMirror.remotingValidator,
 			"onUpdateLinting" : displayHintStatus,
 			"async" : true,
 			"url" : "jaxrs/lint/annotations"
-		}
+		},
+		foldingWith: CodeMirror.xqueryFolding  
       });
     </script>
   </body>
