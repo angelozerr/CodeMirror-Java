@@ -19,10 +19,16 @@ public class SaxonXQueryLintProcessor extends AbstractXQueryLintProcessor {
 		} catch (SaxonApiException e) {
 			XPathException e1 = (XPathException) e.getCause();
 			SourceLocator locator = e1.getLocator();
-			int startLine = locator.getLineNumber() - 1;
-			int startChar = locator.getColumnNumber();
-			int endChar = locator.getColumnNumber() + 1;
-			int endLine = locator.getLineNumber() - 1;
+			int startLine = 0;
+			int startChar = 0;
+			int endChar = 1;
+			int endLine = 0;
+			if (locator != null) {
+				startLine = locator.getLineNumber() - 1;
+				startChar = locator.getColumnNumber();
+				endChar = locator.getColumnNumber() + 1;
+				endLine = locator.getLineNumber() - 1;				
+			}
 			String message = e1.getMessageAndLocation();
 			handler.addAnnotation(startLine, startChar, endLine, endChar,
 					message);

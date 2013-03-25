@@ -20,7 +20,8 @@
 		<init-param>
 			<param-name>jaxrs.serviceClasses</param-name>
 			<param-value>
-				codemirror.lint.LintService
+				codemirror.lint.LintService,
+				codemirror.executor.ExecutorService
 			</param-value>
 		</init-param>
 		<!-- <init-param>

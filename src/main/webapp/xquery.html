@@ -17,6 +17,8 @@
 	<script src="codemirror/addon/hint/show-hint.js"></script>
 	<script src="codemirror/addon/fold/brace-fold.js"></script>  
 	<script src="codemirror/addon/fold/xml-fold.js"></script>
+	<script src="codemirror/addon/runmode/runmode.js"></script>
+	<script src="codemirror/mode/xml/xml.js"></script>
 	        
     <!-- CodeMirror-XQuery -->        
     <script src="codemirror-xquery/addon/hint/xquery/xquery-hint.js"></script>
@@ -30,14 +32,23 @@
 	<script src="codemirror-xquery/addon/fold/autofolding.js"></script>
 	<script src="codemirror-xquery/addon/fold/autofolding-xquery.js"></script>
 	<link rel="stylesheet" href="codemirror-xquery/addon/fold/autofolding.css">
-	    
+
+	<script src="codemirror-xquery/addon/execute/remoting-execute.js"></script>
+	
+	<script src="codemirror-xquery/addon/selection/fullscreen.js"></script>
+	<link rel="stylesheet" href="codemirror-xquery/addon/selection/fullscreen.css">
+		    
     <!-- jQuery-->
     <script src="jquery/jquery-1.9.0.js"></script>
     
     <style type="text/css">
       .CodeMirror {
         height:500px;
-      }      
+      }     
+      .error {
+        color:red;
+        border:solid red 1px;
+      } 
     </style>    
   </head>
   <body>
@@ -46,6 +57,7 @@
 	See <a href="https://github.com/angelozerr/CodeMirror-XQuery">CodeMirror-XQuery Project on GitHub</a>
     <form>
     <span>Status:</span><span id="hintStatus" ></span>
+    <span><input type="button" value="Run" onclick="javascript:run();" /></span>
     <textarea id="code" name="code">
 xquery version "1.0-ml";
 (:
@@ -263,6 +275,8 @@ declare function oauth2:loginAsMarkLogicUser($username)
 };</textarea>
 </form>
 
+<pre id="result" class="cm-s-default"></pre>
+
 <p>Press <strong>ctrl-space, ':', '$'</strong> to activate autocompletion for variables (let, variable, for, module) and functions (<strong>oauth2:, map:,xdmp:</strong>).</p>
 
     <script>
@@ -286,6 +300,7 @@ declare function oauth2:loginAsMarkLogicUser($username)
 	  }
 	        
       var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+        mode: "xquery",
 		lineNumbers: true,
         theme: "xq-light",
         styleActiveLine: true,
@@ -297,7 +312,13 @@ declare function oauth2:loginAsMarkLogicUser($username)
         extraKeys: {
             "':'": passAndHint,
             "'$'": passAndHint,
-            "Ctrl-Space": "autocomplete"
+            "Ctrl-Space": "autocomplete",
+			"F11": function(cm) {
+			  setFullScreen(cm, !isFullScreen(cm));
+			},
+			"Esc": function(cm) {
+			  if (isFullScreen(cm)) setFullScreen(cm, false);
+			}            
         },
         gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-folding-markers"],
         lintWith : {
@@ -308,6 +329,23 @@ declare function oauth2:loginAsMarkLogicUser($username)
 		},
 		foldingWith: CodeMirror.xqueryFolding  
       });
+      
+	  function run() {
+	  	CodeMirror.remotingExecutor(editor, 
+	  	{"url" : "jaxrs/execute/run", 
+	  	 "onResult" : function(data, isError) {
+	  	   var result = document.getElementById('result');
+	  	   if (isError) {
+	  	   	result.className="cm-s-default error";
+	  	   } else {
+	  	     result.className="cm-s-default";
+	  	   }
+	  	   CodeMirror.runMode(data, "application/xml",
+                     result);
+	  	 }
+	  	});
+	  }
+	        
     </script>
   </body>
 </html>
