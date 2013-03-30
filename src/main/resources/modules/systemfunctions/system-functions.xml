@@ -1,0 +1,2461 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+    Copyright (c) 2008, 2009 28msec Inc. and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+   
+    Contributors:
+        Gabriel Petrovay (28msec) - initial API and implementation
+ -->
+
+<functions>
+   <function>
+      <id>fn:abs#1</id>
+      <name>abs</name>
+      <signature>fn:abs ($arg as numeric?) as numeric?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the absolute value of <code>$arg</code>. If
+<code>$arg</code> is negative returns <code>-$arg</code> otherwise
+returns <code>$arg</code>. If type of <code>$arg</code> is one of
+the four numeric types <code>xs:float</code>,
+<code>xs:double</code>, <code>xs:decimal</code> or
+<code>xs:integer</code> the type of the result is the same as the
+type of <code>$arg</code>. If the type of <code>$arg</code> is a
+type derived from one of the numeric types, the result is an
+instance of the base numeric type.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-abs</url>
+   </function>
+   <function>
+      <id>fn:adjust-date-to-timezone#1</id>
+      <name>adjust-date-to-timezone</name>
+      <signature>fn:adjust-date-to-timezone ($arg as xs:date?) as xs:date?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Adjusts an <code>xs:date</code> value to a specific
+timezone, or to no timezone at all. If <code>$timezone</code> is
+the empty sequence, returns an <code>xs:date</code> without a
+timezone. Otherwise, returns an <code>xs:date</code> with a
+timezone. For purposes of timezone adjustment, an
+<code>xs:date</code> is treated as an <code>xs:dateTime</code> with
+time <code>00:00:00</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-adjust-date-to-timezone</url>
+   </function>
+   <function>
+      <id>fn:adjust-date-to-timezone#2</id>
+      <name>adjust-date-to-timezone</name>
+      <signature>fn:adjust-date-to-timezone ($arg as xs:date?, $timezone as xs:dayTimeDuration?) as xs:date?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Adjusts an <code>xs:date</code> value to a specific
+timezone, or to no timezone at all. If <code>$timezone</code> is
+the empty sequence, returns an <code>xs:date</code> without a
+timezone. Otherwise, returns an <code>xs:date</code> with a
+timezone. For purposes of timezone adjustment, an
+<code>xs:date</code> is treated as an <code>xs:dateTime</code> with
+time <code>00:00:00</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-adjust-date-to-timezone</url>
+   </function>
+   <function>
+      <id>fn:adjust-dateTime-to-timezone#1</id>
+      <name>adjust-dateTime-to-timezone</name>
+      <signature>fn:adjust-dateTime-to-timezone ($arg as xs:dateTime?) as xs:dateTime?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Adjusts an <code>xs:dateTime</code> value to a specific
+timezone, or to no timezone at all. If <code>$timezone</code> is
+the empty sequence, returns an <code>xs:dateTime</code> without a
+timezone. Otherwise, returns an <code>xs:dateTime</code> with a
+timezone.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-adjust-dateTime-to-timezone</url>
+   </function>
+   <function>
+      <id>fn:adjust-dateTime-to-timezone#2</id>
+      <name>adjust-dateTime-to-timezone</name>
+      <signature>fn:adjust-dateTime-to-timezone ($arg as xs:dateTime?, $timezone as xs:dayTimeDuration?) as xs:dateTime?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Adjusts an <code>xs:dateTime</code> value to a specific
+timezone, or to no timezone at all. If <code>$timezone</code> is
+the empty sequence, returns an <code>xs:dateTime</code> without a
+timezone. Otherwise, returns an <code>xs:dateTime</code> with a
+timezone.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-adjust-dateTime-to-timezone</url>
+   </function>
+   <function>
+      <id>fn:adjust-time-to-timezone#1</id>
+      <name>adjust-time-to-timezone</name>
+      <signature>fn:adjust-time-to-timezone ($arg as xs:time?) as xs:time?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Adjusts an <code>xs:time</code> value to a specific
+timezone, or to no timezone at all. If <code>$timezone</code> is
+the empty sequence, returns an <code>xs:time</code> without a
+timezone. Otherwise, returns an <code>xs:time</code> with a
+timezone.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-adjust-time-to-timezone</url>
+   </function>
+   <function>
+      <id>fn:adjust-time-to-timezone#2</id>
+      <name>adjust-time-to-timezone</name>
+      <signature>fn:adjust-time-to-timezone ($arg as xs:time?, $timezone as xs:dayTimeDuration?) as xs:time?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Adjusts an <code>xs:time</code> value to a specific
+timezone, or to no timezone at all. If <code>$timezone</code> is
+the empty sequence, returns an <code>xs:time</code> without a
+timezone. Otherwise, returns an <code>xs:time</code> with a
+timezone.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-adjust-time-to-timezone</url>
+   </function>
+   <function>
+      <id>fn:avg#1</id>
+      <name>avg</name>
+      <signature>fn:avg ($arg as xs:anyAtomicType*) as xs:anyAtomicType?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the average of the values in the input sequence
+<code>$arg</code>, that is, the sum of the values divided by the
+number of values.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-avg</url>
+   </function>
+   <function>
+      <id>fn:base-uri#0</id>
+      <name>base-uri</name>
+      <signature>fn:base-uri () as xs:anyURI?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the value of the base-uri URI property for
+<code>$arg</code> as defined by the accessor function
+<code>dm:base-uri()</code> for that kind of node in <a href="http://www.w3.org/TR/xpath-datamodel/#dm-base-uri" shape="rect">Section 5.2
+base-uri Accessor</a>
+            <sup>
+               <small>DM</small>
+            </sup>. If
+<code>$arg</code> is not specified, the behavior is identical to
+calling the function with the context item (<code>.</code>) as
+argument. The following errors may be raised: if the context item
+is undefined [<a href="http://www.w3.org/TR/xpath20/#ERRXPDY0002" title="err:XPDY0002"
+               shape="rect">err:XPDY0002</a>]<sup>
+               <small>XP</small>
+            </sup>;
+if the context item is not a node [<a href="http://www.w3.org/TR/xpath20/#ERRXPTY0004" title="err:XPTY0004"
+               shape="rect">err:XPTY0004</a>]<sup>
+               <small>XP</small>
+            </sup>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-base-uri</url>
+   </function>
+   <function>
+      <id>fn:base-uri#1</id>
+      <name>base-uri</name>
+      <signature>fn:base-uri ($arg as node()?) as xs:anyURI?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the value of the base-uri URI property for
+<code>$arg</code> as defined by the accessor function
+<code>dm:base-uri()</code> for that kind of node in <a href="http://www.w3.org/TR/xpath-datamodel/#dm-base-uri" shape="rect">Section 5.2
+base-uri Accessor</a>
+            <sup>
+               <small>DM</small>
+            </sup>. If
+<code>$arg</code> is not specified, the behavior is identical to
+calling the function with the context item (<code>.</code>) as
+argument. The following errors may be raised: if the context item
+is undefined [<a href="http://www.w3.org/TR/xpath20/#ERRXPDY0002" title="err:XPDY0002"
+               shape="rect">err:XPDY0002</a>]<sup>
+               <small>XP</small>
+            </sup>;
+if the context item is not a node [<a href="http://www.w3.org/TR/xpath20/#ERRXPTY0004" title="err:XPTY0004"
+               shape="rect">err:XPTY0004</a>]<sup>
+               <small>XP</small>
+            </sup>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-base-uri</url>
+   </function>
+   <function>
+      <id>fn:boolean#1</id>
+      <name>boolean</name>
+      <signature>fn:boolean ($arg as item()*) as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Computes the effective boolean value of the sequence
+<code>$arg</code>. See <a href="http://www.w3.org/TR/xpath20/#id-ebv" shape="rect">Section 2.4.3 Effective
+Boolean Value</a>
+            <sup>
+               <small>XP</small>
+            </sup>
+         </p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-boolean</url>
+   </function>
+   <function>
+      <id>fn:ceiling#1</id>
+      <name>ceiling</name>
+      <signature>fn:ceiling ($arg as numeric?) as numeric?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the smallest (closest to negative infinity)
+number with no fractional part that is not less than the value of
+<code>$arg</code>. If type of <code>$arg</code> is one of the four
+numeric types <code>xs:float</code>, <code>xs:double</code>,
+<code>xs:decimal</code> or <code>xs:integer</code> the type of the
+result is the same as the type of <code>$arg</code>. If the type of
+<code>$arg</code> is a type derived from one of the numeric types,
+the result is an instance of the base numeric type.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-ceiling</url>
+   </function>
+   <function>
+      <id>fn:codepoint-equal#2</id>
+      <name>codepoint-equal</name>
+      <signature>fn:codepoint-equal ($comparand1 as xs:string?, $comparand2 as xs:string?) as xs:boolean?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns <code>true</code> or <code>false</code>
+depending on whether the value of <code>$comparand1</code> is equal
+to the value of <code>$comparand2</code>, according to the Unicode
+code point collation
+(<code>http://www.w3.org/2005/xpath-functions/collation/codepoint</code>).</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-codepoint-equal</url>
+   </function>
+   <function>
+      <id>fn:codepoints-to-string#1</id>
+      <name>codepoints-to-string</name>
+      <signature>fn:codepoints-to-string ($arg as xs:integer*) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Creates an <code>xs:string</code> from a sequence of
+<a href="#Unicode4" shape="rect">[The Unicode Standard]</a> code points. Returns
+the zero-length string if <code>$arg</code> is the empty sequence.
+If any of the code points in <code>$arg</code> is not a legal XML
+character, an error is raised [<a href="#ERRFOCH0001" title="err:FOCH0001" shape="rect">err:FOCH0001</a>].</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-codepoints-to-string</url>
+   </function>
+   <function>
+      <id>fn:collection#0</id>
+      <name>collection</name>
+      <signature>fn:collection () as node()*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>This function takes an <code>xs:string</code> as
+argument and returns a sequence of nodes obtained by interpreting
+<code>$arg</code> as an <code>xs:anyURI</code> and resolving it
+according to the mapping specified in <b>Available collections</b>
+described in <a href="http://www.w3.org/TR/xpath20/#id-xp-evaluation-context-components"
+               shape="rect">
+Section C.2 Dynamic Context
+Components</a>
+            <sup>
+               <small>XP</small>
+            </sup>. If <b>Available
+collections</b> provides a mapping from this string to a sequence
+of nodes, the function returns that sequence. If <b>Available
+collections</b> maps the string to an empty sequence, then the
+function returns an empty sequence. If <b>Available collections</b>
+provides no mapping for the string, an error is raised [<a href="#ERRFODC0004" title="err:FODC0004" shape="rect">err:FODC0004</a>]. If
+<code>$arg</code> is not specified, the function returns the
+sequence of the nodes in the default collection in the dynamic
+context. See <a href="http://www.w3.org/TR/xpath20/#id-xp-evaluation-context-components"
+               shape="rect">
+Section C.2 Dynamic Context
+Components</a>
+            <sup>
+               <small>XP</small>
+            </sup>. If the value of the
+default collection is undefined an error is raised [<a href="#ERRFODC0002" title="err:FODC0002" shape="rect">err:FODC0002</a>].</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-collection</url>
+   </function>
+   <function>
+      <id>fn:collection#1</id>
+      <name>collection</name>
+      <signature>fn:collection ($arg as xs:string?) as node()*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>This function takes an <code>xs:string</code> as
+argument and returns a sequence of nodes obtained by interpreting
+<code>$arg</code> as an <code>xs:anyURI</code> and resolving it
+according to the mapping specified in <b>Available collections</b>
+described in <a href="http://www.w3.org/TR/xpath20/#id-xp-evaluation-context-components"
+               shape="rect">
+Section C.2 Dynamic Context
+Components</a>
+            <sup>
+               <small>XP</small>
+            </sup>. If <b>Available
+collections</b> provides a mapping from this string to a sequence
+of nodes, the function returns that sequence. If <b>Available
+collections</b> maps the string to an empty sequence, then the
+function returns an empty sequence. If <b>Available collections</b>
+provides no mapping for the string, an error is raised [<a href="#ERRFODC0004" title="err:FODC0004" shape="rect">err:FODC0004</a>]. If
+<code>$arg</code> is not specified, the function returns the
+sequence of the nodes in the default collection in the dynamic
+context. See <a href="http://www.w3.org/TR/xpath20/#id-xp-evaluation-context-components"
+               shape="rect">
+Section C.2 Dynamic Context
+Components</a>
+            <sup>
+               <small>XP</small>
+            </sup>. If the value of the
+default collection is undefined an error is raised [<a href="#ERRFODC0002" title="err:FODC0002" shape="rect">err:FODC0002</a>].</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-collection</url>
+   </function>
+   <function>
+      <id>fn:compare#2</id>
+      <name>compare</name>
+      <signature>fn:compare ($comparand1 as xs:string?, $comparand2 as xs:string?) as xs:integer?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns -1, 0, or 1, depending on whether the value of
+the <code>$comparand1</code> is respectively less than, equal to,
+or greater than the value of <code>$comparand2</code>, according to
+the rules of the collation that is used.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-compare</url>
+   </function>
+   <function>
+      <id>fn:compare#3</id>
+      <name>compare</name>
+      <signature>fn:compare ($comparand1 as xs:string?, $comparand2 as xs:string?, $collation as xs:string) as xs:integer?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns -1, 0, or 1, depending on whether the value of
+the <code>$comparand1</code> is respectively less than, equal to,
+or greater than the value of <code>$comparand2</code>, according to
+the rules of the collation that is used.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-compare</url>
+   </function>
+   <function>
+      <id>fn:concat#2</id>
+      <name>concat</name>
+      <signature>fn:concat ($arg1 as xs:anyAtomicType?, $arg2 as xs:anyAtomicType?, ...) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Accepts two or more <code>xs:anyAtomicType</code>
+arguments and casts them to <code>xs:string</code>. Returns the
+<code>xs:string</code> that is the concatenation of the values of
+its arguments after conversion. If any of the arguments is the
+empty sequence, the argument is treated as the zero-length
+string.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-concat</url>
+   </function>
+   <function>
+      <id>fn:contains#2</id>
+      <name>contains</name>
+      <signature>fn:contains ($arg1 as xs:string?, $arg2 as xs:string?) as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:boolean</code> indicating whether
+or not the value of <code>$arg1</code> contains (at the beginning,
+at the end, or anywhere within) at least one sequence of collation
+units that provides a minimal match to the collation units in the
+value of <code>$arg2</code>, according to the collation that is
+used.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-contains</url>
+   </function>
+   <function>
+      <id>fn:contains#3</id>
+      <name>contains</name>
+      <signature>fn:contains ($arg1 as xs:string?, $arg2 as xs:string?, $collation as xs:string) as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:boolean</code> indicating whether
+or not the value of <code>$arg1</code> contains (at the beginning,
+at the end, or anywhere within) at least one sequence of collation
+units that provides a minimal match to the collation units in the
+value of <code>$arg2</code>, according to the collation that is
+used.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-contains</url>
+   </function>
+   <function>
+      <id>fn:count#1</id>
+      <name>count</name>
+      <signature>fn:count ($arg as item()*) as xs:integer</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the number of items in the value of
+<code>$arg</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-count</url>
+   </function>
+   <function>
+      <id>fn:current-date#0</id>
+      <name>current-date</name>
+      <signature>fn:current-date () as xs:date</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns <code>xs:date(fn:current-dateTime())</code>.
+This is an <code>xs:date</code> (with timezone) that is current at
+some time during the evaluation of a query or transformation in
+which <code>fn:current-date()</code> is executed. This function is
+<a title="stable" class="termref" href="#stable" shape="rect">
+               <span class="arrow">·</span>stable<span class="arrow">·</span>
+            </a>. The precise
+instant during the query or transformation represented by the value
+of <code>fn:current-date()</code> is <a title="implementation dependent" class="termref"
+               href="#implementation-dependent"
+               shape="rect">
+               <span class="arrow">·</span>implementation dependent<span class="arrow">·</span>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-current-date</url>
+   </function>
+   <function>
+      <id>fn:current-dateTime#0</id>
+      <name>current-dateTime</name>
+      <signature>fn:current-dateTime () as xs:dateTime</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the current dateTime (with timezone) from the
+dynamic context. (See <a href="http://www.w3.org/TR/xpath20/#id-xp-evaluation-context-components"
+               shape="rect">
+Section C.2 Dynamic Context
+Components</a>
+            <sup>
+               <small>XP</small>
+            </sup>.) This is an
+<code>xs:dateTime</code> that is current at some time during the
+evaluation of a query or transformation in which
+<code>fn:current-dateTime()</code> is executed. This function is
+<a title="stable" class="termref" href="#stable" shape="rect">
+               <span class="arrow">·</span>stable<span class="arrow">·</span>
+            </a>. The precise
+instant during the query or transformation represented by the value
+of <code>fn:current-dateTime()</code> is <a title="implementation dependent" class="termref"
+               href="#implementation-dependent"
+               shape="rect">
+               <span class="arrow">·</span>implementation dependent<span class="arrow">·</span>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-current-dateTime</url>
+   </function>
+   <function>
+      <id>fn:current-time#0</id>
+      <name>current-time</name>
+      <signature>fn:current-time () as xs:time</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns <code>xs:time(fn:current-dateTime())</code>.
+This is an <code>xs:time</code> (with timezone) that is current at
+some time during the evaluation of a query or transformation in
+which <code>fn:current-time()</code> is executed. This function is
+<a title="stable" class="termref" href="#stable" shape="rect">
+               <span class="arrow">·</span>stable<span class="arrow">·</span>
+            </a>. The precise
+instant during the query or transformation represented by the value
+of <code>fn:current-time()</code> is <a title="implementation dependent" class="termref"
+               href="#implementation-dependent"
+               shape="rect">
+               <span class="arrow">·</span>implementation dependent<span class="arrow">·</span>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-current-time</url>
+   </function>
+   <function>
+      <id>fn:data#1</id>
+      <name>data</name>
+      <signature>fn:data ($arg as item()*) as xs:anyAtomicType*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/><code>fn:data</code> takes a sequence of items and
+returns a sequence of atomic values.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-data</url>
+   </function>
+   <function>
+      <id>fn:dateTime#2</id>
+      <name>dateTime</name>
+      <signature>fn:dateTime ($arg1 as xs:date?, $arg2 as xs:time?) as xs:dateTime?</signature>
+      <summary/>
+      <url>http://www.w3.org/TR/xpath-functions/#func-dateTime</url>
+   </function>
+   <function>
+      <id>fn:day-from-date#1</id>
+      <name>day-from-date</name>
+      <signature>fn:day-from-date ($arg as xs:date?) as xs:integer?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:integer</code> between 1 and 31,
+both inclusive, representing the day component in the localized
+value of <code>$arg</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-day-from-date</url>
+   </function>
+   <function>
+      <id>fn:day-from-dateTime#1</id>
+      <name>day-from-dateTime</name>
+      <signature>fn:day-from-dateTime ($arg as xs:dateTime?) as xs:integer?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:integer</code> between 1 and 31,
+both inclusive, representing the day component in the localized
+value of <code>$arg</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-day-from-dateTime</url>
+   </function>
+   <function>
+      <id>fn:days-from-duration#1</id>
+      <name>days-from-duration</name>
+      <signature>fn:days-from-duration ($arg as xs:duration?) as xs:integer?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:integer</code> representing the
+days component in the value of <code>$arg</code>. The result is
+obtained by casting <code>$arg</code> to an
+<code>xs:dayTimeDuration</code> (see <a href="#casting-to-durations" shape="rect">
+               <b>17.1.4 Casting to duration
+types</b>
+            </a>) and then computing the days component as described
+in <a href="#canonical-dayTimeDuration" shape="rect">
+               <b>10.3.2.3 Canonical
+representation</b>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-days-from-duration</url>
+   </function>
+   <function>
+      <id>fn:deep-equal#2</id>
+      <name>deep-equal</name>
+      <signature>fn:deep-equal ($parameter1 as item()*, $parameter2 as item()*) as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>This function assesses whether two sequences are
+deep-equal to each other. To be deep-equal, they must contain items
+that are pairwise deep-equal; and for two items to be deep-equal,
+they must either be atomic values that compare equal, or nodes of
+the same kind, with the same name, whose children are deep-equal.
+This is defined in more detail below. The <code>$collation</code>
+argument identifies a collation which is used at all levels of
+recursion when strings are compared (but not when names are
+compared), according to the rules in <a href="#collations" shape="rect">
+               <b>7.3.1
+Collations</b>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-deep-equal</url>
+   </function>
+   <function>
+      <id>fn:deep-equal#3</id>
+      <name>deep-equal</name>
+      <signature>fn:deep-equal ($parameter1 as item()*, $parameter2 as item()*, $collation as string) as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>This function assesses whether two sequences are
+deep-equal to each other. To be deep-equal, they must contain items
+that are pairwise deep-equal; and for two items to be deep-equal,
+they must either be atomic values that compare equal, or nodes of
+the same kind, with the same name, whose children are deep-equal.
+This is defined in more detail below. The <code>$collation</code>
+argument identifies a collation which is used at all levels of
+recursion when strings are compared (but not when names are
+compared), according to the rules in <a href="#collations" shape="rect">
+               <b>7.3.1
+Collations</b>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-deep-equal</url>
+   </function>
+   <function>
+      <id>fn:default-collation#0</id>
+      <name>default-collation</name>
+      <signature>fn:default-collation () as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the value of the default collation property
+from the static context. Components of the static context are
+discussed in <a href="http://www.w3.org/TR/xpath20/#id-xp-static-context-components"
+               shape="rect">Section
+C.1 Static Context Components</a>
+            <sup>
+               <small>XP</small>
+            </sup>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-default-collation</url>
+   </function>
+   <function>
+      <id>fn:distinct-values#1</id>
+      <name>distinct-values</name>
+      <signature>fn:distinct-values ($arg as xs:anyAtomicType*) as xs:anyAtomicType*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the sequence that results from removing from
+<code>$arg</code> all but one of a set of values that are
+<code>eq</code> to one other. Values of type
+<code>xs:untypedAtomic</code> are compared as if they were of type
+<code>xs:string</code>. Values that cannot be compared, i.e. the
+<code>eq</code> operator is not defined for their types, are
+considered to be distinct. The order in which the sequence of
+values is returned is <a title="implementation dependent" class="termref"
+               href="#implementation-dependent"
+               shape="rect">
+               <span class="arrow">·</span>implementation dependent<span class="arrow">·</span>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-distinct-values</url>
+   </function>
+   <function>
+      <id>fn:distinct-values#2</id>
+      <name>distinct-values</name>
+      <signature>fn:distinct-values ($arg as xs:anyAtomicType*, $collation as xs:string) as xs:anyAtomicType*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the sequence that results from removing from
+<code>$arg</code> all but one of a set of values that are
+<code>eq</code> to one other. Values of type
+<code>xs:untypedAtomic</code> are compared as if they were of type
+<code>xs:string</code>. Values that cannot be compared, i.e. the
+<code>eq</code> operator is not defined for their types, are
+considered to be distinct. The order in which the sequence of
+values is returned is <a title="implementation dependent" class="termref"
+               href="#implementation-dependent"
+               shape="rect">
+               <span class="arrow">·</span>implementation dependent<span class="arrow">·</span>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-distinct-values</url>
+   </function>
+   <function>
+      <id>fn:doc#1</id>
+      <name>doc</name>
+      <signature>fn:doc ($uri as xs:string?) as document-node()?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Retrieves a document using an <code>xs:anyURI</code>,
+which may include a fragment identifier, supplied as an
+<code>xs:string</code>. If <code>$uri</code> is not a valid
+<code>xs:anyURI</code>, an error is raised [<a href="#ERRFODC0005" title="err:FODC0005" shape="rect">err:FODC0005</a>]. If it is a relative URI
+Reference, it is resolved relative to the value of the base URI
+property from the static context. The resulting absolute URI
+Reference is promoted to an <code>xs:string</code>. If the
+<b>Available documents</b> discussed in <a href="http://www.w3.org/TR/xpath20/#eval_context" shape="rect">Section 2.1.2 Dynamic
+Context</a>
+            <sup>
+               <small>XP</small>
+            </sup> provides a mapping from
+this string to a document node, the function returns that document
+node. If the <b>Available documents</b> provides no mapping for the
+string, an error is raised [<a href="#ERRFODC0005" title="err:FODC0005" shape="rect">err:FODC0005</a>].</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-doc</url>
+   </function>
+   <function>
+      <id>fn:doc-available#1</id>
+      <name>doc-available</name>
+      <signature>fn:doc-available ($uri as xs:string?) as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>If <a href="#func-doc" shape="rect">
+               <code>fn:doc($uri)</code>
+            </a>
+returns a document node, this function returns <code>true</code>.
+If <code>$uri</code> is not a valid <code>xs:anyURI</code>, an
+error is raised [<a href="#ERRFODC0005" title="err:FODC0005" shape="rect">err:FODC0005</a>]. Otherwise, this function returns
+<code>false</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-doc-available</url>
+   </function>
+   <function>
+      <id>fn:document-uri#1</id>
+      <name>document-uri</name>
+      <signature>fn:document-uri ($arg as node()?) as xs:anyURI?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the value of the document-uri property for
+<code>$arg</code> as defined by the <code>dm:document-uri</code>
+accessor function defined in <a href="http://www.w3.org/TR/xpath-datamodel/#DocumentNodeAccessors" shape="rect">Section
+6.1.2 Accessors</a>
+            <sup>
+               <small>DM</small>
+            </sup>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-document-uri</url>
+   </function>
+   <function>
+      <id>fn:empty#1</id>
+      <name>empty</name>
+      <signature>fn:empty ($arg as item()*) as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>If the value of <code>$arg</code> is the empty
+sequence, the function returns <code>true</code>; otherwise, the
+function returns <code>false</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-empty</url>
+   </function>
+   <function>
+      <id>fn:encode-for-uri#1</id>
+      <name>encode-for-uri</name>
+      <signature>fn:encode-for-uri ($uri-part as xs:string?) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>This function encodes reserved characters in an
+<code>xs:string</code> that is intended to be used in the path
+segment of a URI. It is invertible but not idempotent. This
+function applies the URI escaping rules defined in section 2 of
+<a href="#rfc3986" shape="rect">[RFC 3986]</a> to the <code>xs:string</code>
+supplied as <code>$uri-part</code>. The effect of the function is
+to escape reserved characters. Each such character in the string is
+replaced with its percent-encoded form as described in <a href="#rfc3986" shape="rect">[RFC 3986]</a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-encode-for-uri</url>
+   </function>
+   <function>
+      <id>fn:ends-with#2</id>
+      <name>ends-with</name>
+      <signature>fn:ends-with ($arg1 as xs:string?, $arg2 as xs:string?) as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:boolean</code> indicating whether
+or not the value of <code>$arg1</code> ends with a sequence of
+collation units that provides a minimal match to the collation
+units of <code>$arg2</code> according to the collation that is
+used.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-ends-with</url>
+   </function>
+   <function>
+      <id>fn:ends-with#3</id>
+      <name>ends-with</name>
+      <signature>fn:ends-with ($arg1 as xs:string?, $arg2 as xs:string?, $collation as xs:string) as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:boolean</code> indicating whether
+or not the value of <code>$arg1</code> ends with a sequence of
+collation units that provides a minimal match to the collation
+units of <code>$arg2</code> according to the collation that is
+used.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-ends-with</url>
+   </function>
+   <function>
+      <id>fn:error#0</id>
+      <name>error</name>
+      <signature>fn:error () as none</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>The <code>fn:error</code> function raises an error.
+While this function never returns a value, an error is returned to
+the external processing environment as an <code>xs:anyURI</code> or
+an <code>xs:QName</code>. The error <code>xs:anyURI</code> is
+derived from the error <code>xs:QName</code>. An error
+<code>xs:QName</code> with namespace URI NS and local part LP will
+be returned as the <code>xs:anyURI</code> NS#LP. The method by
+which the <code>xs:anyURI</code> or <code>xs:QName</code> is
+returned to the external processing environment is <a title="implementation dependent" class="termref"
+               href="#implementation-dependent"
+               shape="rect">
+               <span class="arrow">·</span>implementation dependent<span class="arrow">·</span>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-error</url>
+   </function>
+   <function>
+      <id>fn:error#1</id>
+      <name>error</name>
+      <signature>fn:error ($error as xs:QName) as none</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>The <code>fn:error</code> function raises an error.
+While this function never returns a value, an error is returned to
+the external processing environment as an <code>xs:anyURI</code> or
+an <code>xs:QName</code>. The error <code>xs:anyURI</code> is
+derived from the error <code>xs:QName</code>. An error
+<code>xs:QName</code> with namespace URI NS and local part LP will
+be returned as the <code>xs:anyURI</code> NS#LP. The method by
+which the <code>xs:anyURI</code> or <code>xs:QName</code> is
+returned to the external processing environment is <a title="implementation dependent" class="termref"
+               href="#implementation-dependent"
+               shape="rect">
+               <span class="arrow">·</span>implementation dependent<span class="arrow">·</span>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-error</url>
+   </function>
+   <function>
+      <id>fn:error#2</id>
+      <name>error</name>
+      <signature>fn:error ($error as xs:QName?, $description as xs:string) as none</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>The <code>fn:error</code> function raises an error.
+While this function never returns a value, an error is returned to
+the external processing environment as an <code>xs:anyURI</code> or
+an <code>xs:QName</code>. The error <code>xs:anyURI</code> is
+derived from the error <code>xs:QName</code>. An error
+<code>xs:QName</code> with namespace URI NS and local part LP will
+be returned as the <code>xs:anyURI</code> NS#LP. The method by
+which the <code>xs:anyURI</code> or <code>xs:QName</code> is
+returned to the external processing environment is <a title="implementation dependent" class="termref"
+               href="#implementation-dependent"
+               shape="rect">
+               <span class="arrow">·</span>implementation dependent<span class="arrow">·</span>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-error</url>
+   </function>
+   <function>
+      <id>fn:error#3</id>
+      <name>error</name>
+      <signature>fn:error ($error as xs:QName?, $description as xs:string, $error-object as item()*) as none</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>The <code>fn:error</code> function raises an error.
+While this function never returns a value, an error is returned to
+the external processing environment as an <code>xs:anyURI</code> or
+an <code>xs:QName</code>. The error <code>xs:anyURI</code> is
+derived from the error <code>xs:QName</code>. An error
+<code>xs:QName</code> with namespace URI NS and local part LP will
+be returned as the <code>xs:anyURI</code> NS#LP. The method by
+which the <code>xs:anyURI</code> or <code>xs:QName</code> is
+returned to the external processing environment is <a title="implementation dependent" class="termref"
+               href="#implementation-dependent"
+               shape="rect">
+               <span class="arrow">·</span>implementation dependent<span class="arrow">·</span>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-error</url>
+   </function>
+   <function>
+      <id>fn:escape-html-uri#1</id>
+      <name>escape-html-uri</name>
+      <signature>fn:escape-html-uri ($uri as xs:string?) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>This function escapes all characters except printable
+characters of the US-ASCII coded character set, specifically the
+octets ranging from 32 to 126 (decimal). The effect of the function
+is to escape a URI in the manner html user agents handle attribute
+values that expect URIs. Each character in <code>$uri</code> to be
+escaped is replaced by an escape sequence, which is formed by
+encoding the character as a sequence of octets in UTF-8, and then
+representing each of these octets in the form %HH, where HH is the
+hexadecimal representation of the octet. This function must always
+generate hexadecimal values using the upper-case letters A-F.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-escape-html-uri</url>
+   </function>
+   <function>
+      <id>fn:exactly-one#1</id>
+      <name>exactly-one</name>
+      <signature>fn:exactly-one ($arg as item()*) as item()</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns <code>$arg</code> if it contains exactly one
+item. Otherwise, raises an error [<a href="#ERRFORG0005" title="err:FORG0005" shape="rect">err:FORG0005</a>].</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-exactly-one</url>
+   </function>
+   <function>
+      <id>fn:exists#1</id>
+      <name>exists</name>
+      <signature>fn:exists ($arg as item()*) as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>If the value of <code>$arg</code> is not the empty
+sequence, the function returns <code>true</code>; otherwise, the
+function returns <code>false</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-exists</url>
+   </function>
+   <function>
+      <id>fn:false#0</id>
+      <name>false</name>
+      <signature>fn:false () as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the <code>xs:boolean</code> value
+<code>false</code>. Equivalent to <code>xs:boolean("0")</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-false</url>
+   </function>
+   <function>
+      <id>fn:floor#1</id>
+      <name>floor</name>
+      <signature>fn:floor ($arg as numeric?) as numeric?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the largest (closest to positive infinity)
+number with no fractional part that is not greater than the value
+of <code>$arg</code>. If type of <code>$arg</code> is one of the
+four numeric types <code>xs:float</code>, <code>xs:double</code>,
+<code>xs:decimal</code> or <code>xs:integer</code> the type of the
+result is the same as the type of <code>$arg</code>. If the type of
+<code>$arg</code> is a type derived from one of the numeric types,
+the result is an instance of the base numeric type.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-floor</url>
+   </function>
+   <function>
+      <id>fn:hours-from-dateTime#1</id>
+      <name>hours-from-dateTime</name>
+      <signature>fn:hours-from-dateTime ($arg as xs:dateTime?) as xs:integer?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:integer</code> between 0 and 23,
+both inclusive, representing the hours component in the localized
+value of <code>$arg</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-hours-from-dateTime</url>
+   </function>
+   <function>
+      <id>fn:hours-from-duration#1</id>
+      <name>hours-from-duration</name>
+      <signature>fn:hours-from-duration ($arg as xs:duration?) as xs:integer?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:integer</code> representing the
+hours component in the value of <code>$arg</code>. The result is
+obtained by casting <code>$arg</code> to an
+<code>xs:dayTimeDuration</code> (see <a href="#casting-to-durations" shape="rect">
+               <b>17.1.4 Casting to duration
+types</b>
+            </a>) and then computing the hours component as described
+in <a href="#canonical-dayTimeDuration" shape="rect">
+               <b>10.3.2.3 Canonical
+representation</b>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-hours-from-duration</url>
+   </function>
+   <function>
+      <id>fn:hours-from-time#1</id>
+      <name>hours-from-time</name>
+      <signature>fn:hours-from-time ($arg as xs:time?) as xs:integer?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:integer</code> between 0 and 23,
+both inclusive, representing the value of the hours component in
+the localized value of <code>$arg</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-hours-from-time</url>
+   </function>
+   <function>
+      <id>fn:id#1</id>
+      <name>id</name>
+      <signature>fn:id ($arg as xs:string*) as element()*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the sequence of element nodes that have an
+<code>ID</code> value matching the value of one or more of the
+<code>IDREF</code> values supplied in <code>$arg</code> .</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-id</url>
+   </function>
+   <function>
+      <id>fn:id#2</id>
+      <name>id</name>
+      <signature>fn:id ($arg as xs:string*, $node as 
+node()) as element()*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the sequence of element nodes that have an
+<code>ID</code> value matching the value of one or more of the
+<code>IDREF</code> values supplied in <code>$arg</code> .</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-id</url>
+   </function>
+   <function>
+      <id>fn:idref#1</id>
+      <name>idref</name>
+      <signature>fn:idref ($arg as xs:string*) as node()*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the sequence of element or attribute nodes with
+an <code>IDREF</code> value matching the value of one or more of
+the <code>ID</code> values supplied in <code>$arg</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-idref</url>
+   </function>
+   <function>
+      <id>fn:idref#2</id>
+      <name>idref</name>
+      <signature>fn:idref ($arg as xs:string*, $node as 
+node()) as node()*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the sequence of element or attribute nodes with
+an <code>IDREF</code> value matching the value of one or more of
+the <code>ID</code> values supplied in <code>$arg</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-idref</url>
+   </function>
+   <function>
+      <id>fn:implicit-timezone#0</id>
+      <name>implicit-timezone</name>
+      <signature>fn:implicit-timezone () as xs:dayTimeDuration</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the value of the implicit timezone property
+from the dynamic context. Components of the dynamic context are
+discussed in <a href="http://www.w3.org/TR/xpath20/#id-xp-evaluation-context-components"
+               shape="rect">
+Section C.2 Dynamic Context
+Components</a>
+            <sup>
+               <small>XP</small>
+            </sup>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-implicit-timezone</url>
+   </function>
+   <function>
+      <id>fn:in-scope-prefixes#1</id>
+      <name>in-scope-prefixes</name>
+      <signature>fn:in-scope-prefixes ($element as element()) as xs:string*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the prefixes of the in-scope namespaces for
+<code>$element</code>. For namespaces that have a prefix, it
+returns the prefix as an <code>xs:NCName</code>. For the default
+namespace, which has no prefix, it returns the zero-length
+string.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-in-scope-prefixes</url>
+   </function>
+   <function>
+      <id>fn:index-of#2</id>
+      <name>index-of</name>
+      <signature>fn:index-of ($seqParam as xs:anyAtomicType*, $srchParam as xs:anyAtomicType) as xs:integer*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns a sequence of positive integers giving the
+positions within the sequence <code>$seqParam</code> of items that
+are equal to <code>$srchParam</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-index-of</url>
+   </function>
+   <function>
+      <id>fn:index-of#3</id>
+      <name>index-of</name>
+      <signature>fn:index-of ($seqParam as xs:anyAtomicType*, $srchParam as xs:anyAtomicType, $collation as xs:string) as xs:integer*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns a sequence of positive integers giving the
+positions within the sequence <code>$seqParam</code> of items that
+are equal to <code>$srchParam</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-index-of</url>
+   </function>
+   <function>
+      <id>fn:insert-before#3</id>
+      <name>insert-before</name>
+      <signature>fn:insert-before ($target as item()*, $position as xs:integer, $inserts as item()*) as item()*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns a new sequence constructed from the value of
+<code>$target</code> with the value of <code>$inserts</code>
+inserted at the position specified by the value of
+<code>$position</code>. (The value of <code>$target</code> is not
+affected by the sequence construction.)</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-insert-before</url>
+   </function>
+   <function>
+      <id>fn:iri-to-uri#1</id>
+      <name>iri-to-uri</name>
+      <signature>fn:iri-to-uri ($iri as xs:string?) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>This function converts an <code>xs:string</code>
+containing an IRI into a URI according to the rules spelled out in
+Section 3.1 of <a href="#rfc3987" shape="rect">[RFC 3987]</a>. It is idempotent
+but not invertible.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-iri-to-uri</url>
+   </function>
+   <function>
+      <id>fn:lang#1</id>
+      <name>lang</name>
+      <signature>fn:lang ($testlang as xs:string?) as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>This function tests whether the language of
+<code>$node</code>, or the context item if the second argument is
+omitted, as specified by <code>xml:lang</code> attributes is the
+same as, or is a sublanguage of, the language specified by
+<code>$testlang</code>. The behavior of the function if the second
+argument is omitted is exactly the same as if the context item
+(<code>.</code>) had been passed as the second argument. The
+language of the argument node, or the context item if the second
+argument is omitted, is determined by the value of the
+<code>xml:lang</code> attribute on the node, or, if the node has no
+such attribute, by the value of the <code>xml:lang</code> attribute
+on the nearest ancestor of the node that has an
+<code>xml:lang</code> attribute. If there is no such ancestor, then
+the function returns <code>false</code>
+         </p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-lang</url>
+   </function>
+   <function>
+      <id>fn:lang#2</id>
+      <name>lang</name>
+      <signature>fn:lang ($testlang as xs:string?, $node as node()) as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>This function tests whether the language of
+<code>$node</code>, or the context item if the second argument is
+omitted, as specified by <code>xml:lang</code> attributes is the
+same as, or is a sublanguage of, the language specified by
+<code>$testlang</code>. The behavior of the function if the second
+argument is omitted is exactly the same as if the context item
+(<code>.</code>) had been passed as the second argument. The
+language of the argument node, or the context item if the second
+argument is omitted, is determined by the value of the
+<code>xml:lang</code> attribute on the node, or, if the node has no
+such attribute, by the value of the <code>xml:lang</code> attribute
+on the nearest ancestor of the node that has an
+<code>xml:lang</code> attribute. If there is no such ancestor, then
+the function returns <code>false</code>
+         </p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-lang</url>
+   </function>
+   <function>
+      <id>fn:last#0</id>
+      <name>last</name>
+      <signature>fn:last () as xs:integer</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the context size from the dynamic context. (See
+<a href="http://www.w3.org/TR/xpath20/#id-xp-evaluation-context-components"
+               shape="rect">
+Section C.2 Dynamic Context
+Components</a>
+            <sup>
+               <small>XP</small>
+            </sup>.) If the context item is
+undefined, an error is raised: [<a href="http://www.w3.org/TR/xpath20/#ERRXPDY0002" title="err:XPDY0002"
+               shape="rect">err:XPDY0002</a>]<sup>
+               <small>XP</small>
+            </sup>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-last</url>
+   </function>
+   <function>
+      <id>fn:local-name#0</id>
+      <name>local-name</name>
+      <signature>fn:local-name () as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the local part of the name of <code>$arg</code>
+as an <code>xs:string</code> that will either be the zero-length
+string or will have the lexical form of an
+<code>xs:NCName</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-local-name</url>
+   </function>
+   <function>
+      <id>fn:local-name#1</id>
+      <name>local-name</name>
+      <signature>fn:local-name ($arg as node()?) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the local part of the name of <code>$arg</code>
+as an <code>xs:string</code> that will either be the zero-length
+string or will have the lexical form of an
+<code>xs:NCName</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-local-name</url>
+   </function>
+   <function>
+      <id>fn:local-name-from-QName#1</id>
+      <name>local-name-from-QName</name>
+      <signature>fn:local-name-from-QName ($arg as xs:QName?) as xs:NCName?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:NCName</code> representing the
+local part of <code>$arg</code>. If <code>$arg</code> is the empty
+sequence, returns the empty sequence.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-local-name-from-QName</url>
+   </function>
+   <function>
+      <id>fn:lower-case#1</id>
+      <name>lower-case</name>
+      <signature>fn:lower-case ($arg as xs:string?) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the value of <code>$arg</code> after
+translating every character to its lower-case correspondent as
+defined in the appropriate case mappings section in the Unicode
+standard <a href="#Unicode4" shape="rect">[The Unicode Standard]</a>. For
+versions of Unicode beginning with the 2.1.8 update, only
+locale-insensitive case mappings should be applied. Beginning with
+version 3.2.0 (and likely future versions) of Unicode, precise
+mappings are described in default case operations, which are full
+case mappings in the absence of tailoring for particular languages
+and environments. Every upper-case character that does not have a
+lower-case correspondent, as well as every lower-case character, is
+included in the returned value in its original form.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-lower-case</url>
+   </function>
+   <function>
+      <id>fn:matches#2</id>
+      <name>matches</name>
+      <signature>fn:matches ($input as xs:string?, $pattern as xs:string) as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>The function returns <code>true</code> if
+<code>$input</code> matches the regular expression supplied as
+<code>$pattern</code> as influenced by the value of
+<code>$flags</code>, if present; otherwise, it returns
+<code>false</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-matches</url>
+   </function>
+   <function>
+      <id>fn:matches#3</id>
+      <name>matches</name>
+      <signature>fn:matches ($input as xs:string?, $pattern as xs:string, $flags as xs:string) as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>The function returns <code>true</code> if
+<code>$input</code> matches the regular expression supplied as
+<code>$pattern</code> as influenced by the value of
+<code>$flags</code>, if present; otherwise, it returns
+<code>false</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-matches</url>
+   </function>
+   <function>
+      <id>fn:max#1</id>
+      <name>max</name>
+      <signature>fn:max ($arg as xs:anyAtomicType*) as xs:anyAtomicType?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Selects an item from the input sequence
+<code>$arg</code> whose value is greater than or equal to the value
+of every other item in the input sequence. If there are two or more
+such items, then the specific item whose value is returned is
+<a title="implementation dependent" class="termref"
+               href="#implementation-dependent"
+               shape="rect">
+               <span class="arrow">·</span>implementation dependent<span class="arrow">·</span>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-max</url>
+   </function>
+   <function>
+      <id>fn:max#2</id>
+      <name>max</name>
+      <signature>fn:max ($arg as xs:anyAtomicType*, $collation as string) as xs:anyAtomicType?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Selects an item from the input sequence
+<code>$arg</code> whose value is greater than or equal to the value
+of every other item in the input sequence. If there are two or more
+such items, then the specific item whose value is returned is
+<a title="implementation dependent" class="termref"
+               href="#implementation-dependent"
+               shape="rect">
+               <span class="arrow">·</span>implementation dependent<span class="arrow">·</span>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-max</url>
+   </function>
+   <function>
+      <id>fn:min#1</id>
+      <name>min</name>
+      <signature>fn:min ($arg as xs:anyAtomicType*) as xs:anyAtomicType?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>selects an item from the input sequence
+<code>$arg</code> whose value is less than or equal to the value of
+every other item in the input sequence. If there are two or more
+such items, then the specific item whose value is returned is
+<a title="implementation dependent" class="termref"
+               href="#implementation-dependent"
+               shape="rect">
+               <span class="arrow">·</span>implementation dependent<span class="arrow">·</span>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-min</url>
+   </function>
+   <function>
+      <id>fn:min#2</id>
+      <name>min</name>
+      <signature>fn:min ($arg as xs:anyAtomicType*, $collation as string) as xs:anyAtomicType?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>selects an item from the input sequence
+<code>$arg</code> whose value is less than or equal to the value of
+every other item in the input sequence. If there are two or more
+such items, then the specific item whose value is returned is
+<a title="implementation dependent" class="termref"
+               href="#implementation-dependent"
+               shape="rect">
+               <span class="arrow">·</span>implementation dependent<span class="arrow">·</span>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-min</url>
+   </function>
+   <function>
+      <id>fn:minutes-from-dateTime#1</id>
+      <name>minutes-from-dateTime</name>
+      <signature>fn:minutes-from-dateTime ($arg as xs:dateTime?) as xs:integer?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:integer</code> value between 0 and
+59, both inclusive, representing the minute component in the
+localized value of <code>$arg</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-minutes-from-dateTime</url>
+   </function>
+   <function>
+      <id>fn:minutes-from-duration#1</id>
+      <name>minutes-from-duration</name>
+      <signature>fn:minutes-from-duration ($arg as xs:duration?) as xs:integer?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:integer</code> representing the
+minutes component in the value of <code>$arg</code>. The result is
+obtained by casting <code>$arg</code> to an
+<code>xs:dayTimeDuration</code> (see <a href="#casting-to-durations" shape="rect">
+               <b>17.1.4 Casting to duration
+types</b>
+            </a>) and then computing the minutes component as
+described in <a href="#canonical-dayTimeDuration" shape="rect">
+               <b>10.3.2.3
+Canonical representation</b>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-minutes-from-duration</url>
+   </function>
+   <function>
+      <id>fn:minutes-from-time#1</id>
+      <name>minutes-from-time</name>
+      <signature>fn:minutes-from-time ($arg as xs:time?) as xs:integer?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:integer</code> value between 0 and
+59, both inclusive, representing the value of the minutes component
+in the localized value of <code>$arg</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-minutes-from-time</url>
+   </function>
+   <function>
+      <id>fn:month-from-date#1</id>
+      <name>month-from-date</name>
+      <signature>fn:month-from-date ($arg as xs:date?) as xs:integer?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:integer</code> between 1 and 12,
+both inclusive, representing the month component in the localized
+value of <code>$arg</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-month-from-date</url>
+   </function>
+   <function>
+      <id>fn:month-from-dateTime#1</id>
+      <name>month-from-dateTime</name>
+      <signature>fn:month-from-dateTime ($arg as xs:dateTime?) as xs:integer?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:integer</code> between 1 and 12,
+both inclusive, representing the month component in the localized
+value of <code>$arg</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-month-from-dateTime</url>
+   </function>
+   <function>
+      <id>fn:months-from-duration#1</id>
+      <name>months-from-duration</name>
+      <signature>fn:months-from-duration ($arg as xs:duration?) as xs:integer?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:integer</code> representing the
+months component in the value of <code>$arg</code>. The result is
+obtained by casting <code>$arg</code> to an
+<code>xs:yearMonthDuration</code> (see <a href="#casting-to-durations" shape="rect">
+               <b>17.1.4 Casting to duration
+types</b>
+            </a>) and then computing the months component as described
+in <a href="#canonical-yearMonthDuration" shape="rect">
+               <b>10.3.1.3 Canonical
+representation</b>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-months-from-duration</url>
+   </function>
+   <function>
+      <id>fn:name#0</id>
+      <name>name</name>
+      <signature>fn:name () as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the name of a node, as an
+<code>xs:string</code> that is either the zero-length string, or
+has the lexical form of an <code>xs:QName</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-name</url>
+   </function>
+   <function>
+      <id>fn:name#1</id>
+      <name>name</name>
+      <signature>fn:name ($arg as node()?) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the name of a node, as an
+<code>xs:string</code> that is either the zero-length string, or
+has the lexical form of an <code>xs:QName</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-name</url>
+   </function>
+   <function>
+      <id>fn:namespace-uri#0</id>
+      <name>namespace-uri</name>
+      <signature>fn:namespace-uri () as xs:anyURI</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the namespace URI of the <code>xs:QName</code>
+of <code>$arg</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-namespace-uri</url>
+   </function>
+   <function>
+      <id>fn:namespace-uri#1</id>
+      <name>namespace-uri</name>
+      <signature>fn:namespace-uri ($arg as node()?) as xs:anyURI</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the namespace URI of the <code>xs:QName</code>
+of <code>$arg</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-namespace-uri</url>
+   </function>
+   <function>
+      <id>fn:namespace-uri-for-prefix#2</id>
+      <name>namespace-uri-for-prefix</name>
+      <signature>fn:namespace-uri-for-prefix ($prefix as xs:string?, $element as element()) as xs:anyURI?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the namespace URI of one of the in-scope
+namespaces for <code>$element</code>, identified by its namespace
+prefix.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-namespace-uri-for-prefix</url>
+   </function>
+   <function>
+      <id>fn:namespace-uri-from-QName#1</id>
+      <name>namespace-uri-from-QName</name>
+      <signature>fn:namespace-uri-from-QName ($arg as xs:QName?) as xs:anyURI?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the namespace URI for <code>$arg</code> as an
+<code>xs:string</code>. If <code>$arg</code> is the empty sequence,
+the empty sequence is returned. If <code>$arg</code> is in no
+namespace, the zero-length string is returned.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-namespace-uri-from-QName</url>
+   </function>
+   <function>
+      <id>fn:nilled#1</id>
+      <name>nilled</name>
+      <signature>fn:nilled ($arg as node()?) as xs:boolean?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:boolean</code> indicating whether
+the argument node is "nilled". If the argument is not an element
+node, returns the empty sequence. If the argument is the empty
+sequence, returns the empty sequence.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-nilled</url>
+   </function>
+   <function>
+      <id>fn:node-name#1</id>
+      <name>node-name</name>
+      <signature>fn:node-name ($arg as node()?) as xs:QName?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an expanded-QName for node kinds that can have
+names. For other kinds of nodes it returns the empty sequence. If
+<code>$arg</code> is the empty sequence, the empty sequence is
+returned.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-node-name</url>
+   </function>
+   <function>
+      <id>fn:normalize-space#0</id>
+      <name>normalize-space</name>
+      <signature>fn:normalize-space () as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the value of <code>$arg</code> with whitespace
+normalized by stripping leading and trailing whitespace and
+replacing sequences of one or more than one whitespace character
+with a single space, <code>#x20</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-normalize-space</url>
+   </function>
+   <function>
+      <id>fn:normalize-space#1</id>
+      <name>normalize-space</name>
+      <signature>fn:normalize-space ($arg as xs:string?) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the value of <code>$arg</code> with whitespace
+normalized by stripping leading and trailing whitespace and
+replacing sequences of one or more than one whitespace character
+with a single space, <code>#x20</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-normalize-space</url>
+   </function>
+   <function>
+      <id>fn:normalize-unicode#1</id>
+      <name>normalize-unicode</name>
+      <signature>fn:normalize-unicode ($arg as xs:string?) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the value of <code>$arg</code> normalized
+according to the normalization criteria for a normalization form
+identified by the value of <code>$normalizationForm</code>. The
+effective value of the <code>$normalizationForm</code> is computed
+by removing leading and trailing blanks, if present, and converting
+to upper case.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-normalize-unicode</url>
+   </function>
+   <function>
+      <id>fn:normalize-unicode#2</id>
+      <name>normalize-unicode</name>
+      <signature>fn:normalize-unicode ($arg as xs:string?, $normalizationForm as xs:string) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the value of <code>$arg</code> normalized
+according to the normalization criteria for a normalization form
+identified by the value of <code>$normalizationForm</code>. The
+effective value of the <code>$normalizationForm</code> is computed
+by removing leading and trailing blanks, if present, and converting
+to upper case.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-normalize-unicode</url>
+   </function>
+   <function>
+      <id>fn:not#1</id>
+      <name>not</name>
+      <signature>fn:not ($arg as item()*) as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/><code>$arg</code> is first reduced to an effective
+boolean value by applying the <a href="#func-boolean" shape="rect">
+               <code>fn:boolean()</code>
+            </a> function. Returns
+<code>true</code> if the effective boolean value is
+<code>false</code>, and <code>false</code> if the effective boolean
+value is <code>true</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-not</url>
+   </function>
+   <function>
+      <id>fn:number#0</id>
+      <name>number</name>
+      <signature>fn:number () as xs:double</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the value indicated by <code>$arg</code> or, if
+<code>$arg</code> is not specified, the context item after
+atomization, converted to an <code>xs:double</code>
+         </p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-number</url>
+   </function>
+   <function>
+      <id>fn:number#1</id>
+      <name>number</name>
+      <signature>fn:number ($arg as xs:anyAtomicType?) as xs:double</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the value indicated by <code>$arg</code> or, if
+<code>$arg</code> is not specified, the context item after
+atomization, converted to an <code>xs:double</code>
+         </p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-number</url>
+   </function>
+   <function>
+      <id>fn:one-or-more#1</id>
+      <name>one-or-more</name>
+      <signature>fn:one-or-more ($arg as item()*) as item()+</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns <code>$arg</code> if it contains one or more
+items. Otherwise, raises an error [<a href="#ERRFORG0004" title="err:FORG0004" shape="rect">err:FORG0004</a>].</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-one-or-more</url>
+   </function>
+   <function>
+      <id>fn:position#0</id>
+      <name>position</name>
+      <signature>fn:position () as xs:integer</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the context position from the dynamic context.
+(See <a href="http://www.w3.org/TR/xpath20/#id-xp-evaluation-context-components"
+               shape="rect">
+Section C.2 Dynamic Context
+Components</a>
+            <sup>
+               <small>XP</small>
+            </sup>.) If the context item is
+undefined, an error is raised: [<a href="http://www.w3.org/TR/xpath20/#ERRXPDY0002" title="err:XPDY0002"
+               shape="rect">err:XPDY0002</a>]<sup>
+               <small>XP</small>
+            </sup>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-position</url>
+   </function>
+   <function>
+      <id>fn:prefix-from-QName#1</id>
+      <name>prefix-from-QName</name>
+      <signature>fn:prefix-from-QName ($arg as xs:QName?) as xs:NCName?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:NCName</code> representing the
+prefix of <code>$arg</code>. The empty sequence is returned if
+<code>$arg</code> is the empty sequence or if the value of
+<code>$arg</code> contains no prefix.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-prefix-from-QName</url>
+   </function>
+   <function>
+      <id>fn:QName#2</id>
+      <name>QName</name>
+      <signature>fn:QName ($paramURI as xs:string?, $paramQName as xs:string) as xs:QName</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:QName</code> with the namespace URI
+given in <code>$paramURI</code>. If <code>$paramURI</code> is the
+zero-length string or the empty sequence, it represents "no
+namespace"; in this case, if the value of <code>$paramQName</code>
+contains a colon (<code>:</code>), an error is raised [<a href="#ERRFOCA0002" title="err:FOCA0002" shape="rect">err:FOCA0002</a>]. The prefix
+(or absence of a prefix) in <code>$paramQName</code> is retained in
+the returned <code>xs:QName</code> value. The local name in the
+result is taken from the local part of
+<code>$paramQName</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-QName</url>
+   </function>
+   <function>
+      <id>fn:remove#2</id>
+      <name>remove</name>
+      <signature>fn:remove ($target as item()*, $position as xs:integer) as item()*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns a new sequence constructed from the value of
+<code>$target</code> with the item at the position specified by the
+value of <code>$position</code> removed.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-remove</url>
+   </function>
+   <function>
+      <id>fn:replace#3</id>
+      <name>replace</name>
+      <signature>fn:replace ($input as xs:string?, $pattern as xs:string, $replacement as xs:string) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>The function returns the <code>xs:string</code> that is
+obtained by replacing each non-overlapping substring of
+<code>$input</code> that matches the given <code>$pattern</code>
+with an occurrence of the <code>$replacement</code> string.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-replace</url>
+   </function>
+   <function>
+      <id>fn:replace#4</id>
+      <name>replace</name>
+      <signature>fn:replace ($input as xs:string?, $pattern as xs:string, $replacement as xs:string, $flags as xs:string) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>The function returns the <code>xs:string</code> that is
+obtained by replacing each non-overlapping substring of
+<code>$input</code> that matches the given <code>$pattern</code>
+with an occurrence of the <code>$replacement</code> string.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-replace</url>
+   </function>
+   <function>
+      <id>fn:resolve-QName#2</id>
+      <name>resolve-QName</name>
+      <signature>fn:resolve-QName ($qname as xs:string?, $element as element()) as xs:QName?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:QName</code> value (that is, an
+expanded-QName) by taking an <code>xs:string</code> that has the
+lexical form of an <code>xs:QName</code> (a string in the form
+"prefix:local-name" or "local-name") and resolving it using the
+in-scope namespaces for a given element.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-resolve-QName</url>
+   </function>
+   <function>
+      <id>fn:resolve-uri#1</id>
+      <name>resolve-uri</name>
+      <signature>fn:resolve-uri ($relative as xs:string?) as xs:anyURI?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>The purpose of this function is to enable a relative
+URI to be resolved against an absolute URI.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-resolve-uri</url>
+   </function>
+   <function>
+      <id>fn:resolve-uri#2</id>
+      <name>resolve-uri</name>
+      <signature>fn:resolve-uri ($relative as xs:string?, $base as xs:string) as xs:anyURI?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>The purpose of this function is to enable a relative
+URI to be resolved against an absolute URI.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-resolve-uri</url>
+   </function>
+   <function>
+      <id>fn:reverse#1</id>
+      <name>reverse</name>
+      <signature>fn:reverse ($arg as item()*) as item()*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Reverses the order of items in a sequence. If
+<code>$arg</code> is the empty sequence, the empty sequence is
+returned.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-reverse</url>
+   </function>
+   <function>
+      <id>fn:root#0</id>
+      <name>root</name>
+      <signature>fn:root () as node()</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the root of the tree to which <code>$arg</code>
+belongs. This will usually, but not necessarily, be a document
+node.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-root</url>
+   </function>
+   <function>
+      <id>fn:root#1</id>
+      <name>root</name>
+      <signature>fn:root ($arg as node()?) as node()</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the root of the tree to which <code>$arg</code>
+belongs. This will usually, but not necessarily, be a document
+node.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-root</url>
+   </function>
+   <function>
+      <id>fn:round#1</id>
+      <name>round</name>
+      <signature>fn:round ($arg as numeric?) as numeric?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the number with no fractional part that is
+closest to the argument. If there are two such numbers, then the
+one that is closest to positive infinity is returned. If type of
+<code>$arg</code> is one of the four numeric types
+<code>xs:float</code>, <code>xs:double</code>,
+<code>xs:decimal</code> or <code>xs:integer</code> the type of the
+result is the same as the type of <code>$arg</code>. If the type of
+<code>$arg</code> is a type derived from one of the numeric types,
+the result is an instance of the base numeric type.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-round</url>
+   </function>
+   <function>
+      <id>fn:round-half-to-even#1</id>
+      <name>round-half-to-even</name>
+      <signature>fn:round-half-to-even ($arg as numeric?) as numeric?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>The value returned is the nearest (that is, numerically
+closest) value to <code>$arg</code> that is a multiple of ten to
+the power of minus <code>$precision</code>. If two such values are
+equally near (e.g. if the fractional part in <code>$arg</code> is
+exactly .500...), the function returns the one whose least
+significant digit is even.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-round-half-to-even</url>
+   </function>
+   <function>
+      <id>fn:round-half-to-even#2</id>
+      <name>round-half-to-even</name>
+      <signature>fn:round-half-to-even ($arg as numeric?, $precision as xs:integer) as numeric?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>The value returned is the nearest (that is, numerically
+closest) value to <code>$arg</code> that is a multiple of ten to
+the power of minus <code>$precision</code>. If two such values are
+equally near (e.g. if the fractional part in <code>$arg</code> is
+exactly .500...), the function returns the one whose least
+significant digit is even.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-round-half-to-even</url>
+   </function>
+   <function>
+      <id>fn:seconds-from-dateTime#1</id>
+      <name>seconds-from-dateTime</name>
+      <signature>fn:seconds-from-dateTime ($arg as xs:dateTime?) as xs:decimal?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:decimal</code> value greater than
+or equal to zero and less than 60, representing the seconds and
+fractional seconds in the localized value of <code>$arg</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-seconds-from-dateTime</url>
+   </function>
+   <function>
+      <id>fn:seconds-from-duration#1</id>
+      <name>seconds-from-duration</name>
+      <signature>fn:seconds-from-duration ($arg as xs:duration?) as xs:decimal?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:decimal</code> representing the
+seconds component in the value of <code>$arg</code>. The result is
+obtained by casting <code>$arg</code> to an
+<code>xs:dayTimeDuration</code> (see <a href="#casting-to-durations" shape="rect">
+               <b>17.1.4 Casting to duration
+types</b>
+            </a>) and then computing the seconds component as
+described in <a href="#canonical-dayTimeDuration" shape="rect">
+               <b>10.3.2.3
+Canonical representation</b>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-seconds-from-duration</url>
+   </function>
+   <function>
+      <id>fn:seconds-from-time#1</id>
+      <name>seconds-from-time</name>
+      <signature>fn:seconds-from-time ($arg as xs:time?) as xs:decimal?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:decimal</code> value greater than
+or equal to zero and less than 60, representing the seconds and
+fractional seconds in the localized value of <code>$arg</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-seconds-from-time</url>
+   </function>
+   <function>
+      <id>fn:starts-with#2</id>
+      <name>starts-with</name>
+      <signature>fn:starts-with ($arg1 as xs:string?, $arg2 as xs:string?) as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:boolean</code> indicating whether
+or not the value of <code>$arg1</code> starts with a sequence of
+collation units that provides a minimal match to the collation
+units of <code>$arg2</code> according to the collation that is
+used.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-starts-with</url>
+   </function>
+   <function>
+      <id>fn:starts-with#3</id>
+      <name>starts-with</name>
+      <signature>fn:starts-with ($arg1 as xs:string?, $arg2 as xs:string?, $collation as xs:string) as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:boolean</code> indicating whether
+or not the value of <code>$arg1</code> starts with a sequence of
+collation units that provides a minimal match to the collation
+units of <code>$arg2</code> according to the collation that is
+used.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-starts-with</url>
+   </function>
+   <function>
+      <id>fn:static-base-uri#0</id>
+      <name>static-base-uri</name>
+      <signature>fn:static-base-uri () as xs:anyURI?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the value of the Base URI property from the
+static context. If the Base URI property is undefined, the empty
+sequence is returned. Components of the static context are
+discussed in <a href="http://www.w3.org/TR/xpath20/#id-xp-static-context-components"
+               shape="rect">Section
+C.1 Static Context Components</a>
+            <sup>
+               <small>XP</small>
+            </sup> .</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-static-base-uri</url>
+   </function>
+   <function>
+      <id>fn:string#0</id>
+      <name>string</name>
+      <signature>fn:string () as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the value of <code>$arg</code> represented as a
+<code>xs:string</code>. If no argument is supplied, the context
+item (<code>.</code>) is used as the default argument. The behavior
+of the function if the argument is omitted is exactly the same as
+if the context item had been passed as the argument.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-string</url>
+   </function>
+   <function>
+      <id>fn:string#1</id>
+      <name>string</name>
+      <signature>fn:string ($arg as item()?) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the value of <code>$arg</code> represented as a
+<code>xs:string</code>. If no argument is supplied, the context
+item (<code>.</code>) is used as the default argument. The behavior
+of the function if the argument is omitted is exactly the same as
+if the context item had been passed as the argument.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-string</url>
+   </function>
+   <function>
+      <id>fn:string-join#2</id>
+      <name>string-join</name>
+      <signature>fn:string-join ($arg1 as xs:string*, $arg2 as xs:string) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns a <code>xs:string</code> created by
+concatenating the members of the <code>$arg1</code> sequence using
+<code>$arg2</code> as a separator. If the value of
+<code>$arg2</code> is the zero-length string, then the members of
+<code>$arg1</code> are concatenated without a separator.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-string-join</url>
+   </function>
+   <function>
+      <id>fn:string-length#0</id>
+      <name>string-length</name>
+      <signature>fn:string-length () as xs:integer</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:integer</code> equal to the length
+in characters of the value of <code>$arg</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-string-length</url>
+   </function>
+   <function>
+      <id>fn:string-length#1</id>
+      <name>string-length</name>
+      <signature>fn:string-length ($arg as xs:string?) as xs:integer</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:integer</code> equal to the length
+in characters of the value of <code>$arg</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-string-length</url>
+   </function>
+   <function>
+      <id>fn:string-to-codepoints#1</id>
+      <name>string-to-codepoints</name>
+      <signature>fn:string-to-codepoints ($arg as xs:string?) as xs:integer*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the sequence of <a href="#Unicode4" shape="rect">[The
+Unicode Standard]</a> code points that constitute an
+<code>xs:string</code>. If <code>$arg</code> is a zero-length
+string or the empty sequence, the empty sequence is returned.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-string-to-codepoints</url>
+   </function>
+   <function>
+      <id>fn:subsequence#2</id>
+      <name>subsequence</name>
+      <signature>fn:subsequence ($sourceSeq as item()*, $startingLoc as xs:double) as item()*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the contiguous sequence of items in the value
+of <code>$sourceSeq</code> beginning at the position indicated by
+the value of <code>$startingLoc</code> and continuing for the
+number of items indicated by the value of <code>$length</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-subsequence</url>
+   </function>
+   <function>
+      <id>fn:subsequence#3</id>
+      <name>subsequence</name>
+      <signature>fn:subsequence ($sourceSeq as item()*, $startingLoc as xs:double, $length as xs:double) as item()*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the contiguous sequence of items in the value
+of <code>$sourceSeq</code> beginning at the position indicated by
+the value of <code>$startingLoc</code> and continuing for the
+number of items indicated by the value of <code>$length</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-subsequence</url>
+   </function>
+   <function>
+      <id>fn:substring#2</id>
+      <name>substring</name>
+      <signature>fn:substring ($sourceString as xs:string?, $startingLoc as xs:double) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the portion of the value of
+<code>$sourceString</code> beginning at the position indicated by
+the value of <code>$startingLoc</code> and continuing for the
+number of characters indicated by the value of
+<code>$length</code>. The characters returned do not extend beyond
+<code>$sourceString</code>. If <code>$startingLoc</code> is zero or
+negative, only those characters in positions greater than zero are
+returned.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-substring</url>
+   </function>
+   <function>
+      <id>fn:substring#3</id>
+      <name>substring</name>
+      <signature>fn:substring ($sourceString as xs:string?, $startingLoc as xs:double, $length as xs:double) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the portion of the value of
+<code>$sourceString</code> beginning at the position indicated by
+the value of <code>$startingLoc</code> and continuing for the
+number of characters indicated by the value of
+<code>$length</code>. The characters returned do not extend beyond
+<code>$sourceString</code>. If <code>$startingLoc</code> is zero or
+negative, only those characters in positions greater than zero are
+returned.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-substring</url>
+   </function>
+   <function>
+      <id>fn:substring-after#2</id>
+      <name>substring-after</name>
+      <signature>fn:substring-after ($arg1 as xs:string?, $arg2 as xs:string?) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the substring of the value of
+<code>$arg1</code> that follows in the value of <code>$arg1</code>
+the first occurrence of a sequence of collation units that provides
+a minimal match to the collation units of <code>$arg2</code>
+according to the collation that is used.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-substring-after</url>
+   </function>
+   <function>
+      <id>fn:substring-after#3</id>
+      <name>substring-after</name>
+      <signature>fn:substring-after ($arg1 as xs:string?, $arg2 as xs:string?, $collation as xs:string) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the substring of the value of
+<code>$arg1</code> that follows in the value of <code>$arg1</code>
+the first occurrence of a sequence of collation units that provides
+a minimal match to the collation units of <code>$arg2</code>
+according to the collation that is used.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-substring-after</url>
+   </function>
+   <function>
+      <id>fn:substring-before#2</id>
+      <name>substring-before</name>
+      <signature>fn:substring-before ($arg1 as xs:string?, $arg2 as xs:string?) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the substring of the value of
+<code>$arg1</code> that precedes in the value of <code>$arg1</code>
+the first occurrence of a sequence of collation units that provides
+a minimal match to the collation units of <code>$arg2</code>
+according to the collation that is used.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-substring-before</url>
+   </function>
+   <function>
+      <id>fn:substring-before#3</id>
+      <name>substring-before</name>
+      <signature>fn:substring-before ($arg1 as xs:string?, $arg2 as xs:string?, $collation as xs:string) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the substring of the value of
+<code>$arg1</code> that precedes in the value of <code>$arg1</code>
+the first occurrence of a sequence of collation units that provides
+a minimal match to the collation units of <code>$arg2</code>
+according to the collation that is used.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-substring-before</url>
+   </function>
+   <function>
+      <id>fn:sum#1</id>
+      <name>sum</name>
+      <signature>fn:sum ($arg as xs:anyAtomicType*) as xs:anyAtomicType</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns a value obtained by adding together the values
+in <code>$arg</code>. If <code>$zero</code> is not specified, then
+the value returned for an empty sequence is the
+<code>xs:integer</code> value 0. If <code>$zero</code> is
+specified, then the value returned for an empty sequence is
+<code>$zero</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-sum</url>
+   </function>
+   <function>
+      <id>fn:sum#2</id>
+      <name>sum</name>
+      <signature>fn:sum ($arg as xs:anyAtomicType*, $zero as xs:anyAtomicType?) as xs:anyAtomicType</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns a value obtained by adding together the values
+in <code>$arg</code>. If <code>$zero</code> is not specified, then
+the value returned for an empty sequence is the
+<code>xs:integer</code> value 0. If <code>$zero</code> is
+specified, then the value returned for an empty sequence is
+<code>$zero</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-sum</url>
+   </function>
+   <function>
+      <id>fn:timezone-from-date#1</id>
+      <name>timezone-from-date</name>
+      <signature>fn:timezone-from-date ($arg as xs:date?) as xs:dayTimeDuration?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the timezone component of <code>$arg</code> if
+any. If <code>$arg</code> has a timezone component, then the result
+is an <code>xs:dayTimeDuration</code> that indicates deviation from
+UTC; its value may range from +14:00 to -14:00 hours, both
+inclusive. Otherwise, the result is the empty sequence.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-timezone-from-date</url>
+   </function>
+   <function>
+      <id>fn:timezone-from-dateTime#1</id>
+      <name>timezone-from-dateTime</name>
+      <signature>fn:timezone-from-dateTime ($arg as xs:dateTime?) as xs:dayTimeDuration?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the timezone component of <code>$arg</code> if
+any. If <code>$arg</code> has a timezone component, then the result
+is an <code>xs:dayTimeDuration</code> that indicates deviation from
+UTC; its value may range from +14:00 to -14:00 hours, both
+inclusive. Otherwise, the result is the empty sequence.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-timezone-from-dateTime</url>
+   </function>
+   <function>
+      <id>fn:timezone-from-time#1</id>
+      <name>timezone-from-time</name>
+      <signature>fn:timezone-from-time ($arg as xs:time?) as xs:dayTimeDuration?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the timezone component of <code>$arg</code> if
+any. If <code>$arg</code> has a timezone component, then the result
+is an <code>xs:dayTimeDuration</code> that indicates deviation from
+UTC; its value may range from +14:00 to -14:00 hours, both
+inclusive. Otherwise, the result is the empty sequence.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-timezone-from-time</url>
+   </function>
+   <function>
+      <id>fn:tokenize#2</id>
+      <name>tokenize</name>
+      <signature>fn:tokenize ($input as xs:string?, $pattern as xs:string) as xs:string*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>This function breaks the <code>$input</code> string
+into a sequence of strings, treating any substring that matches
+<code>$pattern</code> as a separator. The separators themselves are
+not returned.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-tokenize</url>
+   </function>
+   <function>
+      <id>fn:tokenize#3</id>
+      <name>tokenize</name>
+      <signature>fn:tokenize ($input as xs:string?, $pattern as xs:string, $flags as xs:string) as xs:string*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>This function breaks the <code>$input</code> string
+into a sequence of strings, treating any substring that matches
+<code>$pattern</code> as a separator. The separators themselves are
+not returned.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-tokenize</url>
+   </function>
+   <function>
+      <id>fn:trace#2</id>
+      <name>trace</name>
+      <signature>fn:trace ($value as item()*, $label as xs:string) as item()*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Provides an execution trace intended to be used in
+debugging queries.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-trace</url>
+   </function>
+   <function>
+      <id>fn:translate#3</id>
+      <name>translate</name>
+      <signature>fn:translate ($arg as xs:string?, $mapString as xs:string, $transString as xs:string) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the value of <code>$arg</code> modified so that
+every character in the value of <code>$arg</code> that occurs at
+some position <em>N</em> in the value of <code>$mapString</code>
+has been replaced by the character that occurs at position
+<em>N</em> in the value of <code>$transString</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-translate</url>
+   </function>
+   <function>
+      <id>fn:true#0</id>
+      <name>true</name>
+      <signature>fn:true () as xs:boolean</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the <code>xs:boolean</code> value
+<code>true</code>. Equivalent to <code>xs:boolean("1")</code>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-true</url>
+   </function>
+   <function>
+      <id>fn:unordered#1</id>
+      <name>unordered</name>
+      <signature>fn:unordered ($sourceSeq as item()*) as item()*</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the items of <code>$sourceSeq</code> in an
+<a title="implementation dependent" class="termref"
+               href="#implementation-dependent"
+               shape="rect">
+               <span class="arrow">·</span>implementation dependent<span class="arrow">·</span>
+            </a> order.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-unordered</url>
+   </function>
+   <function>
+      <id>fn:upper-case#1</id>
+      <name>upper-case</name>
+      <signature>fn:upper-case ($arg as xs:string?) as xs:string</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns the value of <code>$arg</code> after
+translating every character to its upper-case correspondent as
+defined in the appropriate case mappings section in the Unicode
+standard <a href="#Unicode4" shape="rect">[The Unicode Standard]</a>. For
+versions of Unicode beginning with the 2.1.8 update, only
+locale-insensitive case mappings should be applied. Beginning with
+version 3.2.0 (and likely future versions) of Unicode, precise
+mappings are described in default case operations, which are full
+case mappings in the absence of tailoring for particular languages
+and environments. Every lower-case character that does not have an
+upper-case correspondent, as well as every upper-case character, is
+included in the returned value in its original form.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-upper-case</url>
+   </function>
+   <function>
+      <id>fn:year-from-date#1</id>
+      <name>year-from-date</name>
+      <signature>fn:year-from-date ($arg as xs:date?) as xs:integer?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:integer</code> representing the
+year in the localized value of <code>$arg</code>. The value may be
+negative.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-year-from-date</url>
+   </function>
+   <function>
+      <id>fn:year-from-dateTime#1</id>
+      <name>year-from-dateTime</name>
+      <signature>fn:year-from-dateTime ($arg as xs:dateTime?) as xs:integer?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:integer</code> representing the
+year component in the localized value of <code>$arg</code>. The
+result may be negative.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-year-from-dateTime</url>
+   </function>
+   <function>
+      <id>fn:years-from-duration#1</id>
+      <name>years-from-duration</name>
+      <signature>fn:years-from-duration ($arg as xs:duration?) as xs:integer?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns an <code>xs:integer</code> representing the
+years component in the value of <code>$arg</code>. The result is
+obtained by casting <code>$arg</code> to an
+<code>xs:yearMonthDuration</code> (see <a href="#casting-to-durations" shape="rect">
+               <b>17.1.4 Casting to duration
+types</b>
+            </a>) and then computing the years component as described
+in <a href="#canonical-yearMonthDuration" shape="rect">
+               <b>10.3.1.3 Canonical
+representation</b>
+            </a>.</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-years-from-duration</url>
+   </function>
+   <function>
+      <id>fn:zero-or-one#1</id>
+      <name>zero-or-one</name>
+      <signature>fn:zero-or-one ($arg as item()*) as item()?</signature>
+      <summary>
+         <p xmlns="http://www.w3.org/1999/xhtml"><b>Summary:</b><br/>Returns <code>$arg</code> if it contains zero or one
+items. Otherwise, raises an error [<a href="#ERRFORG0003" title="err:FORG0003" shape="rect">err:FORG0003</a>].</p>
+      </summary>
+      <url>http://www.w3.org/TR/xpath-functions/#func-zero-or-one</url>
+   </function>
+	
+	
+	<function>
+		<id>xs:anyURI#1</id>
+		<name>anyURI</name>
+		<signature>xs:anyURI($arg as xs:anyAtomicType?) as xs:anyURI?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:base64Binary#1</id>
+		<name>base64Binary</name>
+		<signature>xs:base64Binary($arg as xs:anyAtomicType?) as xs:base64Binary?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:boolean#1</id>
+		<name>boolean</name>
+		<signature>xs:boolean($arg as xs:anyAtomicType?) as xs:boolean?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:byte#1</id>
+		<name>byte</name>
+		<signature>xs:byte($arg as xs:anyAtomicType?) as xs:byte?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:date#1</id>
+		<name>date</name>
+		<signature>xs:date($arg as xs:anyAtomicType?) as xs:date?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:dateTime#1</id>
+		<name>dateTime</name>
+		<signature>xs:dateTime($arg as xs:anyAtomicType?) as xs:dateTime?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:dayTimeDuration#1</id>
+		<name>dayTimeDuration</name>
+		<signature>xs:dayTimeDuration($arg as xs:anyAtomicType?) as xs:dayTimeDuration?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:decimal#1</id>
+		<name>decimal</name>
+		<signature>xs:decimal($arg as xs:anyAtomicType?) as xs:decimal?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:double#1</id>
+		<name>double</name>
+		<signature>xs:double($arg as xs:anyAtomicType?) as xs:double?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:duration#1</id>
+		<name>duration</name>
+		<signature>xs:duration($arg as xs:anyAtomicType?) as xs:duration?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:ENTITY#1</id>
+		<name>ENTITY</name>
+		<signature>xs:ENTITY($arg as xs:anyAtomicType?) as xs:ENTITY?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:float#1</id>
+		<name>float</name>
+		<signature>xs:float($arg as xs:anyAtomicType?) as xs:float?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:gDay#1</id>
+		<name>gDay</name>
+		<signature>xs:gDay($arg as xs:anyAtomicType?) as xs:gDay?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:gMonth#1</id>
+		<name>gMonth</name>
+		<signature>xs:gMonth($arg as xs:anyAtomicType?) as xs:gMonth?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:gMonthDay#1</id>
+		<name>gMonthDay</name>
+		<signature>xs:gMonthDay($arg as xs:anyAtomicType?) as xs:gMonthDay?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:gYear#1</id>
+		<name>gYear</name>
+		<signature>xs:gYear($arg as xs:anyAtomicType?) as xs:gYear?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:gYearMonth#1</id>
+		<name>gYearMonth</name>
+		<signature>xs:gYearMonth($arg as xs:anyAtomicType?) as xs:gYearMonth?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:hexBinary#1</id>
+		<name>hexBinary</name>
+		<signature>xs:hexBinary($arg as xs:anyAtomicType?) as xs:hexBinary?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:int#1</id>
+		<name>int</name>
+		<signature>xs:int($arg as xs:anyAtomicType?) as xs:int?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:integer#1</id>
+		<name>integer</name>
+		<signature>xs:integer($arg as xs:anyAtomicType?) as xs:integer?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:language#1</id>
+		<name>language</name>
+		<signature>xs:language($arg as xs:anyAtomicType?) as xs:language?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:long#1</id>
+		<name>long</name>
+		<signature>xs:long($arg as xs:anyAtomicType?) as xs:long?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:Name#1</id>
+		<name>Name</name>
+		<signature>xs:Name($arg as xs:anyAtomicType?) as xs:Name?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:NCName#1</id>
+		<name>NCName</name>
+		<signature>xs:NCName($arg as xs:anyAtomicType?) as xs:NCName?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:negativeInteger#1</id>
+		<name>negativeInteger</name>
+		<signature>xs:negativeInteger($arg as xs:anyAtomicType?) as xs:negativeInteger?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:nonNegativeInteger#1</id>
+		<name>nonNegativeInteger</name>
+		<signature>xs:nonNegativeInteger($arg as xs:anyAtomicType?) as xs:nonNegativeInteger?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:nonPositiveInteger#1</id>
+		<name>nonPositiveInteger</name>
+		<signature>xs:nonPositiveInteger($arg as xs:anyAtomicType?) as xs:nonPositiveInteger?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:normalizedString#1</id>
+		<name>normalizedString</name>
+		<signature>xs:normalizedString($arg as xs:anyAtomicType?) as xs:normalizedString?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:positiveInteger#1</id>
+		<name>positiveInteger</name>
+		<signature>xs:positiveInteger($arg as xs:anyAtomicType?) as xs:positiveInteger?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:QName#1</id>
+		<name>QName</name>
+		<signature>xs:QName($arg as xs:anyAtomicType) as xs:QName?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:short#1</id>
+		<name>short</name>
+		<signature>xs:short($arg as xs:anyAtomicType?) as xs:short?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:string#1</id>
+		<name>string</name>
+		<signature>xs:string($arg as xs:anyAtomicType?) as xs:string?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:time#1</id>
+		<name>time</name>
+		<signature>xs:time($arg as xs:anyAtomicType?) as xs:time?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:token#1</id>
+		<name>token</name>
+		<signature>xs:token($arg as xs:anyAtomicType?) as xs:token?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:unsignedByte#1</id>
+		<name>unsignedByte</name>
+		<signature>xs:unsignedByte($arg as xs:anyAtomicType?) as xs:unsignedByte?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:unsignedInt#1</id>
+		<name>unsignedInt</name>
+		<signature>xs:unsignedInt($arg as xs:anyAtomicType?) as xs:unsignedInt?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:unsignedLong#1</id>
+		<name>unsignedLong</name>
+		<signature>xs:unsignedLong($arg as xs:anyAtomicType?) as xs:unsignedLong?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:unsignedShort#1</id>
+		<name>unsignedShort</name>
+		<signature>xs:unsignedShort($arg as xs:anyAtomicType?) as xs:unsignedShort?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:untypedAtomic#1</id>
+		<name>untypedAtomic</name>
+		<signature>xs:untypedAtomic($arg as xs:anyAtomicType?) as xs:untypedAtomic?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<function>
+		<id>xs:yearMonthDuration#1</id>
+		<name>yearMonthDuration</name>
+		<signature>xs:yearMonthDuration($arg as xs:anyAtomicType?) as xs:yearMonthDuration?</signature>
+		<summary/>
+		<url/>
+	</function>
+	<!-- 
+		xs:NMTOKEN($arg as xs:anyAtomicType?) as xs:NMTOKEN?
+		xs:IDREF($arg as xs:anyAtomicType?) as xs:IDREF?
+		xs:ID($arg as xs:anyAtomicType?) as xs:ID?
+	-->
+	
+</functions>

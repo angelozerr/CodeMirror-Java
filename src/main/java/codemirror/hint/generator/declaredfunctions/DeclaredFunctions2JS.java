@@ -13,16 +13,12 @@ import java.util.List;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
+import codemirror.hint.generator.Function;
 import codemirror.hint.generator.XMLModule2JsonHandler;
 
 public class DeclaredFunctions2JS {
 
 	private final List<File> files;
-
-	private class Parameter {
-		public String name;
-		public String type;
-	}
 
 	public DeclaredFunctions2JS() {
 		this.files = new ArrayList<File>();
@@ -144,182 +140,15 @@ public class DeclaredFunctions2JS {
 								// declare function xdmp:access($uri as
 								// xs:string, $action as xs:string) as
 								// xs:boolean external;
-								String returnType = null;
-								boolean searchReturnType = false;
+
 								String beforeFunction = "declare function "
 										+ modulePrefix + ":";
 								if (line.startsWith(beforeFunction)) {
 									String afterFunction = line.substring(
 											beforeFunction.length(),
 											line.length());
-									int index = afterFunction.indexOf("(");
-									String funcName = afterFunction.substring(
-											0, index);
-
-									AttributesImpl functionAttributes = new AttributesImpl();
-									functionAttributes
-											.addAttribute(
-													"",
-													XMLModule2JsonHandler.FUNCTION_NAME_ATTR,
-													XMLModule2JsonHandler.FUNCTION_NAME_ATTR,
-													"CDATA", funcName);
-
-									String afterFunctionName = afterFunction
-											.substring(funcName.length(),
-													afterFunction.length());
-									char[] chars = afterFunctionName
-											.toCharArray();
-
-									List<Parameter> parameters = new ArrayList<DeclaredFunctions2JS.Parameter>();
-
-									char c = 0;
-									int bracket = 0;
-									Parameter parameter = null;
-									StringBuilder buffer = new StringBuilder();
-									for (int i = 0; i < chars.length; i++) {
-										c = chars[i];
-										switch (c) {
-										case '(':
-											if (bracket > 0 || searchReturnType) {
-												buffer.append(c);
-											}
-											if (!searchReturnType)
-												bracket++;
-											break;
-										case ')':
-											if (!searchReturnType)
-												bracket--;
-											if (bracket > 0 || searchReturnType) {
-												buffer.append(c);
-											} else {
-												if (parameter != null) {
-													parameter.type = buffer
-															.toString();
-													buffer.setLength(0);
-													parameter = null;
-												}
-											}
-											break;
-										case ' ':
-											if (bracket > 0) {
-												if (parameter == null) {
-													if (buffer.length() > 0) {
-														parameter = new Parameter();
-														parameter.name = buffer
-																.toString();
-														if (parameter.name
-																.startsWith("$")) {
-															parameter.name = parameter.name
-																	.substring(
-																			1,
-																			parameter.name
-																					.length());
-														}
-														parameters
-																.add(parameter);
-														buffer.setLength(0);
-													}
-												} else {
-													if (buffer.toString()
-															.equals("as")) {
-														buffer.setLength(0);
-													} else {
-														buffer.append(c);
-													}
-												}
-											} else {
-												if (buffer.toString().equals(
-														"as")) {
-													buffer.setLength(0);
-													searchReturnType = true;
-												} else if (searchReturnType) {
-													returnType = buffer
-															.toString();
-													break;
-												}
-											}
-											break;
-										case ',':
-											if (parameter != null) {
-												parameter.type = buffer
-														.toString();
-												buffer.setLength(0);
-												parameter = null;
-											}
-											break;
-										default:
-											buffer.append(c);
-										}
-									}
-
-									// String parameters =
-									// afterFunction.substring(funcName.length()+1,
-									// index);
-
-									// String functionAs =
-									// getAs(method.returnType());
-									if (returnType != null) {
-										functionAttributes.addAttribute("",
-												XMLModule2JsonHandler.AS_ATTR, XMLModule2JsonHandler.AS_ATTR, "CDATA",
-												returnType);
-									}
-									handler.startElement("",
-											XMLModule2JsonHandler.FUNCTION_ELT,
-											XMLModule2JsonHandler.FUNCTION_ELT,
-											functionAttributes);
-
-									// Loop for Parameters
-									for (Parameter p : parameters) {
-										AttributesImpl paramAttributes = new AttributesImpl();
-										paramAttributes
-												.addAttribute(
-														"",
-														XMLModule2JsonHandler.FUNCTION_PARAM_NAME_ATTR,
-														XMLModule2JsonHandler.FUNCTION_PARAM_NAME_ATTR,
-														"CDATA", p.name);
-										paramAttributes.addAttribute("",
-												XMLModule2JsonHandler.AS_ATTR,
-												XMLModule2JsonHandler.AS_ATTR,
-												"CDATA", p.type);
-										handler.startElement(
-												"",
-												XMLModule2JsonHandler.FUNCTION_PARAM_ELT,
-												XMLModule2JsonHandler.FUNCTION_PARAM_ELT,
-												paramAttributes);
-										handler.endElement(
-												"",
-												XMLModule2JsonHandler.FUNCTION_PARAM_ELT,
-												XMLModule2JsonHandler.FUNCTION_PARAM_ELT);
-									}
-
-									// Parameter parameter = null;
-									// Parameter[] parameters =
-									// method.parameters();
-									// for (int k = 0; k < parameters.length;
-									// k++) {
-									// parameter = parameters[k];
-									// AttributesImpl paramAttributes = new
-									// AttributesImpl();
-									// paramAttributes.addAttribute("",
-									// FUNCTION_PARAM_NAME_ATTR,
-									// FUNCTION_PARAM_NAME_ATTR, "CDATA",
-									// parameter.name());
-									// paramAttributes.addAttribute("", AS_ATTR,
-									// AS_ATTR, "CDATA",
-									// getAs(parameter.type()));
-									// handler.startElement("",
-									// FUNCTION_PARAM_ELT, FUNCTION_PARAM_ELT,
-									// paramAttributes);
-									// handler.endElement("",
-									// FUNCTION_PARAM_ELT, FUNCTION_PARAM_ELT);
-									// }
-
-									handler.endElement("",
-											XMLModule2JsonHandler.FUNCTION_ELT,
-											XMLModule2JsonHandler.FUNCTION_ELT);
-
+									Function.parse(afterFunction, handler);
 								}
-
 							}
 						}
 						// Process the data, here we just print it out
