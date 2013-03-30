@@ -44,6 +44,15 @@ public class DeclaredFunctions2JS {
 			e.printStackTrace();
 		}
 
+		functions2js = new DeclaredFunctions2JS();
+		functions2js.addFile(new File("src/main/resources/modules/xhive"));
+
+		try {
+			functions2js.generate(new File("target/modules/xhive"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void generate(File outBaseDir) throws Exception {
