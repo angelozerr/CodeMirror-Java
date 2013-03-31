@@ -62,11 +62,10 @@ public class CodeMirrorModuleHandler implements ModuleHandler {
 		}
 		if (parameters != null) {
 			int nbParams = 0;
+			JsonUtils.addString(",\"params\":", false, writer);
+			JsonUtils.beginJsonArray(writer);
 			for (Parameter parameter : parameters) {
-				if (nbParams == 0) {
-					JsonUtils.addString(",\"params\":", false, writer);
-					JsonUtils.beginJsonArray(writer);
-				} else {
+				if (nbParams > 0) {
 					JsonUtils.addFieldsSeparator(writer);
 				}
 				JsonUtils.beginJsonObject(writer);
@@ -79,7 +78,9 @@ public class CodeMirrorModuleHandler implements ModuleHandler {
 				JsonUtils.endJsonObject(writer);
 				nbParams++;
 			}
+			JsonUtils.endJsonArray(writer);
 		}
+		JsonUtils.endJsonObject(writer);
 		this.nbFunctions++;
 
 	}
