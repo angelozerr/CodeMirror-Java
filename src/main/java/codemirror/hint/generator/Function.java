@@ -3,26 +3,19 @@ package codemirror.hint.generator;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
+
+import codemirror.hint.generator.ModuleHandler.Parameter;
+import codemirror.hint.generator.xmlmodules.XMLModule2JsonHandler;
 
 public class Function {
 
-	private static class Parameter {
-		public String name;
-		public String type;
-	}
-
-	public static void parse(String function, XMLModule2JsonHandler handler) throws SAXException {
+	public static void parse(String function, ModuleHandler handler)
+			throws Exception {
 		String returnType = null;
 		boolean searchReturnType = false;
 		int index = function.indexOf("(");
 		String funcName = function.substring(0, index);
-
-		AttributesImpl functionAttributes = new AttributesImpl();
-		functionAttributes.addAttribute("",
-				XMLModule2JsonHandler.FUNCTION_NAME_ATTR,
-				XMLModule2JsonHandler.FUNCTION_NAME_ATTR, "CDATA", funcName.trim());
 
 		String afterFunctionName = function.substring(funcName.length(),
 				function.length());
@@ -51,7 +44,7 @@ public class Function {
 					buffer.append(c);
 				} else {
 					if (parameter != null) {
-						parameter.type = buffer.toString();
+						parameter.setType(buffer.toString());
 						buffer.setLength(0);
 						parameter = null;
 					}
@@ -62,10 +55,10 @@ public class Function {
 					if (parameter == null) {
 						if (buffer.length() > 0) {
 							parameter = new Parameter();
-							parameter.name = buffer.toString();
-							if (parameter.name.startsWith("$")) {
-								parameter.name = parameter.name.substring(1,
-										parameter.name.length());
+							parameter.setName(buffer.toString());
+							if (parameter.getName().startsWith("$")) {
+								parameter.setName(parameter.getName().substring(1,
+										parameter.getName().length()));
 							}
 							parameters.add(parameter);
 							buffer.setLength(0);
@@ -89,7 +82,7 @@ public class Function {
 				break;
 			case ',':
 				if (parameter != null) {
-					parameter.type = buffer.toString();
+					parameter.setType(buffer.toString());
 					buffer.setLength(0);
 					parameter = null;
 				}
@@ -99,34 +92,7 @@ public class Function {
 			}
 		}
 
-		// String parameters =
-		// afterFunction.substring(funcName.length()+1,
-		// index);
+		handler.addFunction(funcName, parameters, returnType);
 
-		// String functionAs =
-		// getAs(method.returnType());
-		if (returnType != null) {
-			functionAttributes.addAttribute("", XMLModule2JsonHandler.AS_ATTR,
-					XMLModule2JsonHandler.AS_ATTR, "CDATA", returnType);
-		}
-		handler.startElement("", XMLModule2JsonHandler.FUNCTION_ELT,
-				XMLModule2JsonHandler.FUNCTION_ELT, functionAttributes);
-
-		// Loop for Parameters
-		for (Parameter p : parameters) {
-			AttributesImpl paramAttributes = new AttributesImpl();
-			paramAttributes.addAttribute("",
-					XMLModule2JsonHandler.FUNCTION_PARAM_NAME_ATTR,
-					XMLModule2JsonHandler.FUNCTION_PARAM_NAME_ATTR, "CDATA",
-					p.name);
-			paramAttributes.addAttribute("", XMLModule2JsonHandler.AS_ATTR,
-					XMLModule2JsonHandler.AS_ATTR, "CDATA", p.type);
-			handler.startElement("", XMLModule2JsonHandler.FUNCTION_PARAM_ELT,
-					XMLModule2JsonHandler.FUNCTION_PARAM_ELT, paramAttributes);
-			handler.endElement("", XMLModule2JsonHandler.FUNCTION_PARAM_ELT,
-					XMLModule2JsonHandler.FUNCTION_PARAM_ELT);
-		}
-		handler.endElement("", XMLModule2JsonHandler.FUNCTION_ELT,
-				XMLModule2JsonHandler.FUNCTION_ELT);
 	}
 }

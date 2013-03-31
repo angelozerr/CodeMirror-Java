@@ -4,26 +4,26 @@ import java.util.Map;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
 
 import codemirror.hint.generator.Function;
-import codemirror.hint.generator.XMLModule2JsonHandler;
+import codemirror.hint.generator.ModuleHandler;
+import codemirror.hint.generator.xmlfunctions.XMLFunctions2JS.Namespace;
 
 public class XMLFunctionsHandler extends DefaultHandler {
 
 	private static final String FUNCTION_ELT = "function";
 	private static final String SIGNATURE_ELT = "signature";
 
-	private final XMLModule2JsonHandler handler;
-	private final Map<String, String> namespaces;
+	private final ModuleHandler handler;
+	private final Map<String, Namespace> namespaces;
 
 	private boolean signatureParsing;
 	private String currentPrefix;
 	private StringBuilder currentFunction;
 
-	public XMLFunctionsHandler(XMLModule2JsonHandler handler,
-			Map<String, String> namespaces) {
+	public XMLFunctionsHandler(ModuleHandler handler,
+			Map<String, Namespace> namespaces) {
 		this.handler = handler;
 		this.namespaces = namespaces;
 		this.currentPrefix = null;
@@ -54,22 +54,40 @@ public class XMLFunctionsHandler extends DefaultHandler {
 			int prefixIndex = function.indexOf(":");
 			if (prefixIndex != -1) {
 				String prefix = function.substring(0, prefixIndex);
-				function = function.substring(prefixIndex + 1, function.length());
-				String namespace = namespaces.get(prefix);
+				function = function.substring(prefixIndex + 1,
+						function.length());
+				Namespace namespace = namespaces.get(prefix);
+				String namespaceURI = "";
+				boolean prefixRequired = true;
 				if (namespace == null) {
-					namespace = prefix;
-				}
-				if (currentPrefix == null) {
-					// start module					
-					startModule(prefix, namespace);
+					namespaceURI = prefix;
 				} else {
-					if (!currentPrefix.equals(prefix)) {
-						endModule();
-						startModule(prefix, namespace);
+					namespaceURI = namespace.namespaceURI;
+					prefixRequired = namespace.prefixRequired;
+				}
+				try {
+					if (currentPrefix == null) {
+						// start module
+
+						handler.startModule(prefix, prefixRequired,
+								namespaceURI, null);
+
+					} else {
+						if (!currentPrefix.equals(prefix)) {
+							handler.endModule();
+							handler.startModule(prefix, prefixRequired,
+									namespaceURI, null);
+						}
 					}
+				} catch (Exception e) {
+					throw new SAXException(e);
 				}
 				currentPrefix = prefix;
-				Function.parse(function, handler);
+				try {
+					Function.parse(function, handler);
+				} catch (Exception e) {
+					throw new SAXException(e);
+				}
 			}
 			this.currentFunction = null;
 			this.signatureParsing = false;
@@ -77,32 +95,14 @@ public class XMLFunctionsHandler extends DefaultHandler {
 		super.endElement(uri, localName, name);
 	}
 
-	private void startModule(String modulePrefix, String moduleNamespace)
-			throws SAXException {
-		AttributesImpl moduleAttributes = new AttributesImpl();
-		moduleAttributes
-				.addAttribute("", XMLModule2JsonHandler.MODULE_PREFIX_ATTR,
-						XMLModule2JsonHandler.MODULE_PREFIX_ATTR, "CDATA",
-						modulePrefix);
-
-		moduleAttributes.addAttribute("",
-				XMLModule2JsonHandler.MODULE_NAMESPACE_URI_ATTR,
-				XMLModule2JsonHandler.MODULE_NAMESPACE_URI_ATTR, "CDATA",
-				moduleNamespace);
-		handler.startElement("", XMLModule2JsonHandler.MODULE_ELT,
-				XMLModule2JsonHandler.MODULE_ELT, moduleAttributes);
-
-	}
-
-	private void endModule() throws SAXException {
-		handler.endElement("", XMLModule2JsonHandler.MODULE_ELT,
-				XMLModule2JsonHandler.MODULE_ELT);
-	}
-
 	@Override
 	public void endDocument() throws SAXException {
 		if (currentPrefix != null) {
-			endModule();
+			try {
+				handler.endModule();
+			} catch (Exception e) {
+				throw new SAXException(e);
+			}
 		}
 	}
 

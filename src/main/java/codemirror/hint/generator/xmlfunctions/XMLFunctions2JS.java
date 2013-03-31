@@ -15,31 +15,52 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import codemirror.hint.generator.XMLModule2JsonHandler;
+import codemirror.hint.generator.CodeMirrorModuleHandler;
+import codemirror.hint.generator.ModuleHandler;
 
 public class XMLFunctions2JS {
 
 	private final List<File> files;
-	private final Map<String, String> namespaces;
+
+	public class Namespace {
+
+		public final String namespaceURI;
+		public final boolean prefixRequired;
+
+		public Namespace(String namespaceURI, boolean prefixRequired) {
+			this.namespaceURI = namespaceURI;
+			this.prefixRequired = prefixRequired;
+		}
+
+	}
+
+	private final Map<String, Namespace> namespaces;
 
 	public XMLFunctions2JS() {
 		this.files = new ArrayList<File>();
-		this.namespaces = new HashMap<String, String>();
+		this.namespaces = new HashMap<String, Namespace>();
 	}
 
 	public void addFile(File file) {
 		this.files.add(file);
 	}
-	
-	public void addNamespace(String prefix, String namespace) {
-		this.namespaces.put(prefix, namespace);
+
+	public void addNamespace(String prefix, String namespaceURI) {
+		addNamespace(prefix, namespaceURI, true);
+	}
+
+	public void addNamespace(String prefix, String namespaceURI,
+			boolean prefixRequired) {
+		this.namespaces
+				.put(prefix, new Namespace(namespaceURI, prefixRequired));
 	}
 
 	public static void main(String[] args) {
-		
+
 		XMLFunctions2JS functions2js = new XMLFunctions2JS();
 		functions2js.addNamespace("xs", "http://www.w3.org/2001/XMLSchema");
-		functions2js.addNamespace("fn", "http://www.w3.org/2005/xpath-functions");
+		functions2js.addNamespace("fn",
+				"http://www.w3.org/2005/xpath-functions", false);
 		functions2js.addFile(new File(
 				"src/main/resources/modules/systemfunctions"));
 
@@ -76,10 +97,10 @@ public class XMLFunctions2JS {
 			File outFile = new File(outBaseDir, path);
 			outFile.getParentFile().mkdirs();
 			Writer writer = null;
-			XMLModule2JsonHandler handler = null;
+			ModuleHandler handler = null;
 			try {
 				writer = new FileWriter(outFile);
-				handler = new XMLModule2JsonHandler(writer, null);
+				handler = new CodeMirrorModuleHandler(writer);
 				generate(file, handler);
 			} finally {
 				if (writer != null) {
@@ -90,7 +111,7 @@ public class XMLFunctions2JS {
 		}
 	}
 
-	private void generate(File file, XMLModule2JsonHandler handler)
+	private void generate(File file, ModuleHandler handler)
 			throws SAXException, IOException {
 		FileReader reader = null;
 		try {

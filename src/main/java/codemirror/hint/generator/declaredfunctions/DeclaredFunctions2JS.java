@@ -11,10 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
+import codemirror.hint.generator.CodeMirrorModuleHandler;
 import codemirror.hint.generator.Function;
-import codemirror.hint.generator.XMLModule2JsonHandler;
+import codemirror.hint.generator.ModuleHandler;
+import codemirror.hint.generator.xmlmodules.XMLModule2JsonHandler;
 
 public class DeclaredFunctions2JS {
 
@@ -58,7 +59,7 @@ public class DeclaredFunctions2JS {
 	}
 
 	public void generate(File file, File inBaseDir, File outBaseDir)
-			throws SAXException, IOException {
+			throws Exception {
 		if (file.isDirectory()) {
 			File[] dirs = file.listFiles();
 			for (int i = 0; i < dirs.length; i++) {
@@ -68,7 +69,7 @@ public class DeclaredFunctions2JS {
 		} else {
 			System.out.println("==============>" + file.getPath());
 			Writer writer = null;
-			XMLModule2JsonHandler handler = null;
+			ModuleHandler handler = null;
 
 			BufferedReader bufferedReader = null;
 			try {
@@ -112,26 +113,9 @@ public class DeclaredFunctions2JS {
 									outFile.getParentFile().mkdirs();
 									writer = new FileWriter(outFile);
 
-									handler = new XMLModule2JsonHandler(writer,
-											null);
-									AttributesImpl moduleAttributes = new AttributesImpl();
-									moduleAttributes
-											.addAttribute(
-													"",
-													XMLModule2JsonHandler.MODULE_PREFIX_ATTR,
-													XMLModule2JsonHandler.MODULE_PREFIX_ATTR,
-													"CDATA", modulePrefix);
-
-									moduleAttributes
-											.addAttribute(
-													"",
-													XMLModule2JsonHandler.MODULE_NAMESPACE_URI_ATTR,
-													XMLModule2JsonHandler.MODULE_NAMESPACE_URI_ATTR,
-													"CDATA", moduleNamespace);
-									handler.startElement("",
-											XMLModule2JsonHandler.MODULE_ELT,
-											XMLModule2JsonHandler.MODULE_ELT,
-											moduleAttributes);
+									handler = new CodeMirrorModuleHandler(writer);
+									handler.startModule(modulePrefix,
+											moduleNamespace, null);
 								}
 							}
 						} else {
@@ -171,8 +155,7 @@ public class DeclaredFunctions2JS {
 			} finally {
 				if (writer != null) {
 
-					handler.endElement("", XMLModule2JsonHandler.MODULE_ELT,
-							XMLModule2JsonHandler.MODULE_ELT);
+					handler.endModule();
 
 					writer.flush();
 					writer.close();
