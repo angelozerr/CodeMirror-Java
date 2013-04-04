@@ -2,69 +2,35 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>CodeMirror: XQuery Hint,Lint Demo</title>
+    <title>CodeMirror: XQuery Autocomplete Demo</title>
     
     <!-- CodeMirror -->
-    <link rel="stylesheet" href="codemirror/lib/codemirror.css">
-    <script src="codemirror/lib/codemirror.js"></script>
-    <link rel="stylesheet" href="codemirror/doc/docs.css">
-    <script src="codemirror/addon/selection/active-line.js"></script>
-    <script src="codemirror/addon/edit/closebrackets.js"></script>
-    <script src="codemirror/addon/edit/matchbrackets.js"></script>
-    <link rel="stylesheet" href="codemirror/theme/xq-light.css">
-	<script src="codemirror/addon/lint/lint.js"></script>
-    <link rel="stylesheet" href="codemirror/addon/lint/lint.css">
-	<script src="codemirror/addon/hint/show-hint.js"></script>
-	<script src="codemirror/addon/fold/brace-fold.js"></script>  
-	<script src="codemirror/addon/fold/xml-fold.js"></script>
-	<script src="codemirror/addon/runmode/runmode.js"></script>
-	<script src="codemirror/mode/xml/xml.js"></script>
-	        
-    <!-- CodeMirror-XQuery -->        
-    <script src="codemirror-xquery/addon/hint/xquery/xquery-hint.js"></script>
-    <link rel="stylesheet" href="codemirror-xquery/addon/hint/show-hint-eclipse.css">    
-    <link rel="stylesheet" href="codemirror-xquery/addon/hint/xquery/xquery-hint.css">   
-    <script src="codemirror-xquery/addon/hint/xquery/system-functions.xml.js"></script>
-    
-    <link rel="stylesheet" href="codemirror-xquery/addon/hint/templates-hint.css">
-	<script src="codemirror-xquery/addon/hint/templates-hint.js"></script>
-	<script src="codemirror-xquery/addon/hint/xquery/xquery-templates.js"></script>
-        
-    <script src="codemirror-xquery/mode/xquery/xquery.js"></script>
-	<script src="codemirror-xquery/addon/lint/remoting-lint.js"></script>
-	<script src="codemirror-xquery/addon/lint/status-lint.js"></script>
-    <link rel="stylesheet" href="codemirror-xquery/addon/lint/status-lint.css">
-    <script src="codemirror-xquery/addon/fold/comment-fold.js"></script>            
-	<script src="codemirror-xquery/addon/fold/autofolding.js"></script>
-	<script src="codemirror-xquery/addon/fold/autofolding-xquery.js"></script>
-	<link rel="stylesheet" href="codemirror-xquery/addon/fold/autofolding.css">
+    <link rel="stylesheet" href="../../codemirror/lib/codemirror.css">
+    <script src="../../codemirror/lib/codemirror.js"></script>
+    <script src="../../codemirror/addon/hint/show-hint.js"></script>
+    <link rel="stylesheet" href="../../codemirror/doc/docs.css">
+    <link rel="stylesheet" href="../../codemirror/theme/xq-light.css">
 
-	<script src="codemirror-xquery/addon/execute/remoting-execute.js"></script>
+    <!-- CodeMirror-XQuery -->        
+    <script src="../addon/hint/xquery/xquery-hint.js"></script>
+    <link rel="stylesheet" href="../addon/hint/show-hint-eclipse.css">    
+    <link rel="stylesheet" href="../addon/hint/xquery/xquery-hint.css">   
+    <script src="../mode/xquery/xquery.js"></script>
 	
-	<script src="codemirror-xquery/addon/selection/fullscreen.js"></script>
-	<link rel="stylesheet" href="codemirror-xquery/addon/selection/fullscreen.css">
-		    
-    <!-- jQuery-->
-    <script src="jquery/jquery-1.9.0.js"></script>
-    
+	<script src="../addon/hint/templates-hint.js"></script>
+	<link rel="stylesheet" href="../addon/hint/templates-hint.css">
+	<script src="../addon/hint/xquery/xquery-templates.js"></script>
+
     <style type="text/css">
       .CodeMirror {
         height:500px;
-      }     
-      .error {
-        color:red;
-        border:solid red 1px;
-      } 
+      }
     </style>    
   </head>
   <body>
-    <h1>CodeMirror: XQuery Demo</h1>
+    <h1>CodeMirror: XQuery Autocomplete demo</h1>
 
-	See <a href="https://github.com/angelozerr/CodeMirror-XQuery">CodeMirror-XQuery Project on GitHub</a>
-    <form>
-    <span>Status:</span><span id="hintStatus" ></span>
-    <span><input type="button" value="Run" onclick="javascript:run();" /></span>
-    <textarea id="code" name="code">
+    <form><textarea id="code" name="code">
 xquery version "1.0-ml";
 (:
  Copyright 2010 MarkLogic Corporation 
@@ -281,9 +247,10 @@ declare function oauth2:loginAsMarkLogicUser($username)
 };</textarea>
 </form>
 
-<pre id="result" class="cm-s-default"></pre>
-
-<p>Press <strong>ctrl-space, ':', '$'</strong> to activate autocompletion for variables (let, variable, for, module) and functions (<strong>oauth2:, map:,xdmp:</strong>).</p>
+<p>Press <strong>ctrl-space, ':', '$'</strong> to activate autocompletion for variables (let, variable, for, module) and functions (<strong>oauth2:, map:,xdmp:</strong>). See
+the code (<a href="../addon/hint/show-hint.js">here</a>
+and <a href="../addon/hint/xquery/xquery-hint.js">here</a>) to figure out
+how it works.</p>
 
     <script>
       
@@ -300,58 +267,15 @@ declare function oauth2:loginAsMarkLogicUser($username)
       CodeMirror.commands.autocomplete = function(cm) {
         CodeMirror.showHint(cm, CodeMirror.xqueryHint);
       }
-
-	  function displayHintStatus(annotations, annotationsGroupedByLine, cm) {
-	    CodeMirror.statusLint(annotations, 'hintStatus', cm);
-	  }
-	        
       var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-        mode: "xquery",
-		lineNumbers: true,
-        theme: "xq-light",
-        styleActiveLine: true,
         lineNumbers: true,
-        lineWrapping: true,
-        autoCloseBrackets: true,
-        matchBrackets: true,
-        trackContext : true,        
+        theme: "xq-light",
         extraKeys: {
             "':'": passAndHint,
             "'$'": passAndHint,
-            "Ctrl-Space": "autocomplete",
-			"F11": function(cm) {
-			  setFullScreen(cm, !isFullScreen(cm));
-			},
-			"Esc": function(cm) {
-			  if (isFullScreen(cm)) setFullScreen(cm, false);
-			}            
-        },
-        gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-folding-markers"],
-        lintWith : {
-			"getAnnotations" : CodeMirror.remotingValidator,
-			"onUpdateLinting" : displayHintStatus,
-			"async" : true,
-			"url" : "jaxrs/lint/annotations"
-		},
-		foldingWith: CodeMirror.xqueryFolding  
+            "Ctrl-Space": "autocomplete"
+        }
       });
-      
-	  function run() {
-	  	CodeMirror.remotingExecutor(editor, 
-	  	{"url" : "jaxrs/execute/run", 
-	  	 "onResult" : function(data, isError) {
-	  	   var result = document.getElementById('result');
-	  	   if (isError) {
-	  	   	result.className="cm-s-default error";
-	  	   } else {
-	  	     result.className="cm-s-default";
-	  	   }
-	  	   CodeMirror.runMode(data, "application/xml",
-                     result);
-	  	 }
-	  	});
-	  }
-	        
     </script>
   </body>
 </html>
