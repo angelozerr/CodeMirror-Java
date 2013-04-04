@@ -6,19 +6,27 @@
     <link rel="stylesheet" href="codemirror/lib/codemirror.css">
     <script src="codemirror/lib/codemirror.js"></script>
     <script src="codemirror/addon/hint/show-hint.js"></script>
-    <link rel="stylesheet" href="codemirror/addon/hint/show-hint.css">
+	<link rel="stylesheet" href="codemirror/theme/eclipse.css">
+	<script src="codemirror/addon/selection/active-line.js"></script>
 
     <script src="codemirror/mode/javascript/javascript.js"></script>
     <link rel="stylesheet" href="codemirror/doc/docs.css">
 
+	<link rel="stylesheet" href="codemirror-xquery/addon/hint/show-hint-eclipse.css">
     <script src="codemirror-xquery/addon/hint/javascript/javascript-hint.js"></script>    
     <script src="codemirror-xquery/addon/hint/templates-hint.js"></script>
 	<link rel="stylesheet" href="codemirror-xquery/addon/hint/templates-hint.css">
 	<script src="codemirror-xquery/addon/hint/javascript/javascript-templates.js"></script>
 	
+	<style type="text/css">
+		.cm-s-eclipse .CodeMirror-activeline-background {background: #e8f2ff !important;}
+		.CodeMirror {line-height: 1.3 !important;}
+		//.CodeMirror-selected { background: #0A246A !important; color: white !important; }
+		//.CodeMirror-focused .CodeMirror-selected { background: #0A246A !important; color: white !important;}
+	</style>
   </head>
   <body>
-    <h1>CodeMirror: Autocomplete demo</h1>
+    <h1>CodeMirror: Autocomplete Templates Demo</h1>
 
     <form><textarea id="code" name="code">    
 for
@@ -35,6 +43,8 @@ ifelse
       }
       var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
         lineNumbers: true,
+        styleActiveLine: true,
+        theme: "eclipse",
         extraKeys: {"Ctrl-Space": "autocomplete"}
       });
     </script>
