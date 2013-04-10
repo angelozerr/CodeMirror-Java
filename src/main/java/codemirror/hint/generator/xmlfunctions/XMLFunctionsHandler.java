@@ -14,13 +14,16 @@ public class XMLFunctionsHandler extends DefaultHandler {
 
 	private static final String FUNCTION_ELT = "function";
 	private static final String SIGNATURE_ELT = "signature";
+	private static final String SUMMARY_ELT = "summary";
 
 	private final ModuleHandler handler;
 	private final Map<String, Namespace> namespaces;
 
 	private boolean signatureParsing;
+	private boolean summaryParsing;
 	private String currentPrefix;
 	private StringBuilder currentFunction;
+	private final StringBuilder doc;
 
 	public XMLFunctionsHandler(ModuleHandler handler,
 			Map<String, Namespace> namespaces) {
@@ -29,6 +32,7 @@ public class XMLFunctionsHandler extends DefaultHandler {
 		this.currentPrefix = null;
 		this.signatureParsing = false;
 		this.currentFunction = null;
+		this.doc = new StringBuilder();
 	}
 
 	@Override
@@ -39,6 +43,13 @@ public class XMLFunctionsHandler extends DefaultHandler {
 		} else if ((SIGNATURE_ELT).equals(name)) {
 			this.currentFunction = new StringBuilder();
 			this.signatureParsing = true;
+		} else if ((SUMMARY_ELT).equals(name)) {
+			this.summaryParsing = true;
+			this.doc.setLength(0);
+		} else if (summaryParsing) {
+			doc.append('<');
+			doc.append(name);
+			doc.append('>');
 		}
 		super.startElement(uri, localName, name, attributes);
 	}
@@ -47,7 +58,13 @@ public class XMLFunctionsHandler extends DefaultHandler {
 	public void endElement(String uri, String localName, String name)
 			throws SAXException {
 		if ((FUNCTION_ELT).equals(name)) {
-
+			try {
+				Function.parse(currentFunction.toString(), doc.toString(),
+						handler);
+			} catch (Exception e) {
+				throw new SAXException(e);
+			}
+			this.currentFunction = null;
 		} else if ((SIGNATURE_ELT).equals(name)) {
 
 			String function = currentFunction.toString();
@@ -83,14 +100,15 @@ public class XMLFunctionsHandler extends DefaultHandler {
 					throw new SAXException(e);
 				}
 				currentPrefix = prefix;
-				try {
-					Function.parse(function, handler);
-				} catch (Exception e) {
-					throw new SAXException(e);
-				}
 			}
-			this.currentFunction = null;
+			currentFunction = new StringBuilder(function);
 			this.signatureParsing = false;
+		} else if ((SUMMARY_ELT).equals(name)) {
+			this.summaryParsing = false;
+		} else if (summaryParsing) {
+			doc.append("</");
+			doc.append(name);
+			doc.append('>');
 		}
 		super.endElement(uri, localName, name);
 	}
@@ -109,8 +127,15 @@ public class XMLFunctionsHandler extends DefaultHandler {
 	@Override
 	public void characters(char[] ch, int start, int length)
 			throws SAXException {
+		String s = null;
+		if (signatureParsing || summaryParsing) {
+			s = String.valueOf(ch, start, length);
+			s = s.replaceAll("\n", "").trim();
+		}
 		if (signatureParsing) {
-			currentFunction.append(String.valueOf(ch, start, length));
+			currentFunction.append(s);
+		} else if (summaryParsing) {
+			doc.append(s);
 		}
 		super.characters(ch, start, length);
 	}

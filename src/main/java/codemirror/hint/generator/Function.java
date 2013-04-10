@@ -10,7 +10,7 @@ import codemirror.hint.generator.xmlmodules.XMLModule2JsonHandler;
 
 public class Function {
 
-	public static void parse(String function, ModuleHandler handler)
+	public static void parse(String function, String doc, ModuleHandler handler)
 			throws Exception {
 		String returnType = null;
 		boolean searchReturnType = false;
@@ -92,7 +92,7 @@ public class Function {
 			}
 		}
 
-		handler.addFunction(funcName, parameters, returnType);
+		handler.addFunction(funcName, parameters, returnType, doc);
 
 	}
 }

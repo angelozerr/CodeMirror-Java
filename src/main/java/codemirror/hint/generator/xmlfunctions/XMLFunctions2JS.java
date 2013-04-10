@@ -63,9 +63,19 @@ public class XMLFunctions2JS {
 				"http://www.w3.org/2005/xpath-functions", false);
 		functions2js.addFile(new File(
 				"src/main/resources/modules/systemfunctions"));
-
 		try {
 			functions2js.generate(new File("target/modules/systemfunctions"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		functions2js = new XMLFunctions2JS();
+		functions2js.addNamespace("xhive",
+				"http://www.x-hive.com/2001/08/xquery-function");
+		functions2js.addFile(new File("src/main/resources/modules/xhive"));
+		try {
+			functions2js.generate(new File("target/modules/xhive"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -102,6 +112,8 @@ public class XMLFunctions2JS {
 				writer = new FileWriter(outFile);
 				handler = new CodeMirrorModuleHandler(writer);
 				generate(file, handler);
+			} catch (Exception e) {
+				e.printStackTrace();
 			} finally {
 				if (writer != null) {
 					writer.flush();

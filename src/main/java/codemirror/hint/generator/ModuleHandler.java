@@ -44,5 +44,5 @@ public interface ModuleHandler {
 	void endModule() throws Exception;
 
 	void addFunction(String funcName, List<Parameter> parameters,
-			String returnType) throws Exception;
+			String returnType, String doc) throws Exception;
 }
