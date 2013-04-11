@@ -47,6 +47,7 @@ public class XMLFunctionsHandler extends DefaultHandler {
 			this.summaryParsing = true;
 			this.doc.setLength(0);
 		} else if (summaryParsing) {
+			doc.append(" ");
 			doc.append('<');
 			doc.append(name);
 			doc.append('>');
@@ -109,6 +110,7 @@ public class XMLFunctionsHandler extends DefaultHandler {
 			doc.append("</");
 			doc.append(name);
 			doc.append('>');
+			doc.append(" ");
 		}
 		super.endElement(uri, localName, name);
 	}
@@ -131,6 +133,7 @@ public class XMLFunctionsHandler extends DefaultHandler {
 		if (signatureParsing || summaryParsing) {
 			s = String.valueOf(ch, start, length);
 			s = s.replaceAll("\n", "").trim();
+			s = s.replaceAll("\t", " ").trim();
 		}
 		if (signatureParsing) {
 			currentFunction.append(s);

@@ -1,59 +1,265 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- // file:///C:/Program%20Files/xDB-10.2.4/docs/manual/index.html#doc:topic/xquery_xml_updates.html -->
-declare function xhive:create-library($uri as xs:string) as empty-sequence() external;	
-declare function xhive:insert-into($where as node(), $what as item()*) as empty-sequence() external;
-declare function xhive:insert-into-as-first($where as node(), $what as item()*) as empty-sequence() external;
-
-declare function xhive:insert-into-as-last($where as node(), $what as item()*) as empty-sequence() external;
-declare function xhive:insert-before($where as node(), $what as item()*) as empty-sequence() external;
-declare function xhive:insert-after($where as node(), $what as item()*) as empty-sequence() external;	
-declare function xhive:insert-document($uri as xs:string, $document as document-node()) as empty-sequence() external;
-declare function xhive:remove($nodes as node()*) as empty-sequence() external;
-declare function xhive:remove-library($uri as xs:string) as empty-sequence() external;
-declare function xhive:rename-to($what as node(), $newName as xs:QName) as empty-sequence() external;
-declare function xhive:replace-value-of($where as node(), $newContents as item()*) as empty-sequence() external;
-declare function xhive:move($target as node(), $sources as node()*) as empty-sequence() external;
-declare function xhive:move($target as node(), $anchor as node()?, $sources as node()*) as empty-sequence() external;
-
 <functions>
+	<!-- // file:///C:/Program%20Files/xDB-10.2.4/docs/manual/index.html#doc:topic/xquery_xml_updates.html -->
 	<function>
 		<signature>xhive:create-library($uri as xs:string) as empty-sequence()</signature>
 		<summary>
+		Creates a library with the specified <code>$uri</code> location. Any parent libraries that are missing in the path are created.
 		</summary>	</function>
-		<function>
+	<function>
 		<signature>xhive:insert-into($where as node(), $what as item()*) as empty-sequence()</signature>
 		<summary>
+			Applying any of the insert functions inserts the <code>$what</code> value
+			relative to the <code>$where</code> value. The <code>insert-into</code> and <code>insert-into-as-last</code>
+			elements behave identically. Atomic values within the <code>$what</code> value are
+			converted into text nodes similar to element constructors. If the
+			<code>$where</code> value is not a node or the empty sequence, an error is raised.
 		</summary>
 	</function>
-		<function>
+	<function>
 		<signature>xhive:insert-into-as-first($where as node(), $what as item()*) as empty-sequence()</signature>
 		<summary>
+			Applying any of the insert functions inserts the <code>$what</code> value
+			relative to the <code>$where</code> value. The <code>insert-into</code> and <code>insert-into-as-last</code>
+			elements behave identically. Atomic values within the <code>$what</code> value are
+			converted into text nodes similar to element constructors. If the
+			<code>$where</code> value is not a node or the empty sequence, an error is raised.
 		</summary>
 	</function>
-		<function>
+	<function>
 		<signature>xhive:insert-into-as-last($where as node(), $what as item()*) as empty-sequence()</signature>
 		<summary>
+			Applying any of the insert functions inserts the <code>$what</code> value
+			relative to the <code>$where</code> value. The <code>insert-into</code> and <code>insert-into-as-last</code>
+			elements behave identically. Atomic values within the <code>$what</code> value are
+			converted into text nodes similar to element constructors. If the
+			<code>$where</code> value is not a node or the empty sequence, an error is raised.
 		</summary>
 	</function>
-		<function>
-		<signature>xhive:create-library($uri as xs:string) as empty-sequence()</signature>
+	<function>
+		<signature>xhive:insert-before($where as node(), $what as item()*) as empty-sequence()</signature>
 		<summary>
+			Applying any of the insert functions inserts the <code>$what</code> value
+			relative to the <code>$where</code> value. The <code>insert-into</code> and <code>insert-into-as-last</code>
+			elements behave identically. Atomic values within the <code>$what</code> value are
+			converted into text nodes similar to element constructors. If the
+			<code>$where</code> value is not a node or the empty sequence, an error is raised.
 		</summary>
 	</function>
-		<function>
-		<signature>xhive:create-library($uri as xs:string) as empty-sequence()</signature>
+	<function>
+		<signature>xhive:insert-after($where as node(), $what as item()*) as empty-sequence()</signature>
 		<summary>
+			Applying any of the insert functions inserts the <code>$what</code> value
+			relative to the <code>$where</code> value. The <code>insert-into</code> and <code>insert-into-as-last</code>
+			elements behave identically. Atomic values within the <code>$what</code> value are
+			converted into text nodes similar to element constructors. If the
+			<code>$where</code> value is not a node or the empty sequence, an error is raised.
 		</summary>
 	</function>
-		<function>
-		<signature>xhive:create-library($uri as xs:string) as empty-sequence()</signature>
+	<function>
+		<signature>xhive:insert-document($uri as xs:string, $document as document-node()) as empty-sequence()</signature>
 		<summary>
+		Inserts the <code>$document</code> value at the $uri location. If there is already a document at the <code>$uri</code> location an error is raised. 
 		</summary>
 	</function>
-		<function>
-		<signature>xhive:create-library($uri as xs:string) as empty-sequence()</signature>
+	<function>
+		<signature>xhive:remove($nodes as node()*) as empty-sequence()</signature>
 		<summary>
+		Removes the <code>$nodes</code> values from their parents. The <code>xhive:delete()</code> function is an alias to this function.
 		</summary>
 	</function>
+	<function>
+		<signature>xhive:remove-library($uri as xs:string) as empty-sequence()</signature>
+		<summary>
+		Removes the library at <code>$uri</code> location, including all children. 
+		</summary>
+	</function>	
+	<function>
+		<signature>xhive:rename-to($what as node(), $newName as xs:QName) as empty-sequence()</signature>
+		<summary>
+			Renames the specified node to the <code>$newName</code> value. This
+			function raises an error if the target is not an attribute node,
+			element node, a processing instruction, or a document node. Processing
+			instructions can only be renamed to unqualified local names, such as
+			QNames without a namespace URI. To construct a QName, use the standard
+			<code>fn:QName($uri as xs:string?, $qname as xs:string) as xs:QName</code>
+			function.
+		</summary>
+	</function>
+	<function>
+		<signature>xhive:replace-value-of($where as node(), $newContents as item()*) as empty-sequence()</signature>
+		<summary>
+			Removes all children from the $where value and replaces them with
+			<code>$newContents</code> values. This function allows to directly move DOM nodes
+			into a new target.
+			<p>
+				This function is similar to the
+				<code>xhive:delete($where/node()),xhive:insert-into($where, $newContents),
+				xhive:move($target as node(), $sources as node()*) as
+				empty-sequence(), and xhive:move($target as node(), $anchor as
+				node()?, $sources as node()*) as empty-sequence()</code> functions. By
+				default, <code>$sources</code> values are inserted last into <code>$target</code> values. If a
+				<code>$anchor</code> value is specified and not empty, the <code>$sources</code> values are
+				inserted before the $anchor values.
+			</p>
+		</summary>
+	</function>	
+	<function>
+		<signature>xhive:move($target as node(), $sources as node()*) as empty-sequence()</signature>
+		<summary>
+			By default, <code>$sources</code> values are inserted last into <code>$target</code> values. If
+			a <code>$anchor</code> value is specified and not empty, the <code>$sources</code> values are
+			inserted before the $anchor values.
+			<p>
+				Using this function has a potential performance advantage over deleting
+				and inserting nodes. If the <code>$where</code> and <code>$newContents</code> values belong to
+				the same document, nodes do not have to be copied or imported.
+			</p>
+			<p>
+				Nodes covered by indexes with UNIQUE_KEYS flags can be moved. If any of
+				the <code>$node</code> child nodes use a unique index, moving elements with a
+				<code>delete node $node and an insert node $node into $target</code> statement
+				generates a DUPLICATE_KEY exception. Using <code>xhive:move($target, $node)</code>
+				instead works.
+			</p>
+		</summary>
+	</function>
+	<function>
+		<signature>xhive:move($target as node(), $anchor as node()?, $sources as node()*) as empty-sequence()</signature>
+		<summary>
+			By default, <code>$sources</code> values are inserted last into <code>$target</code> values. If
+			a <code>$anchor</code> value is specified and not empty, the <code>$sources</code> values are
+			inserted before the $anchor values.
+			<p>
+				Using this function has a potential performance advantage over deleting
+				and inserting nodes. If the <code>$where</code> and <code>$newContents</code> values belong to
+				the same document, nodes do not have to be copied or imported.
+			</p>
+			<p>
+				Nodes covered by indexes with UNIQUE_KEYS flags can be moved. If any of
+				the <code>$node</code> child nodes use a unique index, moving elements with a
+				<code>delete node $node and an insert node $node into $target</code> statement
+				generates a DUPLICATE_KEY exception. Using <code>xhive:move($target, $node)</code>
+				instead works.
+			</p>
+		</summary>
+	</function>		
+	<!-- // file:///C:/Program%20Files/xDB-10.2.4/docs/manual/index.html#doc:topic/xquery_extension_functions.html -->
+	<function>
+		<signature>xhive:fts($context as node(), $query as xs:string, $options as xs:string) as xs:boolean</signature>
+		<summary>
+		This function executes a query using the full text index. The <code>$options</code> argument is an optional string literal containing a semicolon-separated list of options. 
+		</summary>
+	</function>
+	<function>
+		<signature>xhive:evaluate($query as xs:string) as item()*</signature>
+		<summary>
+		
+		</summary>
+	</function>	
+	<function>
+		<signature>xhive:parse($doc-text as xs:string, $schema-hint as xs:string) as document-node()</signature>
+		<summary>
+		
+		</summary>
+	</function>	
+	<function>
+		<signature> xhive:parse($doc-text as xs:string) as document-node()</signature>
+		<summary>
+		
+		</summary>
+	</function>	
+	<function>
+		<signature>xhive:input() as document-node()</signature>
+		<summary>
+		
+		</summary>
+	</function>	
+	<function>
+		<signature>xhive:java($class as xs:string, ...) as item()*</signature>
+		<summary>
+		
+		</summary>
+	</function>	
+	<function>
+		<signature>xhive:get-nodes-by-key($library as xs:string, $indexname as xs:string, $key as xs:string) as node()*</signature>
+		<summary>
+		
+		</summary>
+	</function>	
+	<function>
+		<signature>xhive:document-name($document as document-node())</signature>
+		<summary>
+		
+		</summary>
+	</function>	
+	<function>
+		<signature>xhive:document-id($document as document-node()) as xs:long</signature>
+		<summary>
+		
+		</summary>
+	</function>	
+	<function>
+		<signature>xhive:force($items as item()*) as item()*</signature>
+		<summary>
+		
+		</summary>
+	</function>	
+	<function>
+		<signature>xhive:version($document as document-node()*, $version as xs:string) as document-node()*</signature>
+		<summary>
+		
+		</summary>
+	</function>	
+	<function>
+		<signature>xhive:version-property($document as document-node()*, $version as xs:string, $property as xs:string) as xs:string*</signature>
+		<summary>
+		
+		</summary>
+	</function>	
+	<function>
+		<signature>xhive:version-ids($document as node()*[, $branchversion as xs:string]) as xs:string*</signature>
+		<summary>
+		
+		</summary>
+	</function>	
+	<function>
+		<signature>xhive:metadata($document as document-node(), $key as xs:string) as xdt:untypedAtomic*</signature>
+		<summary>
+		
+		</summary>
+	</function>	
+	<function>
+		<signature>xhive:highlight($arg as item()*, ...) as item()*</signature>
+		<summary>
+		
+		</summary>
+	</function>	
+	<function>
+		<signature>xhive:created-at($uri as xs:string) as xs:dateTime</signature>
+		<summary>
+		
+		</summary>
+	</function>	
+	<function>
+		<signature>xhive:last-modified($uri as xs:string) as xs:dateTime</signature>
+		<summary>
+		
+		</summary>
+	</function>	
+	<function>
+		<signature>xhive:child-documents($uri as xs:string) as document-node()*</signature>
+		<summary>
+		
+		</summary>
+	</function>	
+	<function>
+		<signature>xhive:child-uris($uri as xs:string) as xs:string*</signature>
+		<summary>
+		
+		</summary>
+	</function>	
+
+		
 </functions>
