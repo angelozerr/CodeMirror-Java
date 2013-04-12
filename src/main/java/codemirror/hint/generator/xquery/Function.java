@@ -1,12 +1,12 @@
-package codemirror.hint.generator;
+package codemirror.hint.generator.xquery;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.xml.sax.helpers.AttributesImpl;
 
-import codemirror.hint.generator.ModuleHandler.Parameter;
-import codemirror.hint.generator.xmlmodules.XMLModule2JsonHandler;
+import codemirror.hint.generator.xquery.ModuleHandler.Parameter;
+import codemirror.hint.generator.xquery.xmlmodules.XMLModule2JsonHandler;
 
 public class Function {
 

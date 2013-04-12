@@ -1,4 +1,4 @@
-package codemirror.hint.generator.xmlmodules;
+package codemirror.hint.generator.xquery.xmlmodules;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import codemirror.hint.generator.ModuleHandler;
-import codemirror.hint.generator.ModuleHandler.Parameter;
+import codemirror.hint.generator.xquery.ModuleHandler;
+import codemirror.hint.generator.xquery.ModuleHandler.Parameter;
 
 public class XMLModule2JsonHandler extends DefaultHandler {
 
@@ -78,7 +78,7 @@ public class XMLModule2JsonHandler extends DefaultHandler {
 					if (this.parameters.size() == 0) {
 						doc.append("<ul>");
 					}
-					doc.append("<li><b>");
+					doc.append("<li><b>$");
 					doc.append(currentParamName);
 					doc.append("</b>: ");
 				}

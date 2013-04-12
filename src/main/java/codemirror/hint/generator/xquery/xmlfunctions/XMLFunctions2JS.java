@@ -1,13 +1,11 @@
-package codemirror.hint.generator.xmlfunctions;
+package codemirror.hint.generator.xquery.xmlfunctions;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.xml.sax.InputSource;
@@ -15,12 +13,11 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import codemirror.hint.generator.CodeMirrorModuleHandler;
-import codemirror.hint.generator.ModuleHandler;
+import codemirror.hint.generator.Model2JS;
+import codemirror.hint.generator.xquery.CodeMirrorModuleHandler;
+import codemirror.hint.generator.xquery.ModuleHandler;
 
-public class XMLFunctions2JS {
-
-	private final List<File> files;
+public class XMLFunctions2JS extends Model2JS {
 
 	public class Namespace {
 
@@ -37,12 +34,8 @@ public class XMLFunctions2JS {
 	private final Map<String, Namespace> namespaces;
 
 	public XMLFunctions2JS() {
-		this.files = new ArrayList<File>();
+		super();
 		this.namespaces = new HashMap<String, Namespace>();
-	}
-
-	public void addFile(File file) {
-		this.files.add(file);
 	}
 
 	public void addNamespace(String prefix, String namespaceURI) {
@@ -83,7 +76,7 @@ public class XMLFunctions2JS {
 	}
 
 	public void generate(File outBaseDir) throws Exception {
-		for (File file : files) {
+		for (File file : getFiles()) {
 			generate(file, file, outBaseDir);
 		}
 	}

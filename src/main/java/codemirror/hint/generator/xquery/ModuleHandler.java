@@ -1,4 +1,4 @@
-package codemirror.hint.generator;
+package codemirror.hint.generator.xquery;
 
 import java.util.List;
 

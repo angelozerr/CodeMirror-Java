@@ -1,4 +1,4 @@
-package codemirror.hint.generator.xmlfunctions;
+package codemirror.hint.generator.xquery.xmlfunctions;
 
 import java.util.Map;
 
@@ -6,9 +6,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import codemirror.hint.generator.Function;
-import codemirror.hint.generator.ModuleHandler;
-import codemirror.hint.generator.xmlfunctions.XMLFunctions2JS.Namespace;
+import codemirror.hint.generator.xquery.Function;
+import codemirror.hint.generator.xquery.ModuleHandler;
+import codemirror.hint.generator.xquery.xmlfunctions.XMLFunctions2JS.Namespace;
 
 public class XMLFunctionsHandler extends DefaultHandler {
 
