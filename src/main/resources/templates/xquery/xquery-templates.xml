@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+    Copyright (c) 2008, 2009 28msec Inc. and others.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+   
+    Contributors:
+        Gabriel Petrovay (28msec) - initial API and implementation
+ -->
+
+<templates>
+
+<!-- ********************************************************************* -->
+<!-- ***************************** XQuery 1.0 **************************** -->
+<!-- ********************************************************************* -->
+
+<template
+	name="xquery"
+	description="%Templates.VersionDecl"
+	id="xquery.VersionDeclX"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">xquery version "${ver_string}" encoding "${enc_string}";
+</template>
+<template
+	name="version"
+	description="%Templates.VersionDecl"
+	id="xquery.VersionDeclV"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">xquery version "${string_literal}" encoding "${string_literal}";
+</template>
+
+<template
+	name="module"
+	description="%Templates.ModuleDecl"
+	id="xquery.ModuleDeclM"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">module namespace ${namespace_name} = "${URI_literal}";
+</template>
+<template
+	name="namespace"
+	description="%Templates.ModuleDecl"
+	id="xquery.ModuleDeclN"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">module namespace ${namespace_name} = "${URI_literal}";
+</template>
+
+<!--<template
+	name="service"
+	description="%Templates.ServiceDecl"
+	id="scripting.ServiceDeclS"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">service namespace ${namespace_name} = "${URI_literal}" port:${9999};
+</template>
+<template
+	name="namespace"
+	description="%Templates.ServiceDecl"
+	id="scripting.ServiceDeclN"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">service namespace ${namespace_name} = "${URI_literal}" port:${9999};
+</template>-->
+
+<template
+	name="import"
+	description="%Templates.ModuleImport"
+	id="xquery.ModuleImportI"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">import module namespace ${namespace_name} = "${URI_literal}";
+</template>
+<template
+	name="module"
+	description="%Templates.ModuleImport"
+	id="xquery.ModuleImportM"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">import module namespace ${namespace_name} = "${URI_literal}";
+</template>
+
+<template
+	name="import"
+	description="%Templates.ModuleImportAt"
+	id="xquery.ModuleImportAtI"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">import module namespace ${namespace_name} = ${URI_and_location_hints};
+</template>
+<template
+	name="module"
+	description="%Templates.ModuleImportAt"
+	id="xquery.ModuleImportAtM"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">import module namespace ${namespace_name} = ${URI_and_location_hints};
+</template>
+
+<template
+    name="import"
+    description="%Templates.SchemaImport"
+    id="xquery.SchemaImportI"
+    context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+    enabled="true"
+    autoinsert="false">import schema ${schema_prefix} "${schema_URI}";
+</template>
+<template
+    name="schema"
+    description="%Templates.SchemaImport"
+    id="xquery.SchemaImportS"
+    context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+    enabled="true"
+    autoinsert="false">import schema ${schema_prefix} "${schema_URI}";
+</template>
+
+<template
+    name="import"
+    description="%Templates.SchemaImportAt"
+    id="xquery.SchemaImportAtI"
+    context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+    enabled="true"
+    autoinsert="false">import schema ${schema_prefix} ${schema_URI_and_hints};
+</template>
+<template
+    name="schema"
+    description="%Templates.SchemaImportAt"
+    id="xquery.SchemaImportAtS"
+    context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+    enabled="true"
+    autoinsert="false">import schema ${schema_prefix} ${schema_URI_and_hints};
+</template>
+
+<!--<template
+	name="import"
+	description="%Templates.ServiceImport"
+	id="scripting.ServiceImportI"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">import service namespace ${namespace_name} = "${URI_literal}" from "${URI_literal}";
+</template>
+<template
+	name="service"
+	description="%Templates.ServiceImport"
+	id="scripting.ServiceImportS"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">import service namespace ${namespace_name} = "${URI_literal}" from "${URI_literal}";
+</template>-->
+	
+<template
+	name="namespace"
+	description="%Templates.NamespaceDecl"
+	id="xquery.NamespaceDecl"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare namespace ${namespace_name} = "${URI_literal}";
+</template>
+
+<template
+	name="boundry-space"
+	description="%Templates.BoundarySpaceDecl"
+	id="xquery.BoundarySpaceDecl"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare boundary-space ${boundary_space_type};</template>
+
+<template
+	name="namespace"
+	description="%Templates.DefaultNamespaceDecl"
+	id="xquery.DefaultNamespaceDecl"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare default ${default_namespace_type} namespace "${URI_literal}";
+</template>
+
+<template
+	name="option"
+	description="%Templates.OptionDecl"
+	id="xquery.OptionDecl"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare option ${option_name} "${string_literal}";
+</template>
+
+<template
+	name="ordering"
+	description="%Templates.OrderingModeDecl"
+	id="xquery.OrderingModeDecl"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare ordering ${ordering_mode};</template>
+
+<template
+	name="empty"
+	description="%Templates.EmptyOrderDecl"
+	id="xquery.EmptyOrderDeclE"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare default order empty ${empty_order_mode};</template>
+
+<template
+	name="order"
+	description="%Templates.EmptyOrderDecl"
+	id="xquery.EmptyOrderDeclO"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare default order empty ${empty_order_mode};</template>
+
+<template
+	name="copy-namespaces"
+	description="%Templates.CopyNamespacesDecl"
+	id="xquery.CopyNamespacesDecl"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare copy-namespaces ${preserve_mode}, ${inherit_mode};</template>
+
+<template
+	name="collation"
+	description="%Templates.DefaultCollationDecl"
+	id="xquery.DefaultCollationDecl"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare default collation "${URI_literal}";
+</template>
+
+<template
+	name="base-uri"
+	description="%Templates.BaseURIDecl"
+	id="xquery.BaseURIDecl"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare base-uri "${URI_literal}";
+</template>
+
+<template
+	name="construction"
+	description="%Templates.ConstructionDecl"
+	id="xquery.ConstructionDecl"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare construction ${construction_mode};</template>
+
+<template
+	name="variable"
+	description="%Templates.VarDecl"
+	id="xquery.VarDecl"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare variable $$${variable} := ${value};
+</template>
+<template
+	name="variable"
+	description="%Templates.VarDeclTyped"
+	id="xquery.VarDeclTyped"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare variable $$${variable} as ${type} := ${value};
+</template>
+<template
+	name="variable"
+	description="%Templates.VarDeclExternal"
+	id="xquery.VarDeclExteral"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare variable $$${variable} external;
+</template>
+<template
+	name="variable"
+	description="%Templates.VarDeclTypedExternal"
+	id="xquery.VarDeclTypedExternal"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare variable $$${variable} as ${type} external;
+</template>
+
+<template
+	name="function"
+	description="%Templates.FunctionDecl"
+	id="xquery.FunctionDecl"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare function ${function_namespace}:${function_name} (${function_params}) as ${sequence_type} {
+	${insert_an_expression_here}${cursor}
+};
+
+</template>
+<template
+	name="function"
+	description="%Templates.FunctionDeclExternal"
+	id="xquery.FunctionDeclExternal"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare function ${function_namespace}:${function_name} (${function_params}) as ${sequence_type} external;</template>
+
+<template
+	name="for"
+	description="%Templates.ForClause"
+	id="xquery.ForClause"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">for $$${iteration_variable} in expression${cursor}
+</template>
+<template
+	name="for"
+	description="%Templates.ForClausePositional"
+	id="xquery.ForClausePositional"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">for $$${iteration_variable} at $$${positional_variable} in expression${cursor}
+</template>
+
+<template
+	name="let"
+	description="%Templates.LetClause"
+	id="xquery.LetClause"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">let $$${variable} := expression
+</template>
+
+<template
+	name="order by"
+	description="%Templates.OrderByClause"
+	id="xquery.OrderByClause"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">${strict_order} expression ${order_modifier}
+</template>
+
+<template
+	name="flwor"
+	description="%Templates.FLWORExpr"
+	id="xquery.FLWORExpr"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">for $$${iteration_variable} in expression
+let $$${variable} := expression
+return $$${iteration_variable}${cursor}
+</template>
+<template
+	name="flwor"
+	description="%Templates.FLWORExprExt"
+	id="xquery.FLWORExprExt"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">for $$${iteration_variable} in expression
+let $$${variable} := expression
+where expression
+${strict_order} expression ${order_modifier}
+return
+	$$${iteration_variable}${cursor}
+</template>
+
+<template
+	name="some"
+	description="%Templates.QuantifiedExprSome"
+	id="xquery.QuantifiedExprSome"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">${quantifier} $$${variable} in expression satisfies test_expression${cursor}
+</template>
+<template
+	name="every"
+	description="%Templates.QuantifiedExprEvery"
+	id="xquery.QuantifiedExprEvery"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">${quantifier} $$${variable} in expression satisfies test_expression${cursor}
+</template>
+
+<template
+	name="typeswitch"
+	description="%Templates.TypeswitchExpr"
+	id="xquery.TypeswitchExpr"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">typeswitch (expression)
+	case $$${variable} as ${sequence_type} return expression${cursor}
+	default $$${variable} return expression
+</template>
+
+<template
+	name="case"
+	description="%Templates.CaseClause"
+	id="xquery.CaseClause"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">case $$${variable} as ${sequence_type} return expression</template>
+
+<template
+	name="if"
+	description="%Templates.IfExpr"
+	id="xquery.IfExpr"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">if (expression)
+	then expression${cursor}
+	else expression
+</template>
+
+<template
+	name="instance"
+	description="%Templates.InstanceofExpr"
+	id="xquery.InstanceofExpr"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">${expression} instance of ${sequence_type}</template>
+
+<template
+	name="treat"
+	description="%Templates.TreatExpr"
+	id="xquery.TreatExpr"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">${expression} treat as ${sequence_type}</template>
+
+<template
+	name="castable"
+	description="%Templates.CastableExpr"
+	id="xquery.CastableExpr"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">${expression} castable as ${type}</template>
+
+<template
+	name="cast"
+	description="%Templates.CastExpr"
+	id="xquery.CastExpr"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">${expression} cast as ${atomic_type}</template>
+
+<template
+	name="validate"
+	description="%Templates.ValidateExpr"
+	id="xquery.ValidateExpr"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">validate ${validation_mode} { expression }</template>
+
+<template
+	name="as"
+	description="%Templates.AsExpr"
+	id="xquery.AsExpr"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">as ${sequence_type}</template>
+
+
+<!-- ********************************************************************* -->
+<!-- ************************* XQuery Update 1.0 ************************* -->
+<!-- ********************************************************************* -->
+
+<template
+	name="updating"
+	description="%Templates.UpdatingFunctionDecl"
+	id="update.FunctionDeclU"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryUpdateTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare updating function ${function_namespace}:${function_name} (${function_params}) {
+	${insert_an_expression_here}${cursor}
+};
+
+</template>
+
+<template
+	name="function"
+	description="%Templates.UpdatingFunctionDecl"
+	id="update.FunctionDeclF"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryUpdateTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare updating function ${function_namespace}:${function_name} (${function_params}) {
+	${insert_an_expression_here}${cursor}
+};
+
+</template>
+
+<template
+	name="insert"
+	description="%Templates.InsertExpr"
+	id="update.InsertExpr"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryUpdateTemplateContentType"
+	enabled="true"
+	autoinsert="false">insert ${node_nodes} ${source_expression} ${target_choice} ${target_expression}</template>
+
+<template
+	name="delete"
+	description="%Templates.DeleteExpr"
+	id="update.DeleteExpr"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryUpdateTemplateContentType"
+	enabled="true"
+	autoinsert="false">delete ${node_nodes} ${target_expression}</template>
+
+<template
+	name="replace"
+	description="%Templates.ReplaceExpr"
+	id="update.ReplaceExpr"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryUpdateTemplateContentType"
+	enabled="true"
+	autoinsert="false">replace ${value_of}node ${target_expression} with ${expression}</template>
+
+<template
+	name="rename"
+	description="%Templates.RenameExpr"
+	id="update.RenameExpr"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryUpdateTemplateContentType"
+	enabled="true"
+	autoinsert="false">rename node ${target_expression} as ${new_expression}</template>
+
+<template
+	name="copy"
+	description="%Templates.TransformExpr"
+	id="update.TransformExprC"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryUpdateTemplateContentType"
+	enabled="true"
+	autoinsert="false">copy $$${variable} := ${expression} modify ${expression} return ${expression}</template>
+
+<template
+	name="transform"
+	description="%Templates.TransformExpr"
+	id="update.TransformExprT"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryUpdateTemplateContentType"
+	enabled="true"
+	autoinsert="false">copy $$${variable} := ${expression} modify ${expression} return ${expression}</template>
+
+
+<!-- ********************************************************************* -->
+<!-- ************************ XQuery Full Text 1.0 *********************** -->
+<!-- ********************************************************************* -->
+
+<template
+	name="ft-option"
+	description="%Templates.FTOptionDecl"
+	id="fulltext.FTOptionDecl"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare ft-option ${simple_ftoption};</template>
+
+
+<!-- ********************************************************************* -->
+<!-- ************************ XQuery Scripting 1.0 *********************** -->
+<!-- ********************************************************************* -->
+
+<template
+	name="sequential"
+	description="%Templates.SequentialFunctionDecl"
+	id="scripting.FunctionDeclS"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryScriptingTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare sequential function ${function_namespace}:${function_name} (${function_params}) as ${sequence_type} {
+	${insert_an_expression_here}${cursor};
+};
+
+</template>
+
+<template
+	name="function"
+	description="%Templates.SequentialFunctionDecl"
+	id="scripting.FunctionDeclF"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryScriptingTemplateContentType"
+	enabled="true"
+	autoinsert="false">declare sequential function ${function_namespace}:${function_name} (${function_params}) as ${sequence_type} {
+	${insert_an_expression_here}${cursor};
+};
+
+</template>
+
+<template
+	name="set"
+	description="%Templates.AssignExpr"
+	id="scripting.AssignExpr"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryScriptingTemplateContentType"
+	enabled="true"
+	autoinsert="false">set $$${variable} := ${expression}</template>
+
+<template
+	name="while"
+	description="%Templates.WhileExpr"
+	id="scripting.WhileExpr"
+	context="org.eclipse.wst.xquery.ui.templates.XQueryScriptingTemplateContentType"
+	enabled="true"
+	autoinsert="false">while (${loop_expression}) {
+	${expression}
+}</template>
+
+</templates>
