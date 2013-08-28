@@ -1,6 +1,8 @@
 (function() {
   "use strict";
 
+  var HOVER_CLASS = " CodeMirror-hover";
+  
   function showTooltip(e, content) {
     var tt = document.createElement("div");
     tt.className = "CodeMirror-hover-tooltip";
@@ -31,14 +33,12 @@
   }
 
   function showTooltipFor(e, content, node, state) {
-    if (state.node != node) return;
     var tooltip = showTooltip(e, content);
     function hide() {
       CodeMirror.off(node, "mouseout", hide);
       CodeMirror.off(node, "click", hide);
-      node.className = node.className.substring(0, node.className.length
-          - ' CodeMirror-hover'.length);
-      if (tooltip) { hideTooltip(tooltip); if (state.node === node) state.node = node; tooltip = null; }
+      node.className = node.className.replace(HOVER_CLASS, "");
+      if (tooltip) { hideTooltip(tooltip); tooltip = null; }
     }
     var poll = setInterval(function() {
       if (tooltip) for (var n = node;; n = n.parentNode) {
@@ -69,10 +69,9 @@
     var node = e.target || e.srcElement;
     if (node) {
       var state = cm.state.textHover;
-      state.node = node;
-      var content = state.options.getTextHover(cm, node, e);
+      var content = state.options.getTextHover(cm, e);
       if (content) {
-        node.className += ' CodeMirror-hover'
+        node.className += HOVER_CLASS;
         //clearTimeout(state.timeout);
         //state.timeout = setTimeout(function() {showTooltipFor(e, content, node, state);}, 300);
         showTooltipFor(e, content, node, state);
@@ -92,40 +91,22 @@
     }
   }
 
-  function isTokenType(type, typeToSearch) {
-    if (!type)
-      return false;
-    return type.indexOf(typeToSearch) != -1;
-  }
-  CodeMirror.isTokenType = isTokenType;
-
-  function findTokenAt(cm, pos, types) {
-    var type = cm.getTokenTypeAt(pos);
-    if (type) {
-      if (!types)
-        return cm.getTokenAt(pos);
-      for ( var j = 0; j < types.length; j++) {
-        if (isTokenType(type, types[j])) {
-          return cm.getTokenAt(pos);
-        }
-      }
-    }
-  }
-
   // When the mouseover fires, the cursor might not actually be over
   // the character itself yet. These pairs of x,y offsets are used to
   // probe a few nearby points when no suitable marked range is found.
   var nearby = [ 0, 0, 0, 5, 0, -5, 5, 0, -5, 0 ];
 
-  CodeMirror.defineExtension("findTokenAt", function(e, types) {
-    var cm = this;
+  CodeMirror.defineExtension("findTokenAt", function(e) {
+    var cm = this, node = e.target || e.srcElement, text = node.innerText || node.textContent;
     for ( var i = 0; i < nearby.length; i += 2) {
       var pos = cm.coordsChar({
         left : e.clientX + nearby[i],
         top : e.clientY + nearby[i + 1]
       });
-      var token = findTokenAt(cm, pos, types);
-      if (token) return token;
+      var token = cm.getTokenAt(pos);
+      if (token && token.string === text) {
+        return token;
+      }
     }
   });
 

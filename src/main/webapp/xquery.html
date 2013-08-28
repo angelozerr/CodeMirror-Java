@@ -45,7 +45,10 @@
 	<link rel="stylesheet" href="codemirror-extension/addon/fold/folding-eclipse.css">	  
    
 	<script src="codemirror-extension/addon/execute/remoting-execute.js"></script>
-        	        
+
+ 	<script src="codemirror-extension/addon/hover/text-hover.js"></script>
+  	<link rel="stylesheet" href="codemirror-extension/addon/hover/text-hover.css">
+         	        
     <!-- CodeMirror-XQuery -->        
     <script src="codemirror-xquery/addon/xquery-commons.js"></script>
     <script src="codemirror-xquery/addon/hint/xquery-hint.js"></script>
@@ -53,6 +56,7 @@
     <script src="codemirror-xquery/addon/hint/system-functions.xml.js"></script>    
 	<script src="codemirror-xquery/addon/hint/xquery-templates.js"></script>                    
     <script src="codemirror-xquery/mode/xquery/xquery.js"></script>
+	<script src="codemirror-xquery/addon/hover/xquery-hover.js"></script>
     	    
     <!-- jQuery-->
     <script src="jquery/jquery-1.9.0.js"></script>
@@ -345,7 +349,8 @@ declare function oauth2:loginAsMarkLogicUser($username)
 		},
 	    foldGutter: {
 	        rangeFinder : new CodeMirror.fold.combine(CodeMirror.fold.brace, CodeMirror.fold.comment, CodeMirror.fold.xml)
-	    }
+	    },
+	    textHover: true
       });
       
 	  function run() {
