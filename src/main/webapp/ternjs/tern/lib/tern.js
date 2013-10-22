@@ -71,7 +71,7 @@
 
   function updateText(file, text, srv) {
     file.text = text;
-    file.ast = infer.parse(text, srv.passes);
+    file.ast = infer.parse(text, srv.passes, {directSourceFile: file});
     file.lineOffsets = null;
   }
 
@@ -91,7 +91,10 @@
     this.defs = options.defs.slice(0);
     for (var plugin in options.plugins) if (options.plugins.hasOwnProperty(plugin) && plugin in plugins) {
       var init = plugins[plugin](this, options.plugins[plugin]);
-      if (init && init.defs) this.defs.push(init.defs);
+      if (init && init.defs) {
+        if (init.loadFirst) this.defs.unshift(init.defs);
+        else this.defs.push(init.defs);
+      }
       if (init && init.passes) for (var type in init.passes) if (init.passes.hasOwnProperty(type))
         (this.passes[type] || (this.passes[type] = [])).push(init.passes[type]);
     }
@@ -104,16 +107,19 @@
     },
     delFile: function(name) {
       for (var i = 0, f; i < this.files.length; ++i) if ((f = this.files[i]).name == name) {
-        clearFile(this, f);
+        clearFile(this, f, null, true);
         this.files.splice(i--, 1);
         return;
       }
     },
     reset: function() {
+      this.signal("reset");
       this.cx = new infer.Context(this.defs, this);
       this.uses = 0;
-      for (var i = 0; i < this.files.length; ++i) file.scope = null;
-      this.signal("reset");
+      for (var i = 0; i < this.files.length; ++i) {
+        var file = this.files[i];
+        file.scope = null;
+      }
     },
 
     request: function(doc, c) {
@@ -188,7 +194,7 @@
         try {
           result = queryType.run(srv, query, file);
         } catch (e) {
-          if (srv.options.debug && e.name != "TernError") console.log(e.stack);
+          if (srv.options.debug && e.name != "TernError") console.error(e.stack);
           return c(e);
         }
         c(null, result);
@@ -230,9 +236,9 @@
     }
   }
 
-  function clearFile(srv, file, newText) {
+  function clearFile(srv, file, newText, purge) {
     if (file.scope) {
-      infer.withContext(srv.cx, function() {
+      if (purge) infer.withContext(srv.cx, function() {
         // FIXME try to batch purges into a single pass (each call needs
         // to traverse the whole graph)
         infer.purgeTypes(file.name);
@@ -365,7 +371,7 @@
       var scopeEnd = infer.scopeAt(realFile.ast, pos + text.length, realFile.scope);
       var scope = file.scope = scopeDepth(scopeStart) < scopeDepth(scopeEnd) ? scopeEnd : scopeStart;
       infer.markVariablesDefinedBy(scopeStart, file.name, pos, pos + file.text.length);
-      file.ast = infer.parse(file.text, srv.passes);
+      file.ast = infer.parse(file.text, srv.passes, {directSourceFile: file});
       infer.analyze(file.ast, file.name, scope, srv.passes);
       infer.purgeMarkedVariables(scopeStart);
 
@@ -633,11 +639,6 @@
     return clean(result);
   }
 
-  function isInAST(node, ast) {
-    var found = walk.findNodeAt(ast, node.start, node.end, node.type, infer.fullVisitor);
-    return found && found.node == node;
-  }
-
   function storeTypeDocs(type, out) {
     if (!out.url) out.url = type.url;
     if (!out.doc) out.doc = type.doc;
@@ -689,8 +690,7 @@
     }
 
     if (span && span.node) { // refers to a loaded file
-      var spanFile = findFile(srv.files, span.origin);
-      if (file.type == "part" && file.name == span.origin && span.node && isInAST(span.node, file.ast)) spanFile = file;
+      var spanFile = span.node.sourceFile || findFile(srv.files, span.origin);
       var start = outputPos(query, spanFile, span.node.start), end = outputPos(query, spanFile, span.node.end);
       result.start = start; result.end = end;
       result.file = span.origin;
@@ -810,5 +810,5 @@
     return {files: srv.files.map(function(f){return f.name;})};
   }
 
-  exports.version = "0.3.1";
+  exports.version = "0.5.1";
 });
