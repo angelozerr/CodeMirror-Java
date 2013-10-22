@@ -54,7 +54,7 @@
   // ABSTRACT VALUES
 
   var WG_DEFAULT = 100, WG_NEW_INSTANCE = 90, WG_MADEUP_PROTO = 10, WG_MULTI_MEMBER = 5,
-      WG_CATCH_ERROR = 5, WG_GLOBAL_THIS = 2, WG_SPECULATIVE_THIS = 2;
+      WG_CATCH_ERROR = 5, WG_GLOBAL_THIS = 90, WG_SPECULATIVE_THIS = 2;
 
   var AVal = exports.AVal = function() {
     this.types = [];
@@ -84,7 +84,7 @@
       if (target == ANull || (target instanceof Type)) return;
       if (weight && weight < WG_DEFAULT) target = new Muffle(target, weight);
       (this.forward || (this.forward = [])).push(target);
-      var types = this.types, weight = this.maxWeight;
+      var types = this.types;
       if (types.length) withWorklist(function(add) {
         for (var i = 0; i < types.length; ++i) add(types[i], target, weight);
       });
@@ -193,8 +193,6 @@
         if (!tp.retval.isEmpty()) ++score;
       } else if (objs) {
         score = tp.name ? 100 : 2;
-      } else if (prims) {
-        score = 1;
       }
       if (score >= maxScore) { maxScore = score; maxTp = tp; }
     }
@@ -354,7 +352,7 @@
     typeHint: function() { return this.other; }
   });
 
-  var IfObj = constraint("target", {
+  var IfObj = exports.IfObj = constraint("target", {
     addType: function(t, weight) {
       if (t instanceof Obj) this.target.addType(t, weight);
     },
@@ -381,6 +379,7 @@
 
   var Type = exports.Type = function() {};
   Type.prototype = extend(ANull, {
+    constructor: Type,
     propagate: function(c, w) { c.addType(this, w); },
     hasType: function(other) { return other == this; },
     isEmpty: function() { return false; },
@@ -390,6 +389,7 @@
 
   var Prim = exports.Prim = function(proto, name) { this.name = name; this.proto = proto; };
   Prim.prototype = extend(Type.prototype, {
+    constructor: Prim,
     toString: function() { return this.name; },
     getProp: function(prop) {return this.proto.hasProp(prop) || ANull;},
     gatherProperties: function(f, depth) {
@@ -409,6 +409,7 @@
     this.origin = cx.curOrigin;
   };
   Obj.prototype = extend(Type.prototype, {
+    constructor: Obj,
     toString: function(maxDepth) {
       if (!maxDepth && this.name) return this.name;
       var props = [], etc = false;
@@ -455,11 +456,7 @@
       var found = this.hasProp(prop, true) || (this.maybeProps && this.maybeProps[prop]);
       if (found) return found;
       if (prop == "__proto__" || prop == "✖") return ANull;
-      if (!this.maybeProps) {
-        if (this.proto) this.proto.forAllProps(this);
-        this.maybeProps = Object.create(null);
-      }
-      return this.maybeProps[prop] = new AVal;
+      return this.ensureMaybeProps()[prop] = new AVal;
     },
     broadcastProp: function(prop, val, local) {
       if (local) {
@@ -481,6 +478,18 @@
         this.proto.getProp(prop).propagate(maybe);
       }
       this.broadcastProp(prop, val, false);
+    },
+    ensureMaybeProps: function() {
+      if (!this.maybeProps) {
+        if (this.proto) this.proto.forAllProps(this);
+        this.maybeProps = Object.create(null);
+      }
+      return this.maybeProps;
+    },
+    removeProp: function(prop) {
+      var av = this.props[prop];
+      delete this.props[prop];
+      this.ensureMaybeProps()[prop] = av;
     },
     forAllProps: function(c) {
       if (!this.onNewProp) {
@@ -523,6 +532,7 @@
     this.retval = retval;
   };
   Fn.prototype = extend(Obj.prototype, {
+    constructor: Fn,
     toString: function(maxDepth) {
       if (maxDepth) maxDepth--;
       var str = "fn(";
@@ -539,7 +549,7 @@
     },
     getProp: function(prop) {
       if (prop == "prototype") {
-        var known = this.hasProp(prop);
+        var known = this.hasProp(prop, false);
         if (!known) {
           known = this.defProp(prop);
           var proto = new Obj(true, this.name && this.name + ".prototype");
@@ -552,7 +562,7 @@
     },
     defProp: function(prop, originNode) {
       if (prop == "prototype") {
-        var found = this.hasProp(prop);
+        var found = this.hasProp(prop, false);
         if (found) return found;
         found = Obj.prototype.defProp.call(this, prop, originNode);
         found.origin = this.origin;
@@ -570,6 +580,7 @@
     if (contentType) contentType.propagate(content);
   };
   Arr.prototype = extend(Obj.prototype, {
+    constructor: Arr,
     toString: function(maxDepth) {
       return "[" + toString(this.getProp("<i>").getType(), maxDepth, this) + "]";
     }
@@ -592,7 +603,6 @@
     this.parent = parent;
     this.props = Object.create(null);
     this.protos = Object.create(null);
-    this.prim = Object.create(null);
     this.origins = [];
     this.curOrigin = "ecma5";
     this.paths = Object.create(null);
@@ -663,6 +673,7 @@
     this.prev = prev;
   };
   Scope.prototype = extend(Obj.prototype, {
+    constructor: Scope,
     defVar: function(name, originNode) {
       for (var s = this; ; s = s.proto) {
         var found = s.props[name];
@@ -847,6 +858,7 @@
     case "number": return cx.num;
     case "string": return cx.str;
     case "object":
+    case "function":
       if (!val) return ANull;
       return getInstance(cx.protos.RegExp);
     }
@@ -1018,19 +1030,16 @@
         callee.propagate(new IsCallee(cx.topScope, args, node.arguments, out));
       }
     }),
-    MemberExpression: ret(function(node, scope, c) {
+    MemberExpression: fill(function(node, scope, c, out) {
       var name = propName(node, scope);
       var obj = infer(node.object, scope, c);
       var prop = obj.getProp(name);
       if (name == "<i>") {
         var propType = infer(node.property, scope, c);
-        if (!propType.hasType(cx.num)) {
-          var target = new AVal;
-          prop.propagate(target, WG_MULTI_MEMBER);
-          return target;
-        }
+        if (!propType.hasType(cx.num))
+          return prop.propagate(out, WG_MULTI_MEMBER);
       }
-      return prop;
+      prop.propagate(out);
     }),
     Identifier: ret(function(node, scope) {
       if (node.name == "arguments" && scope.fnType && !(node.name in scope.props))
@@ -1106,10 +1115,10 @@
     if (arr) for (var i = 0; i < arr.length; ++i) arr[i].apply(null, args);
   }
 
-  var parse = exports.parse = function(text, passes) {
+  var parse = exports.parse = function(text, passes, options) {
     var ast;
-    try { ast = acorn.parse(text); }
-    catch(e) { ast = acorn_loose.parse_dammit(text); }
+    try { ast = acorn.parse(text, options); }
+    catch(e) { ast = acorn_loose.parse_dammit(text, options); }
     runPasses(passes, "postParse", ast, text);
     return ast;
   };
@@ -1140,9 +1149,10 @@
     for (var prop in cx.props) {
       var list = cx.props[prop];
       for (var i = 0; i < list.length; ++i) {
-        var obj = list[i];
-        if (test(obj, obj.originNode)) list.splice(i--, 1);
+        var obj = list[i], av = obj.props[prop];
+        if (!av || test(av, av.originNode)) list.splice(i--, 1);
       }
+      if (!list.length) delete cx.props[prop];
     }
   };
 
@@ -1182,7 +1192,12 @@
   Obj.prototype.purge = function(test) {
     if (this.purgeGen == cx.purgeGen) return true;
     this.purgeGen = cx.purgeGen;
-    for (var p in this.props) this.props[p].purge(test);
+    for (var p in this.props) {
+      var av = this.props[p];
+      if (test(av, av.originNode))
+        this.removeProp(p);
+      av.purge(test);
+    }
   };
   Fn.prototype.purge = function(test) {
     if (Obj.prototype.purge.call(this, test)) return;

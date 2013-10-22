@@ -1,10 +1,10 @@
 // Type description parser
-
+//
 // Type description JSON files (such as ecma5.json and browser.json)
 // are used to
 //
 // A) describe types that come from native code
-
+//
 // B) to cheaply load the types for big libraries, or libraries that
 //    can't be inferred well
 
@@ -60,10 +60,11 @@
           break;
         }
       }
-      var retType, computeRet, fn;
+      var retType, computeRet, computeRetStart, fn;
       if (this.eat(" -> ")) {
         if (top && this.spec.indexOf("!", this.pos) > -1) {
           retType = infer.ANull;
+          computeRetStart = this.pos;
           computeRet = this.parseRetType();
         } else retType = this.parseType();
       } else retType = infer.ANull;
@@ -72,6 +73,7 @@
       else
         fn = new infer.Fn(name, infer.ANull, args, names, retType);
       if (computeRet) fn.computeRet = computeRet;
+      if (computeRetStart != null) fn.computeRetSource = this.spec.slice(computeRetStart, this.pos);
       return fn;
     },
     parseType: function(name, top) {
@@ -79,6 +81,10 @@
         return this.parseFnType(name, top);
       } else if (this.eat("[")) {
         var inner = this.parseType();
+        if (inner == infer.ANull && this.spec == "[b.<i>]") {
+          var b = parsePath("b");
+          console.log(b.props["<i>"].types.length);
+        }
         this.eat("]") || this.error();
         if (top && this.base) {
           infer.Arr.call(this.base, inner);
@@ -95,22 +101,28 @@
       } else if (this.eat("?")) {
         return infer.ANull;
       } else {
-        var spec = this.word(/[\w$<>\.!]/), cx = infer.cx();
-        switch (spec) {
-        case "number": return cx.num;
-        case "string": return cx.str;
-        case "bool": return cx.bool;
-        case "<top>": return cx.topScope;
-        }
-        if (cx.localDefs && spec in cx.localDefs) return cx.localDefs[spec];
-        return parsePath(spec);
+        return this.fromWord(this.word(/[\w$<>\.!`]/));
       }
+    },
+    fromWord: function(spec) {
+      var cx = infer.cx();
+      switch (spec) {
+      case "number": return cx.num;
+      case "string": return cx.str;
+      case "bool": return cx.bool;
+      case "<top>": return cx.topScope;
+      }
+      if (cx.localDefs && spec in cx.localDefs) return cx.localDefs[spec];
+      return parsePath(spec);
     },
     parseBaseRetType: function() {
       if (this.eat("[")) {
         var inner = this.parseRetType();
         this.eat("]") || this.error();
         return function(self, args) { return new infer.Arr(inner(self, args)); };
+      } else if (this.eat("+")) {
+        var base = this.parseRetType();
+        return function(self, args) { return infer.getInstance(base(self, args)); };
       } else if (this.eat("!")) {
         var arg = this.word(/\d/);
         if (arg) {
@@ -121,7 +133,9 @@
         } else if (this.eat("custom:")) {
           var fname = this.word(/[\w$]/);
           return customFunctions[fname] || function() { return infer.ANull; };
-        } else this.error();
+        } else {
+          return this.fromWord("!" + arg + this.word(/[\w$<>\.!]/));
+        }
       }
       var t = this.parseType();
       return function(){return t;};
@@ -158,14 +172,15 @@
 
   function addEffect(fn, handler, replaceRet) {
     var oldCmp = fn.computeRet, rv = fn.retval;
-    fn.computeRet = function(self, args) {
-      var handled = handler(self, args);
-      var old = oldCmp ? oldCmp(self, args) : rv;
+    fn.computeRet = function(self, args, argNodes) {
+      var handled = handler(self, args, argNodes);
+      var old = oldCmp ? oldCmp(self, args, argNodes) : rv;
       return replaceRet ? handled : old;
     };
   }
 
   var parseEffect = exports.parseEffect = function(effect, fn) {
+    var m;
     if (effect.indexOf("propagate ") == 0) {
       var p = new TypeParser(effect, 10);
       var getOrigin = p.parseRetType();
@@ -188,9 +203,9 @@
         callee.propagate(new infer.IsCallee(slf, as, null, result));
         return result;
       }, andRet);
-    } else if (effect.indexOf("custom ") == 0) {
-      var customFunc = customFunctions[effect.slice(7).trim()];
-      if (customFunc) addEffect(fn, customFunc);
+    } else if (m = effect.match(/^custom (\S+)\s*(.*)/)) {
+      var customFunc = customFunctions[m[1]];
+      if (customFunc) addEffect(fn, m[2] ? customFunc(m[2]) : customFunc);
     } else if (effect.indexOf("copy ") == 0) {
       var p = new TypeParser(effect, 5);
       var getFrom = p.parseRetType();
@@ -239,14 +254,14 @@
           if (!fn) {
             base = infer.ANull;
           } else if (prop == "!ret") {
-            base = fn.retval.getType() || infer.ANull;
+            base = fn.retval && fn.retval.getType() || infer.ANull;
           } else {
-            var arg = fn.args[Number(prop.slice(1))];
+            var arg = fn.args && fn.args[Number(prop.slice(1))];
             base = (arg && arg.getType()) || infer.ANull;
           }
         }
       } else if (base instanceof infer.Obj) {
-        var propVal = base.props[prop];
+        var propVal = (prop == "prototype" && base instanceof infer.Fn) ? base.getProp(prop) : base.props[prop];
         if (!propVal || propVal.isEmpty())
           base = infer.ANull;
         else
@@ -254,7 +269,7 @@
       }
     }
     // Uncomment this to get feedback on your poorly written .json files
-    // if (base == infer.ANull) console.log("bad path: " + path + " (" + cx.curOrigin + ")");
+    // if (base == infer.ANull) console.error("bad path: " + origPath + " (" + cx.curOrigin + ")");
     cx.paths[origPath] = base == infer.ANull ? null : base;
     return base;
   };
@@ -267,9 +282,9 @@
   }
 
   function isSimpleAnnotation(spec) {
-    if (!spec["!type"]) return false;
+    if (!spec["!type"] || /^(fn\(|\[)/.test(spec["!type"])) return false;
     for (var prop in spec)
-      if (prop != "!type" && prop != "!doc" && prop != "!url" && prop != "!span")
+      if (prop != "!type" && prop != "!doc" && prop != "!url" && prop != "!span" && prop != "!data")
         return false;
     return true;
   }
@@ -292,7 +307,6 @@
     for (var name in spec) if (hop(spec, name) && name.charCodeAt(0) != 33) {
       var inner = spec[name];
       if (typeof inner == "string" || isSimpleAnnotation(inner)) continue;
-      if (!base.defProp) console.log("base=" + (window.badBase = base));
       var prop = base.defProp(name);
       passOne(prop.getType(), inner, path ? path + "." + name : name).propagate(prop);
     }
@@ -314,6 +328,7 @@
     var effects = spec["!effects"];
     if (effects && base instanceof infer.Fn) for (var i = 0; i < effects.length; ++i)
       parseEffect(effects[i], base);
+    copyInfo(spec, base);
 
     for (var name in spec) if (hop(spec, name) && name.charCodeAt(0) != 33) {
       var inner = spec[name], known = base.defProp(name), innerPath = path ? path + "." + name : name;
@@ -327,30 +342,34 @@
         } else if (!type) {
           parseType(inner["!type"], innerPath, null, true).propagate(known);
           type = known.getType();
+          if (type instanceof infer.Obj) copyInfo(inner, type);
         } else continue;
-        var doc = inner["!doc"], url = inner["!url"], span = inner["!span"];
-        if (doc) {
-          if (type && type instanceof infer.Obj) type.doc = doc;
-          known.doc = doc;
-        }
-        if (url) {
-          if (type && type instanceof infer.Obj) type.url = url;
-          known.url = url;
-        }
-        if (span) {
-          if (type && type instanceof infer.Obj) type.span = span;
-          known.span = span;
-        }
+        if (inner["!doc"]) known.doc = inner["!doc"];
+        if (inner["!url"]) known.url = inner["!url"];
+        if (inner["!span"]) known.span = inner["!span"];
       }
     }
+  }
+
+  function copyInfo(spec, type) {
+    if (spec["!doc"]) type.doc = spec["!doc"];
+    if (spec["!url"]) type.url = spec["!url"];
+    if (spec["!span"]) type.span = spec["!span"];
+    if (spec["!data"]) type.metaData = spec["!data"];
+  }
+
+  function runPasses(type, arg) {
+    var parent = infer.cx().parent, pass = parent && parent.passes && parent.passes[type];
+    if (pass) for (var i = 0; i < pass.length; i++) pass[i](arg);
   }
 
   function doLoadEnvironment(data, scope) {
     var cx = infer.cx();
 
     infer.addOrigin(cx.curOrigin = data["!name"] || "env#" + cx.origins.length);
-    cx.loading = data;
     cx.localDefs = cx.definitions[cx.curOrigin] = Object.create(null);
+
+    runPasses("preLoadDef", data);
 
     passOne(scope, data);
 
@@ -368,7 +387,9 @@
 
     passTwo(scope, data);
 
-    cx.curOrigin = cx.loading = cx.localDefs = null;
+    runPasses("postLoadDef", data);
+
+    cx.curOrigin = cx.localDefs = null;
   }
 
   exports.load = function(data, scope) {
@@ -414,18 +435,21 @@
     return result;
   });
 
-  var IsBound = infer.constraint("args, target", {
+  var IsBound = infer.constraint("self, args, target", {
     addType: function(tp) {
       if (!(tp instanceof infer.Fn)) return;
-      var cut = Math.max(0, this.args.length - 1);
-      this.target.addType(new infer.Fn(tp.name, this.args[0] || infer.ANull,
-                                       tp.args.slice(cut), tp.argNames.slice(cut), tp.retval));
+      this.target.addType(new infer.Fn(tp.name, tp.self, tp.args.slice(this.args.length),
+                                       tp.argNames.slice(this.args.length), tp.retval));
+      this.self.propagate(tp.self);
+      for (var i = 0; i < Math.min(tp.args.length, this.args.length); ++i)
+        this.args[i].propagate(tp.args[i]);
     }
   });
 
   infer.registerFunction("Function_bind", function(self, args) {
+    if (!args.length) return infer.ANull;
     var result = new infer.AVal;
-    self.propagate(new IsBound(args, result));
+    self.propagate(new IsBound(args[0], args.slice(1), result));
     return result;
   });
 

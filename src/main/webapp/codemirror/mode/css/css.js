@@ -1,11 +1,9 @@
-CodeMirror.defineMode("css", function(config) {
-  return CodeMirror.getMode(config, "text/css");
-});
-
-CodeMirror.defineMode("css-base", function(config, parserConfig) {
+CodeMirror.defineMode("css", function(config, parserConfig) {
   "use strict";
 
-  var indentUnit = config.indentUnit,
+  if (!parserConfig.propertyKeywords) parserConfig = CodeMirror.resolveMode("text/css");
+
+  var indentUnit = config.indentUnit || config.tabSize || 2,
       hooks = parserConfig.hooks || {},
       atMediaTypes = parserConfig.atMediaTypes || {},
       atMediaFeatures = parserConfig.atMediaFeatures || {},
@@ -39,7 +37,7 @@ CodeMirror.defineMode("css-base", function(config, parserConfig) {
       stream.match(/^\s*\w*/);
       return ret("keyword", "important");
     }
-    else if (/\d/.test(ch)) {
+    else if (/\d/.test(ch) || ch == "." && stream.eat(/\d/)) {
       stream.eatWhile(/[\w.%]/);
       return ret("number", "unit");
     }
@@ -261,8 +259,13 @@ CodeMirror.defineMode("css-base", function(config, parserConfig) {
       }
       else if (type == "}") {
         if (context == "interpolation") style = "operator";
-        state.stack.pop();
-        if (context == "propertyValue") state.stack.pop();
+        // Pop off end of array until { is reached
+        while(state.stack.length){
+          var removed = state.stack.pop();
+          if(removed.indexOf("{") > -1){
+            break;
+          }
+        }
       }
       else if (type == "interpolation") state.stack.push("interpolation");
       else if (type == "@media") state.stack.push("@media");
@@ -280,11 +283,13 @@ CodeMirror.defineMode("css-base", function(config, parserConfig) {
         else state.stack.push("(");
       }
       else if (type == ")") {
-        if (context == "propertyValue") {
-          // In @mediaType( without closing ; after propertyValue
-          state.stack.pop();
+        // Pop off end of array until ( is reached
+        while(state.stack.length){
+          var removed = state.stack.pop();
+          if(removed.indexOf("(") > -1){
+            break;
+          }
         }
-        state.stack.pop();
       }
       else if (type == ":" && state.lastToken == "property") state.stack.push("propertyValue");
       else if (context == "propertyValue" && type == ";") state.stack.pop();
@@ -580,7 +585,7 @@ CodeMirror.defineMode("css-base", function(config, parserConfig) {
         return false;
       }
     },
-    name: "css-base"
+    name: "css"
   });
 
   CodeMirror.defineMIME("text/x-scss", {
@@ -604,6 +609,11 @@ CodeMirror.defineMode("css-base", function(config, parserConfig) {
         }
         return ["variable", "variable"];
       },
+      ",": function(_stream, state) {
+        if (state.stack[state.stack.length - 1] == "propertyValue") {
+          return ["operator", ";"];
+        }
+      },
       "/": function(stream, state) {
         if (stream.eat("/")) {
           stream.skipToEnd();
@@ -624,6 +634,6 @@ CodeMirror.defineMode("css-base", function(config, parserConfig) {
         }
       }
     },
-    name: "css-base"
+    name: "css"
   });
 })();
