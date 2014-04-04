@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>CodeMirror: Javascript - Lint + Hint with Tern demo</title>
+    <title>YUI Tern Demo</title>
     
-    <!-- CodeMirror -->
+   <!-- CodeMirror -->
     <link rel="stylesheet" href="../../codemirror/lib/codemirror.css">
     <script src="../../codemirror/lib/codemirror.js"></script>
     <link rel="stylesheet" href="../../codemirror/theme/eclipse.css">
@@ -30,7 +30,7 @@
   <script src="../../ternjs/tern/lib/def.js"></script>
   <script src="../../ternjs/tern/lib/comment.js"></script>
   <script src="../../ternjs/tern/lib/infer.js"></script>
-  <script src="../../ternjs/tern/plugin/alloyui.js"></script>
+  <script src="../../ternjs/tern/plugin/yui.js"></script>
   
   <!-- Official CodeMirror Tern addon -->
   <script src="../../codemirror/addon/tern/tern.js"></script>   
@@ -59,16 +59,16 @@
   <script src="../addon/hint/tern/tern-hover.js"></script>
     		          
     <link rel="stylesheet" href="../../codemirror/doc/docs.css">
-  </head>
+      </head>
   <body>
     
-    <h1>Demo with Tern plugin AlloyUI </h1>
-  
-    <form><textarea id="code" name="code">A //<-Ctrl+Space shows AUI
-AUI(). //<-Ctrl+Space shows use and ready
-AUI().use('', function(A) {
-  //<-Ctrl+Space shows A
-  A. //<-Ctrl+Space shows use and ready
+    <h1>Demo with YUI Tern plugin</h1>
+	<p>See <a href="https://github.com/angelozerr/tern.yuidoc">https://github.com/angelozerr/tern.yuidoc</a> for more infos.</p>  
+    <form><textarea id="code" name="code">Y //<-Ctrl+Space shows YUI
+YUI(). //<-Ctrl+Space shows use...
+YUI().use('', function(Y) {
+  //<-Ctrl+Space shows Y
+  Y. //<-Ctrl+Space shows use, add
 });
 
 YUI().use('aui-node', function(Y) {
@@ -76,9 +76,26 @@ YUI().use('aui-node', function(Y) {
   node. // <-Ctrl+Space: here addClass from 'aui-node' module is displayed.
 });
 
-YUI().use('xxx', function(Y) {
-  var node = Y.one('#toggleColor');
-  node. // <-Ctrl+Space: here ano completion, because module 'aui-node' is not loaded.
+YUI().use('node', function (Y) {
+    var helloWorld = function(e) {
+    	//<-Ctrl+Space shows e
+    	e. //<-Ctrl+Space shows target, ...
+    	e.target. //<-Ctrl+Space shows setHTML
+    	
+        e.target.setHTML("<p>Hello World!</p>");
+        Y.one('#container').addClass('hello');
+    }
+
+    var node = Y.one("#container");
+	
+    node.on("click", helloWorld);
+
+    var interceptLink = function(e) {
+        e.preventDefault();
+        Y.one('.message').setStyle('visibility', 'visible');
+    }
+
+    Y.one('#secondA').on("click", interceptLink);
 });
 </textarea></form>
     <script type="text/javascript">
@@ -116,7 +133,7 @@ YUI().use('xxx', function(Y) {
         },
         gutters: ["CodeMirror-linenumbers"],
     	textHover: {delay:300},
-    	ternWith: { plugins: {"alloyui" : "../alloyui"}}
+    	ternWith: { plugins: {"yui" : "../yui"}}
       });
     </script>
     
