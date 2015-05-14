@@ -5,6 +5,9 @@
 	<artifactId>CodeMirror-Java</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
+	<build>
+		<finalName>${project.artifactId}</finalName>
+	</build>
 
 	<dependencies>
 
