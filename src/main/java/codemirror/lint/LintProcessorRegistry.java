@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import codemirror.lint.velocity.VelocityLintProcessor;
-import codemirror.lint.xquery.saxon.SaxonXQueryLintProcessor;
 
 public class LintProcessorRegistry {
 
@@ -19,7 +18,6 @@ public class LintProcessorRegistry {
 		this.processors = new HashMap<String, LintProcessor>();
 		
 		// should use SPI to register processor
-		register(new SaxonXQueryLintProcessor());
 		register(new VelocityLintProcessor());
 		
 	}

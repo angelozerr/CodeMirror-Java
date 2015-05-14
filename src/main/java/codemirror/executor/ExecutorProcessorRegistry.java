@@ -3,8 +3,6 @@ package codemirror.executor;
 import java.util.HashMap;
 import java.util.Map;
 
-import codemirror.executor.xquery.saxon.SaxonXQueryExecutorProcessor;
-
 public class ExecutorProcessorRegistry {
 
 	private static final ExecutorProcessorRegistry INSTANCE = new ExecutorProcessorRegistry();
@@ -17,8 +15,6 @@ public class ExecutorProcessorRegistry {
 	public ExecutorProcessorRegistry() {
 		this.processors = new HashMap<String, ExecutorProcessor>();
 
-		// should use SPI to register processor
-		register(new SaxonXQueryExecutorProcessor());
 
 	}
 
