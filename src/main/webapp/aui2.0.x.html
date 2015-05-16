@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>AlloyUI Tern Demo</title>
+    <title>AlloyUI 2.0.x Tern Demo</title>
     
    <!-- CodeMirror -->
     <link rel="stylesheet" href="codemirror/lib/codemirror.css">
@@ -16,7 +16,6 @@
     <script src="codemirror/addon/runmode/runmode.js"></script>
         
     <script src="codemirror/mode/javascript/javascript.js"></script>    
-	<script src="../../jshint/jshint-r12-80277ef.js"></script>
 	<script src="codemirror/addon/lint/lint.js"></script>
     <link rel="stylesheet" href="codemirror/addon/lint/lint.css">
 	<script src="codemirror/addon/lint/javascript-lint.js"></script>
@@ -30,16 +29,17 @@
   <script src="ternjs/tern/lib/def.js"></script>
   <script src="ternjs/tern/lib/comment.js"></script>
   <script src="ternjs/tern/lib/infer.js"></script>
-  <script src="ternjs/tern/plugin/aui.js"></script>
+  <script src="ternjs/tern-yui3/yui3.js"></script>
+  <script src="ternjs/tern-aui2.0.x/aui2.0.x.js"></script>
   
   <!-- Official CodeMirror Tern addon -->
   <script src="codemirror/addon/tern/tern.js"></script>   
 
   <!-- Extension of CodeMirror Tern addon -->
-  <link rel="stylesheet" href="../addon/hint/tern/tern-extension.css">
-  <script src="../addon/hint/tern/tern-extension.js"></script>    
-  <script src="../addon/hint/tern/defs/ecma5.json.js"></script>
-  <script src="../addon/hint/tern/defs/browser.json.js"></script>
+  <link rel="stylesheet" href="codemirror-javascript/addon/hint/tern/tern-extension.css">
+  <script src="codemirror-javascript/addon/hint/tern/tern-extension.js"></script>    
+  <script src="codemirror-javascript/addon/hint/tern/defs/ecma5.json.js"></script>
+  <script src="codemirror-javascript/addon/hint/tern/defs/browser.json.js"></script>
 
   <!-- CodeMirror Extension -->  
   
@@ -51,52 +51,36 @@
   <script src="codemirror-extension/addon/hint/templates-hint.js"></script>
   
   <!-- CodeMirror Javascript -->
-  <script src="../addon/hint/javascript/javascript-templates.js"></script>
+  <script src="codemirror-javascript/addon/hint/javascript/javascript-templates.js"></script>
 
   <!-- Tern Hover -->
   <link rel="stylesheet" href="codemirror-extension/addon/hover/text-hover.css">
   <script src="codemirror-extension/addon/hover/text-hover.js"></script>
-  <script src="../addon/hint/tern/tern-hover.js"></script>
+  <script src="codemirror-javascript/addon/hint/tern/tern-hover.js"></script>
     		          
     <link rel="stylesheet" href="codemirror/doc/docs.css">
       </head>
   <body>
     
-    <h1>Demo with AlloyUI Tern plugin </h1>
-	<p>See <a href="https://github.com/angelozerr/tern.yuidoc">https://github.com/angelozerr/tern.yuidoc</a> for more infos.</p>  
-    <form><textarea id="code" name="code">Y //<-Ctrl+Space shows YUI
-YUI(). //<-Ctrl+Space shows use...
-YUI().use('', function(Y) {
-  //<-Ctrl+Space shows Y
-  Y. //<-Ctrl+Space shows use, add
-});
+    <h1>Demo with YUI Tern plugin</h1>
+	<p>See <a href="https://github.com/angelozerr/tern-aui2.0.x">https://github.com/angelozerr/tern-aui2.0.x</a> for more infos.</p>  
+    <form><textarea id="code" name="code">AUI().use(
+  'aui-ace-editor',
+  function(Y) {
+    new Y. // here Ctrl+Space shows Anim, AceEditor, etc
+    new Y.Anim(). // here Ctrl+Space shows addAttr, etc
+    new Y.AceEditor(
+      {
+        // here Ctrl+Spcae shows contentBox, etc
+        boundingBox: '#myEditor',
+        mode: 'xml',
+        value: '<body id="content"></body>'
+      }
+    ).render();
+  }
+);
 
-YUI().use('aui-node', function(Y) {
-  var node = Y.one('#toggleColor');
-  node. // <-Ctrl+Space: here addClass from 'aui-node' module is displayed.
-});
-
-YUI().use('node', function (Y) {
-    var helloWorld = function(e) {
-    	//<-Ctrl+Space shows e
-    	e. //<-Ctrl+Space shows target, ...
-    	e.target. //<-Ctrl+Space shows setHTML
-    	
-        e.target.setHTML("<p>Hello World!</p>");
-        Y.one('#container').addClass('hello');
-    }
-
-    var node = Y.one("#container");
-	
-    node.on("click", helloWorld);
-
-    var interceptLink = function(e) {
-        e.preventDefault();
-        Y.one('.message').setStyle('visibility', 'visible');
-    }
-
-    Y.one('#secondA').on("click", interceptLink);
-});
+AUI().use(' // here Ctrl+Space shows modules
 </textarea></form>
     <script type="text/javascript">
        
@@ -133,7 +117,7 @@ YUI().use('node', function (Y) {
         },
         gutters: ["CodeMirror-linenumbers"],
     	textHover: {delay:300},
-    	ternWith: { plugins: {"aui" : "../aui"}}
+    	ternWith: { plugins: {"yui3" : {}, "aui2.0.x" : {}}}
       });
     </script>
     
