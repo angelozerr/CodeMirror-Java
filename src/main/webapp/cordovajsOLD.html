@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>CordovaJS Tern Demo</title>
+    <title>CodeMirror: Javascript - Lint + Hint with Tern demo</title>
     
-   <!-- CodeMirror -->
+    <!-- CodeMirror -->
     <link rel="stylesheet" href="codemirror/lib/codemirror.css">
     <script src="codemirror/lib/codemirror.js"></script>
     <link rel="stylesheet" href="codemirror/theme/eclipse.css">
@@ -16,6 +16,7 @@
     <script src="codemirror/addon/runmode/runmode.js"></script>
         
     <script src="codemirror/mode/javascript/javascript.js"></script>    
+	<script src="../../jshint/jshint-r12-80277ef.js"></script>
 	<script src="codemirror/addon/lint/lint.js"></script>
     <link rel="stylesheet" href="codemirror/addon/lint/lint.css">
 	<script src="codemirror/addon/lint/javascript-lint.js"></script>
@@ -29,16 +30,16 @@
   <script src="ternjs/tern/lib/def.js"></script>
   <script src="ternjs/tern/lib/comment.js"></script>
   <script src="ternjs/tern/lib/infer.js"></script>
-  <script src="ternjs/tern-cordovajs/cordovajs.js"></script>
+  <script src="ternjs/tern/plugin/cordovajs.js"></script>
   
   <!-- Official CodeMirror Tern addon -->
   <script src="codemirror/addon/tern/tern.js"></script>   
 
   <!-- Extension of CodeMirror Tern addon -->
-  <link rel="stylesheet" href="codemirror-javascript/addon/hint/tern/tern-extension.css">
-  <script src="codemirror-javascript/addon/hint/tern/tern-extension.js"></script>    
-  <script src="codemirror-javascript/addon/hint/tern/defs/ecma5.json.js"></script>
-  <script src="codemirror-javascript/addon/hint/tern/defs/browser.json.js"></script>
+  <link rel="stylesheet" href="../addon/hint/tern/tern-extension.css">
+  <script src="../addon/hint/tern/tern-extension.js"></script>    
+  <script src="../addon/hint/tern/defs/ecma5.json.js"></script>
+  <script src="../addon/hint/tern/defs/browser.json.js"></script>
 
   <!-- CodeMirror Extension -->  
   
@@ -50,21 +51,22 @@
   <script src="codemirror-extension/addon/hint/templates-hint.js"></script>
   
   <!-- CodeMirror Javascript -->
-  <script src="codemirror-javascript/addon/hint/javascript/javascript-templates.js"></script>
+  <script src="../addon/hint/javascript/javascript-templates.js"></script>
 
   <!-- Tern Hover -->
   <link rel="stylesheet" href="codemirror-extension/addon/hover/text-hover.css">
   <script src="codemirror-extension/addon/hover/text-hover.js"></script>
-  <script src="codemirror-javascript/addon/hint/tern/tern-hover.js"></script>
+  <script src="../addon/hint/tern/tern-hover.js"></script>
     		          
     <link rel="stylesheet" href="codemirror/doc/docs.css">
-      </head>
+  </head>
   <body>
     
-    <h1>Demo with CKEditor Tern plugin</h1>
-	<p>See <a href="https://github.com/vrubezhny/tern-cordovajs">https://github.com/vrubezhny/tern-cordovajs</a> for more infos.</p>  
+    <h1>Demo with Tern plugin CordovaJS </h1>
+  
     <form><textarea id="code" name="code">co //<-Ctrl+Space shows cordova
-cordova. //<-Ctrl+Space shows cordova object's members</textarea></form>
+cordova. //<-Ctrl+Space shows cordova object's members:
+</textarea></form>
     <script type="text/javascript">
        
       function passAndHint(cm) {
@@ -100,7 +102,7 @@ cordova. //<-Ctrl+Space shows cordova object's members</textarea></form>
         },
         gutters: ["CodeMirror-linenumbers"],
     	textHover: {delay:300},
-    	ternWith: { plugins: {"cordovajs" : {}}}
+    	ternWith: { plugins: {"cordovajs" : "../cordovajs"}}
       });
     </script>
     
