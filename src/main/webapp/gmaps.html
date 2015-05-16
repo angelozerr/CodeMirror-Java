@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Google Maps 3.17 Tern Demo</title>
+    <title>Google Maps Tern Demo</title>
     
    <!-- CodeMirror -->
     <link rel="stylesheet" href="codemirror/lib/codemirror.css">
@@ -16,7 +16,6 @@
     <script src="codemirror/addon/runmode/runmode.js"></script>
         
     <script src="codemirror/mode/javascript/javascript.js"></script>    
-	<script src="../../jshint/jshint-r12-80277ef.js"></script>
 	<script src="codemirror/addon/lint/lint.js"></script>
     <link rel="stylesheet" href="codemirror/addon/lint/lint.css">
 	<script src="codemirror/addon/lint/javascript-lint.js"></script>
@@ -30,16 +29,16 @@
   <script src="ternjs/tern/lib/def.js"></script>
   <script src="ternjs/tern/lib/comment.js"></script>
   <script src="ternjs/tern/lib/infer.js"></script>
-  <script src="ternjs/tern/plugin/gmaps_3.17.js"></script>
+  <script src="ternjs/tern-gmaps3.20/gmaps3.20.js"></script>
   
   <!-- Official CodeMirror Tern addon -->
   <script src="codemirror/addon/tern/tern.js"></script>   
 
   <!-- Extension of CodeMirror Tern addon -->
-  <link rel="stylesheet" href="../addon/hint/tern/tern-extension.css">
-  <script src="../addon/hint/tern/tern-extension.js"></script>    
-  <script src="../addon/hint/tern/defs/ecma5.json.js"></script>
-  <script src="../addon/hint/tern/defs/browser.json.js"></script>
+  <link rel="stylesheet" href="codemirror-javascript/addon/hint/tern/tern-extension.css">
+  <script src="codemirror-javascript/addon/hint/tern/tern-extension.js"></script>    
+  <script src="codemirror-javascript/addon/hint/tern/defs/ecma5.json.js"></script>
+  <script src="codemirror-javascript/addon/hint/tern/defs/browser.json.js"></script>
 
   <!-- CodeMirror Extension -->  
   
@@ -51,22 +50,31 @@
   <script src="codemirror-extension/addon/hint/templates-hint.js"></script>
   
   <!-- CodeMirror Javascript -->
-  <script src="../addon/hint/javascript/javascript-templates.js"></script>
+  <script src="codemirror-javascript/addon/hint/javascript/javascript-templates.js"></script>
 
   <!-- Tern Hover -->
   <link rel="stylesheet" href="codemirror-extension/addon/hover/text-hover.css">
   <script src="codemirror-extension/addon/hover/text-hover.js"></script>
-  <script src="../addon/hint/tern/tern-hover.js"></script>
+  <script src="codemirror-javascript/addon/hint/tern/tern-hover.js"></script>
     		          
     <link rel="stylesheet" href="codemirror/doc/docs.css">
       </head>
   <body>
     
-    <h1>Demo with Google Maps 3.17 Tern plugin</h1>
-	<p>See <a href="https://github.com/angelozerr/tern.jsduck">https://github.com/angelozerr/tern.jsduck</a> for more infos.</p>  
-    <form><textarea id="code" name="code">var map = new google.maps.Map(mapDiv, opts);
-map. // here Ctrl+Space opens methods of map.
-</textarea></form>
+    <h1>Demo with Google Maps Tern plugin</h1>
+	<p>See <a href="https://github.com/angelozerr/tern.googleapi">https://github.com/angelozerr/tern.googleapi</a> for more infos.</p>  
+    <form><textarea id="code" name="code">function initialize() {
+  var mapOptions = {
+  	// here Ctrl+Space shows backGroundColor
+    zoom: 8,
+    center: new google.maps.LatLng(-34.397, 150.644)
+  };
+  map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+}
+
+google.maps.event. // here Ctrl+Spcae shows addDomListener, etc
+google.maps.event.addDomListener(window, 'load', initialize);</textarea></form>
     <script type="text/javascript">
        
       function passAndHint(cm) {
@@ -74,8 +82,6 @@ map. // here Ctrl+Space opens methods of map.
       	return CodeMirror.Pass;
       }
        
-      
-      
       function myHint(cm) {
       	return CodeMirror.showHint(cm, CodeMirror.ternHint, {async: true}); 
       }
@@ -102,7 +108,7 @@ map. // here Ctrl+Space opens methods of map.
         },
         gutters: ["CodeMirror-linenumbers"],
     	textHover: {delay:300},
-    	ternWith: { plugins: {"gmaps_3.17" : {}}, defs:["ecma5", "browser"]}
+    	ternWith: { plugins: {"gmaps3.20" : {}}}
       });
     </script>
     
