@@ -131,7 +131,7 @@
 
   function autoCloseSlash(cm) {
     if (cm.getOption("disableInput")) return CodeMirror.Pass;
-    return autoCloseCurrent(cm, true);
+    autoCloseCurrent(cm, true);
   }
 
   CodeMirror.commands.closeTag = function(cm) { return autoCloseCurrent(cm); };

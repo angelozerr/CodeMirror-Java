@@ -1,4 +1,4 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}(g.acorn || (g.acorn = {})).walk = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}(g.acorn || (g.acorn = {})).walk = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 "use strict";
 
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
@@ -52,17 +52,15 @@ exports.findNodeBefore = findNodeBefore;
 // Used to create a custom walker. Will fill in all missing node
 // type properties with the defaults.
 exports.make = make;
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+exports.__esModule = true;
 
-function simple(node, visitors, base, state) {
+function simple(node, visitors, base, state, override) {
   if (!base) base = exports.base;(function c(node, st, override) {
     var type = override || node.type,
         found = visitors[type];
     base[type](node, st, c);
     if (found) found(node, st);
-  })(node, state);
+  })(node, state, override);
 }
 
 function ancestor(node, visitors, base, state) {
@@ -79,10 +77,10 @@ function ancestor(node, visitors, base, state) {
   })(node, state);
 }
 
-function recursive(node, state, funcs, base) {
+function recursive(node, state, funcs, base, override) {
   var visitor = funcs ? exports.make(funcs, base) : base;(function c(node, st, override) {
     visitor[override || node.type](node, st, c);
-  })(node, state);
+  })(node, state, override);
 }
 
 function makeTest(test) {
@@ -224,12 +222,15 @@ base.SwitchStatement = function (node, st, c) {
 base.ReturnStatement = base.YieldExpression = function (node, st, c) {
   if (node.argument) c(node.argument, st, "Expression");
 };
-base.ThrowStatement = base.SpreadElement = base.RestElement = function (node, st, c) {
+base.ThrowStatement = base.SpreadElement = function (node, st, c) {
   return c(node.argument, st, "Expression");
 };
 base.TryStatement = function (node, st, c) {
   c(node.block, st, "Statement");
-  if (node.handler) c(node.handler.body, st, "ScopeBody");
+  if (node.handler) {
+    c(node.handler.param, st, "Pattern");
+    c(node.handler.body, st, "ScopeBody");
+  }
   if (node.finalizer) c(node.finalizer, st, "Statement");
 };
 base.WhileStatement = base.DoWhileStatement = function (node, st, c) {
@@ -258,26 +259,49 @@ base.FunctionDeclaration = function (node, st, c) {
 base.VariableDeclaration = function (node, st, c) {
   for (var i = 0; i < node.declarations.length; ++i) {
     var decl = node.declarations[i];
+    c(decl.id, st, "Pattern");
     if (decl.init) c(decl.init, st, "Expression");
   }
 };
 
 base.Function = function (node, st, c) {
-  return c(node.body, st, "ScopeBody");
+  for (var i = 0; i < node.params.length; i++) {
+    c(node.params[i], st, "Pattern");
+  }c(node.body, st, "ScopeBody");
 };
 base.ScopeBody = function (node, st, c) {
   return c(node, st, "Statement");
 };
 
+base.Pattern = function (node, st, c) {
+  if (node.type == "Identifier") c(node, st, "VariablePattern");else if (node.type == "MemberExpression") c(node, st, "MemberPattern");else c(node, st);
+};
+base.VariablePattern = ignore;
+base.MemberPattern = skipThrough;
+base.RestElement = function (node, st, c) {
+  return c(node.argument, st, "Pattern");
+};
+base.ArrayPattern = function (node, st, c) {
+  for (var i = 0; i < node.elements.length; ++i) {
+    var elt = node.elements[i];
+    if (elt) c(elt, st, "Pattern");
+  }
+};
+base.ObjectPattern = function (node, st, c) {
+  for (var i = 0; i < node.properties.length; ++i) {
+    c(node.properties[i].value, st, "Pattern");
+  }
+};
+
 base.Expression = skipThrough;
 base.ThisExpression = base.Super = base.MetaProperty = ignore;
-base.ArrayExpression = base.ArrayPattern = function (node, st, c) {
+base.ArrayExpression = function (node, st, c) {
   for (var i = 0; i < node.elements.length; ++i) {
     var elt = node.elements[i];
     if (elt) c(elt, st, "Expression");
   }
 };
-base.ObjectExpression = base.ObjectPattern = function (node, st, c) {
+base.ObjectExpression = function (node, st, c) {
   for (var i = 0; i < node.properties.length; ++i) {
     c(node.properties[i], st);
   }
@@ -291,8 +315,12 @@ base.SequenceExpression = base.TemplateLiteral = function (node, st, c) {
 base.UnaryExpression = base.UpdateExpression = function (node, st, c) {
   c(node.argument, st, "Expression");
 };
-base.BinaryExpression = base.AssignmentExpression = base.AssignmentPattern = base.LogicalExpression = function (node, st, c) {
+base.BinaryExpression = base.LogicalExpression = function (node, st, c) {
   c(node.left, st, "Expression");
+  c(node.right, st, "Expression");
+};
+base.AssignmentExpression = base.AssignmentPattern = function (node, st, c) {
+  c(node.left, st, "Pattern");
   c(node.right, st, "Expression");
 };
 base.ConditionalExpression = function (node, st, c) {
@@ -310,21 +338,25 @@ base.MemberExpression = function (node, st, c) {
   c(node.object, st, "Expression");
   if (node.computed) c(node.property, st, "Expression");
 };
-base.ExportDeclaration = function (node, st, c) {
-  return c(node.declaration, st);
+base.ExportNamedDeclaration = base.ExportDefaultDeclaration = function (node, st, c) {
+  if (node.declaration) c(node.declaration, st);
 };
 base.ImportDeclaration = function (node, st, c) {
   for (var i = 0; i < node.specifiers.length; i++) {
     c(node.specifiers[i], st);
   }
 };
-base.ImportSpecifier = base.ImportBatchSpecifier = base.Identifier = base.Literal = ignore;
+base.ImportSpecifier = base.ImportDefaultSpecifier = base.ImportNamespaceSpecifier = base.Identifier = base.Literal = ignore;
 
 base.TaggedTemplateExpression = function (node, st, c) {
   c(node.tag, st, "Expression");
   c(node.quasi, st);
 };
 base.ClassDeclaration = base.ClassExpression = function (node, st, c) {
+  return c(node, st, "Class");
+};
+base.Class = function (node, st, c) {
+  if (node.id) c(node.id, st, "Pattern");
   if (node.superClass) c(node.superClass, st, "Expression");
   for (var i = 0; i < node.body.body.length; i++) {
     c(node.body.body[i], st);

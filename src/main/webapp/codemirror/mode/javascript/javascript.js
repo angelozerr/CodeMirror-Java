@@ -118,7 +118,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
       } else if (state.lastType == "operator" || state.lastType == "keyword c" ||
                state.lastType == "sof" || /^[\[{}\(,;:]$/.test(state.lastType)) {
         readRegexp(stream);
-        stream.match(/^\b(([gimyu])(?![gimyu]*\2))+\b/);
+        stream.eatWhile(/[gimy]/); // 'y' is "sticky" option in Mozilla
         return ret("regexp", "string-2");
       } else {
         stream.eatWhile(isOperatorChar);

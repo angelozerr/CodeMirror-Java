@@ -98,9 +98,14 @@
     } else if (name in data.modules) {
       result = data.modules[name];
     } else if (data.options.modules && data.options.modules.hasOwnProperty(name)) {
-      var scope = buildWrappingScope(cx.topScope, name);
-      infer.def.load(data.options.modules[name], scope);
-      result = data.modules[name] = scope.exports;
+      var mod = data.options.modules[name];
+      if (typeof(mod) == "string" && mod.charAt(0) == "=") {
+        result = infer.def.parsePath(mod.slice(1));
+      } else {
+        var scope = buildWrappingScope(cx.topScope, name);
+        infer.def.load(data.options.modules[name], scope);
+        result = data.modules[name] = scope.exports;
+      }
     } else {
       // data.currentFile is only available while analyzing a file; at query
       // time, determine the calling file from the caller's AST.
@@ -140,6 +145,7 @@
   }
 
   function findTypeAt(_file, _pos, expr, type) {
+    if (!expr) return type;
     var isStringLiteral = expr.node.type === "Literal" &&
        typeof expr.node.value === "string";
     var isRequireArg = !!expr.node.required;

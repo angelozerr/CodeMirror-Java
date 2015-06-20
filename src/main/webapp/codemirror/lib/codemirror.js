@@ -2611,10 +2611,8 @@
   }
 
   function focusInput(cm) {
-    if (cm.options.readOnly != "nocursor" && (!mobile || activeElt() != cm.display.input)) {
-      try { cm.display.input.focus(); }
-      catch (e) {} // IE8 will throw if the textarea is display: none or not in DOM
-    }
+    if (cm.options.readOnly != "nocursor" && (!mobile || activeElt() != cm.display.input))
+      cm.display.input.focus();
   }
 
   function ensureFocus(cm) {
@@ -7578,14 +7576,12 @@
     return removeChildren(parent).appendChild(e);
   }
 
-  var contains = CodeMirror.contains = function(parent, child) {
+  function contains(parent, child) {
     if (parent.contains)
       return parent.contains(child);
-    while (child = child.parentNode) {
-      if (child.nodeType == 11) child = child.host;
+    while (child = child.parentNode)
       if (child == parent) return true;
-    }
-  };
+  }
 
   function activeElt() { return document.activeElement; }
   // Older versions of IE throws unspecified error when touching
@@ -8043,7 +8039,7 @@
 
   // THE END
 
-  CodeMirror.version = "4.12.1";
+  CodeMirror.version = "4.12.0";
 
   return CodeMirror;
 });

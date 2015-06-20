@@ -59,6 +59,7 @@
     this.options = options || {};
     var plugins = this.options.plugins || (this.options.plugins = {});
     if (!plugins.doc_comment) plugins.doc_comment = true;
+    this.docs = Object.create(null);
     if (this.options.useWorker) {
       this.server = new WorkerServer(this);
     } else {
@@ -68,8 +69,7 @@
         defs: this.options.defs || [],
         plugins: plugins
       });
-    }
-    this.docs = Object.create(null);
+    }    
     this.trackChange = function(doc, change) { trackChange(self, doc, change); };
 
     this.cachedArgHints = null;
@@ -252,9 +252,7 @@
           tip.appendChild(document.createTextNode(" — " + data.doc));
         if (data.url) {
           tip.appendChild(document.createTextNode(" "));
-          var child = tip.appendChild(elt("a", null, "[docs]"));
-          child.href = data.url;
-          child.target = "_blank";
+          tip.appendChild(elt("a", null, "[docs]")).href = data.url;
         }
       }
       tempTooltip(cm, tip);
@@ -584,33 +582,15 @@
   // Tooltips
 
   function tempTooltip(cm, content) {
-    if (cm.state.ternTooltip) remove(cm.state.ternTooltip);
     var where = cm.cursorCoords();
-    var tip = cm.state.ternTooltip = makeTooltip(where.right + 1, where.bottom, content);
-    function maybeClear() {
-      old = true;
-      if (!mouseOnTip) clear();
-    }
+    var tip = makeTooltip(where.right + 1, where.bottom, content);
     function clear() {
-      cm.state.ternTooltip = null;
       if (!tip.parentNode) return;
       cm.off("cursorActivity", clear);
-      cm.off('blur', clear);
-      cm.off('scroll', clear);
       fadeOut(tip);
     }
-    var mouseOnTip = false, old = false;
-    CodeMirror.on(tip, "mousemove", function() { mouseOnTip = true; });
-    CodeMirror.on(tip, "mouseout", function(e) {
-      if (!CodeMirror.contains(tip, e.relatedTarget || e.toElement)) {
-        if (old) clear();
-        else mouseOnTip = false;
-      }
-    });
-    setTimeout(maybeClear, 1700);
+    setTimeout(clear, 1700);
     cm.on("cursorActivity", clear);
-    cm.on('blur', clear);
-    cm.on('scroll', clear);
   }
 
   function makeTooltip(x, y, content) {
