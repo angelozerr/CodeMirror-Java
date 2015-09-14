@@ -40,6 +40,7 @@
   }
 
   CodeMirror.ternHint = function(cm, c) {
+    var server = getServer(cm);
     function c1(data) {
       // add info method to the Tern completion
       var completions = data.list;
@@ -54,7 +55,7 @@
           var from = Pos(data.from.line, data.from.ch);
           var to = Pos(data.to.line, data.to.ch);
           var ternCompletion = completion.data;
-          var template = getInsertTemplate(ternCompletion);
+          var template = getInsertTemplate(ternCompletion, server, cm, from);
           template.insert(cm, data);
         };
       }
@@ -72,8 +73,7 @@
         }
       }
       c(data);
-    }
-    var server = getServer(cm);
+    }    
     return server.getHint(cm, c1);
   }
 
@@ -131,11 +131,11 @@
   CodeMirror.tern.getServer = getServer;
 
   function startsWith(str, token) {
-    return str.slice(0, token.length).toUpperCase() == token.toUpperCase();
+    return str && str.slice(0, token.length).toUpperCase() == token.toUpperCase();
   }
 
   function getText(completion) {
-    var text = completion.name;
+    var text = completion.displayName || completion.name;
     var type = completion.type;
     var returnType = null;
     if (startsWith(type, 'fn(')) {
@@ -168,16 +168,28 @@
     return text;
   }
 
-  function getInsertTemplate(completion) {
+  function getGuessType(ts, cm, from, property) {
+    if (!ts.server.plugins["guess-types"]) return;
+    var guess;
+    ts.request(cm, {type: "guess-types", end: from, property: property}, function(error, data) {
+      if (error) return showError(ts, cm, error);
+      guess = data;//applyChanges(ts, data.changes);
+    });
+    return guess;
+  }
+  
+  function getInsertTemplate(completion, server, cm, from) {
     var tokens = [completion.name];
 
     var type = completion.type;
     var firstParam = null, currentParam = null, typeParsing = false, optionalParam = false;
-    if (startsWith(type, 'fn(')) {
+    if (startsWith(type, 'fn(')) {      
+      // try to call tern guess type
+      var guessType = getGuessType(server, cm, from, completion.name);      
       tokens.push('(');
       var bracket = 0;
       var afterStartFn = type.substring(2, type.length);
-      var i = 0;
+      var i = 0, nbVar = 0;
       for (i = 0; i < afterStartFn.length; i++) {
         var c = afterStartFn.charAt(i);
         switch (c) {
@@ -205,8 +217,17 @@
                       firstParam = currentParam;
                     } else {
                       tokens.push(', ');
+                    }                    
+                    var list, argTypes = guessType && guessType.args && guessType.args[nbVar++];
+                    if (argTypes) {
+                      list = [];
+                      var names = argTypes.split("|");
+                      for (var j = 0; j < names.length; j++) {
+                        var l = guessType[names[j]];
+                        if (l) list = list.concat(l);
+                      }
                     }
-                    tokens.push({variable: currentParam});
+                    tokens.push({variable: currentParam, list: list});
                   }
                   currentParam = null;
                   optionalParam = false;

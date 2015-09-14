@@ -5,59 +5,60 @@
     <title>CodeMirror: Javascript - Lint + Hint with Tern demo</title>
     
     <!-- CodeMirror -->
-    <link rel="stylesheet" href="../../codemirror/lib/codemirror.css">
-    <script src="../../codemirror/lib/codemirror.js"></script>
-    <link rel="stylesheet" href="../../codemirror/theme/eclipse.css">
-    <script src="../../codemirror/addon/hint/show-hint.js"></script>
-    <script src="../../codemirror/addon/edit/closetag.js"></script>
-    <script src="../../codemirror/addon/edit/closebrackets.js"></script>    
-    <script src="../../codemirror/addon/edit/matchbrackets.js"></script>
-    <script src="../../codemirror/addon/selection/active-line.js"></script>
-    <script src="../../codemirror/addon/runmode/runmode.js"></script>
+    <link rel="stylesheet" href="../node_modules/codemirror/lib/codemirror.css">
+    <script src="../node_modules/codemirror/lib/codemirror.js"></script>
+    <link rel="stylesheet" href="../node_modules/codemirror/theme/eclipse.css">
+    <script src="../node_modules/codemirror/addon/hint/show-hint.js"></script>
+    <script src="../node_modules/codemirror/addon/edit/closetag.js"></script>
+    <script src="../node_modules/codemirror/addon/edit/closebrackets.js"></script>    
+    <script src="../node_modules/codemirror/addon/edit/matchbrackets.js"></script>
+    <script src="../node_modules/codemirror/addon/selection/active-line.js"></script>
+    <script src="../node_modules/codemirror/addon/runmode/runmode.js"></script>
         
-    <script src="../../codemirror/mode/javascript/javascript.js"></script>    
-	<script src="../../jshint/jshint-r12-80277ef.js"></script>
-	<script src="../../codemirror/addon/lint/lint.js"></script>
-    <link rel="stylesheet" href="../../codemirror/addon/lint/lint.css">
-	<script src="../../codemirror/addon/lint/javascript-lint.js"></script>
+    <script src="../node_modules/codemirror/mode/javascript/javascript.js"></script>    
+	<script src="../node_modules/codemirror/addon/lint/lint.js"></script>
+    <link rel="stylesheet" href="../node_modules/codemirror/addon/lint/lint.css">
+	<script src="../node_modules/codemirror/addon/lint/javascript-lint.js"></script>
 
   <!-- Tern JS -->
-  <script src="../../ternjs/acorn/dist/acorn.js"></script>
-  <script src="../../ternjs/acorn/dist/acorn_loose.js"></script>
-  <script src="../../ternjs/acorn/dist/walk.js"></script>
-  <script src="../../ternjs/tern/lib/signal.js"></script>
-  <script src="../../ternjs/tern/lib/tern.js"></script>
-  <script src="../../ternjs/tern/lib/def.js"></script>
-  <script src="../../ternjs/tern/lib/comment.js"></script>
-  <script src="../../ternjs/tern/lib/infer.js"></script>
+  <script src="../node_modules/tern/node_modules/acorn/dist/acorn.js"></script>
+  <script src="../node_modules/tern/node_modules/acorn/dist/acorn_loose.js"></script>
+  <script src="../node_modules/tern/node_modules/acorn/dist/walk.js"></script>
+  <script src="../node_modules/tern/lib/signal.js"></script>
+  <script src="../node_modules/tern/lib/tern.js"></script>
+  <script src="../node_modules/tern/lib/def.js"></script>
+  <script src="../node_modules/tern/lib/comment.js"></script>
+  <script src="../node_modules/tern/lib/infer.js"></script>
 
   <!-- Official CodeMirror Tern addon -->
-  <script src="../../codemirror/addon/tern/tern.js"></script>   
+  <script src="../node_modules/codemirror/addon/tern/tern.js"></script>   
 
   <!-- Extension of CodeMirror Tern addon -->
   <link rel="stylesheet" href="../addon/hint/tern/tern-extension.css">
   <script src="../addon/hint/tern/tern-extension.js"></script>    
-  <script src="../addon/hint/tern/defs/ecma5.json.js"></script>
-  <script src="../addon/hint/tern/defs/browser.json.js"></script>
+  <script src="defs/ecma5.json.js"></script>
+  <script src="defs/browser.json.js"></script>
 
   <!-- CodeMirror Extension -->  
   
-  <link rel="stylesheet" href="../../codemirror-extension/addon/hint/show-hint-eclipse.css">
-  <script src="../../codemirror-extension/addon/hint/show-context-info.js"></script>
-  <link rel="stylesheet" href="../../codemirror-extension/addon/hint/show-context-info.css">
+  <link rel="stylesheet" href="../node_modules/codemirror-extension/addon/hint/show-hint-eclipse.css">
+  <script src="../node_modules/codemirror-extension/addon/hint/show-context-info.js"></script>
+  <link rel="stylesheet" href="../node_modules/codemirror-extension/addon/hint/show-context-info.css">
   
-  <link rel="stylesheet" href="../../codemirror-extension/addon/hint/templates-hint.css">
-  <script src="../../codemirror-extension/addon/hint/templates-hint.js"></script>
+  <link rel="stylesheet" href="../node_modules/codemirror-extension/addon/hint/templates-hint.css">
+  <script src="../node_modules/codemirror-extension/addon/hint/templates-hint.js"></script>
   
   <!-- CodeMirror Javascript -->
-  <script src="../addon/hint/javascript/javascript-templates.js"></script>
+  <script src="../node_modules/tern-guess-types/guess-types.js"></script>
 
   <!-- Tern Hover -->
-  <link rel="stylesheet" href="../../codemirror-extension/addon/hover/text-hover.css">
-  <script src="../../codemirror-extension/addon/hover/text-hover.js"></script>
+  <link rel="stylesheet" href="../node_modules/codemirror-extension/addon/hover/text-hover.css">
+  <script src="../node_modules/codemirror-extension/addon/hover/text-hover.js"></script>
   <script src="../addon/hint/tern/tern-hover.js"></script>
-    		          
-    <link rel="stylesheet" href="../../codemirror/doc/docs.css">
+    		         
+  <!-- Tern Guess Types-->
+  <script src="../addon/hint/tern/tern-hover.js"></script>
+      		          
   </head>
   <body>
     
@@ -82,6 +83,10 @@
     <form><textarea id="code" name="code">var arr = [];
 arr. // do Ctrl+Space here to open completion with array method. It uses the CodeMirror Tern addon
 for // do Ctrl+Space here to open templates (snippet). It uses the CodeMirror Javascript templates addon
+
+var i = 0, j = 10, s1 = "";
+s1.cha
+
 </textarea></form>
     <script type="text/javascript">
        
@@ -118,6 +123,7 @@ for // do Ctrl+Space here to open templates (snippet). It uses the CodeMirror Ja
         },
         gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers"],
     	lintWith: CodeMirror.javascriptValidator,
+    	ternWith: {"plugins": {"guess-types": {}}},
     	textHover: {delay:300}
       });
     </script>

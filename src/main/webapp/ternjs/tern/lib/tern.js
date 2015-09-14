@@ -21,12 +21,15 @@
     debug: false,
     async: false,
     getFile: function(_f, c) { if (this.async) c(null, null); },
+    normalizeFilename: function(name) { return name },
     defs: [],
     plugins: {},
     fetchTimeout: 1000,
     dependencyBudget: 20000,
     reuseInstances: true,
-    stripCRs: false
+    stripCRs: false,
+    ecmaVersion: 6,
+    projectDir: "/"
   };
 
   var queryTypes = {
@@ -73,10 +76,23 @@
   }
   File.prototype.asLineChar = function(pos) { return asLineChar(this, pos); };
 
+  function parseFile(srv, file) {
+    var options = {
+      directSourceFile: file,
+      allowReturnOutsideFunction: true,
+      allowImportExportEverywhere: true,
+      ecmaVersion: srv.options.ecmaVersion
+    }
+    var text = srv.signalReturnFirst("preParse", file.text, options) || file.text
+    var ast = infer.parse(text, options)
+    srv.signal("postParse", ast, text)
+    return ast
+  }
+
   function updateText(file, text, srv) {
     file.text = srv.options.stripCRs ? text.replace(/\r\n/g, "\n") : text;
     infer.withContext(srv.cx, function() {
-      file.ast = infer.parse(file.text, srv.passes, {directSourceFile: file, allowReturnOutsideFunction: true});
+      file.ast = parseFile(srv, file)
     });
     file.lineOffsets = null;
   }
@@ -87,6 +103,9 @@
     for (var o in defaultOptions) if (!options.hasOwnProperty(o))
       options[o] = defaultOptions[o];
 
+    this.projectDir = options.projectDir.replace(/\\/g, "/")
+    if (!/\/$/.test(this.projectDir)) this.projectDir += "/"
+
     this.handlers = Object.create(null);
     this.files = [];
     this.fileMap = Object.create(null);
@@ -95,18 +114,12 @@
     this.uses = 0;
     this.pending = 0;
     this.asyncError = null;
-    this.passes = Object.create(null);
+    this.mod = {}
 
-    this.defs = options.defs.slice(0);
-    for (var plugin in options.plugins) if (options.plugins.hasOwnProperty(plugin) && plugin in plugins) {
-      var init = plugins[plugin](this, options.plugins[plugin]);
-      if (init && init.defs) {
-        if (init.loadFirst) this.defs.unshift(init.defs);
-        else this.defs.push(init.defs);
-      }
-      if (init && init.passes) for (var type in init.passes) if (init.passes.hasOwnProperty(type))
-        (this.passes[type] || (this.passes[type] = [])).push(init.passes[type]);
-    }
+    this.defs = options.defs.slice(0)
+    this.plugins = Object.create(null)
+    for (var plugin in options.plugins) if (options.plugins.hasOwnProperty(plugin))
+      this.loadPlugin(plugin, options.plugins[plugin])
 
     this.reset();
   };
@@ -114,6 +127,8 @@
     addFile: function(name, /*optional*/ text, parent) {
       // Don't crash when sloppy plugins pass non-existent parent ids
       if (parent && !(parent in this.fileMap)) parent = null;
+      if (!(name in this.fileMap))
+        name = this.normalizeFilename(name)
       ensureFile(this, name, parent, text);
     },
     delFile: function(name) {
@@ -167,6 +182,30 @@
     finishAsyncAction: function(err) {
       if (err) this.asyncError = err;
       if (--this.pending === 0) this.signal("everythingFetched");
+    },
+
+    addDefs: function(defs, toFront) {
+      if (toFront) this.defs.unshift(defs)
+      else this.defs.push(defs)
+    },
+
+    loadPlugin: function(name, options) {
+      if (arguments.length == 1) options = this.options.plugins[name] || true
+      if (name in this.plugins || !(name in plugins) || !options) return
+      this.plugins[name] = true
+      var init = plugins[name](this, options)
+
+      // This is for backwards-compatibilty. Don't rely on it -- use addDef and on directly
+      if (!init) return
+      if (init.defs) this.addDefs(init.defs, init.loadFirst)
+      if (init.passes) for (var type in init.passes) if (init.passes.hasOwnProperty(type))
+        this.on(type, init.passes[type])
+    },
+
+    normalizeFilename: function(name) {
+      var norm = this.options.normalizeFilename(name).replace(/\\/g, "//")
+      if (norm.indexOf(this.projectDir) == 0) norm = norm.slice(this.projectDir.length)
+      return norm
     }
   });
 
@@ -216,6 +255,7 @@
         }
         c(null, result);
       }
+      infer.resetGuessing()
       infer.withContext(srv.cx, timeBudget ? function() { infer.withTimeout(timeBudget[0], run); } : run);
     });
   }
@@ -224,7 +264,7 @@
     infer.withContext(srv.cx, function() {
       file.scope = srv.cx.topScope;
       srv.signal("beforeLoad", file);
-      infer.analyze(file.ast, file.name, file.scope, srv.passes);
+      infer.analyze(file.ast, file.name, file.scope);
       srv.signal("afterLoad", file);
     });
     return file;
@@ -394,15 +434,15 @@
       if (foundPos && (m = line.match(/^(.*?)\bfunction\b/))) {
         var cut = m[1].length, white = "";
         for (var i = 0; i < cut; ++i) white += " ";
-        text = white + text.slice(cut);
+        file.text = white + text.slice(cut);
         atFunction = true;
       }
 
       var scopeStart = infer.scopeAt(realFile.ast, pos, realFile.scope);
       var scopeEnd = infer.scopeAt(realFile.ast, pos + text.length, realFile.scope);
       var scope = file.scope = scopeDepth(scopeStart) < scopeDepth(scopeEnd) ? scopeEnd : scopeStart;
-      file.ast = infer.parse(text, srv.passes, {directSourceFile: file, allowReturnOutsideFunction: true});
-      infer.analyze(file.ast, file.name, scope, srv.passes);
+      file.ast = parseFile(srv, file)
+      infer.analyze(file.ast, file.name, scope);
 
       // This is a kludge to tie together the function types (if any)
       // outside and inside of the fragment, so that arguments and
@@ -592,12 +632,38 @@
     "catch finally return void continue for switch while debugger " +
     "function this with default if throw delete in try").split(" ");
 
+  var addCompletion = exports.addCompletion = function(query, completions, name, aval, depth) {
+    var typeInfo = query.types || query.docs || query.urls || query.origins;
+    var wrapAsObjs = typeInfo || query.depths;
+
+    for (var i = 0; i < completions.length; ++i) {
+      var c = completions[i];
+      if ((wrapAsObjs ? c.name : c) == name) return;
+    }
+    var rec = wrapAsObjs ? {name: name} : name;
+    completions.push(rec);
+
+    if (aval && typeInfo) {
+      infer.resetGuessing();
+      var type = aval.getType();
+      rec.guess = infer.didGuess();
+      if (query.types)
+        rec.type = infer.toString(aval);
+      if (query.docs)
+        maybeSet(rec, "doc", parseDoc(query, aval.doc || type && type.doc));
+      if (query.urls)
+        maybeSet(rec, "url", aval.url || type && type.url);
+      if (query.origins)
+        maybeSet(rec, "origin", aval.origin || type && type.origin);
+    }
+    if (query.depths) rec.depth = depth || 0;
+    return rec;
+  };
+
   function findCompletions(srv, query, file) {
     if (query.end == null) throw ternError("missing .query.end field");
-    if (srv.passes.completion) for (var i = 0; i < srv.passes.completion.length; i++) {
-      var result = srv.passes.completion[i](file, query);
-      if (result) return result;
-    }
+    var fromPlugin = srv.signalReturnFirst("completion", file, query)
+    if (fromPlugin) return fromPlugin
 
     var wordStart = resolvePos(file, query.end), wordEnd = wordStart, text = file.text;
     while (wordStart && acorn.isIdentifierChar(text.charCodeAt(wordStart - 1))) --wordStart;
@@ -605,7 +671,6 @@
       while (wordEnd < text.length && acorn.isIdentifierChar(text.charCodeAt(wordEnd))) ++wordEnd;
     var word = text.slice(wordStart, wordEnd), completions = [], ignoreObj;
     if (query.caseInsensitive) word = word.toLowerCase();
-    var wrapAsObjs = query.types || query.depths || query.docs || query.urls || query.origins;
 
     function gather(prop, obj, depth, addInfo) {
       // 'hasOwnProperty' and such are usually just noise, leave them
@@ -614,29 +679,8 @@
       if (query.filter !== false && word &&
           (query.caseInsensitive ? prop.toLowerCase() : prop).indexOf(word) !== 0) return;
       if (ignoreObj && ignoreObj.props[prop]) return;
-      for (var i = 0; i < completions.length; ++i) {
-        var c = completions[i];
-        if ((wrapAsObjs ? c.name : c) == prop) return;
-      }
-      var rec = wrapAsObjs ? {name: prop} : prop;
-      completions.push(rec);
-
-      if (obj && (query.types || query.docs || query.urls || query.origins)) {
-        var val = obj.props[prop];
-        infer.resetGuessing();
-        var type = val.getType();
-        rec.guess = infer.didGuess();
-        if (query.types)
-          rec.type = infer.toString(val);
-        if (query.docs)
-          maybeSet(rec, "doc", parseDoc(query, val.doc || type && type.doc));
-        if (query.urls)
-          maybeSet(rec, "url", val.url || type && type.url);
-        if (query.origins)
-          maybeSet(rec, "origin", val.origin || type && type.origin);
-      }
-      if (query.depths) rec.depth = depth;
-      if (wrapAsObjs && addInfo) addInfo(rec);
+      var result = addCompletion(query, completions, prop, obj && obj.props[prop], depth);
+      if (addInfo && result && typeof result != "string") addInfo(result);
     }
 
     var hookname, prop, objType, isKey;
@@ -646,14 +690,15 @@
     // Decide whether this is an object property, either in a member
     // expression or an object literal.
     if (exprAt) {
-      if (exprAt.node.type == "MemberExpression" && exprAt.node.object.end < wordStart) {
+      var exprNode = exprAt.node;
+      if (exprNode.type == "MemberExpression" && exprNode.object.end < wordStart) {
         memberExpr = exprAt;
-      } else if (isStringAround(exprAt.node, wordStart, wordEnd)) {
-        var parent = infer.parentNode(exprAt.node, file.ast);
-        if (parent.type == "MemberExpression" && parent.property == exprAt.node)
+      } else if (isStringAround(exprNode, wordStart, wordEnd)) {
+        var parent = infer.parentNode(exprNode, file.ast);
+        if (parent.type == "MemberExpression" && parent.property == exprNode)
           memberExpr = {node: parent, state: exprAt.state};
-      } else if (exprAt.node.type == "ObjectExpression") {
-        var objProp = pointInProp(exprAt.node, wordEnd);
+      } else if (exprNode.type == "ObjectExpression") {
+        var objProp = pointInProp(exprNode, wordEnd);
         if (objProp) {
           objLit = exprAt;
           prop = isKey = objProp.key.name;
@@ -702,8 +747,7 @@
       });
       hookname = "variableCompletion";
     }
-    if (srv.passes[hookname])
-      srv.passes[hookname].forEach(function(hook) {hook(file, wordStart, wordEnd, gather);});
+    srv.signal(hookname, file, wordStart, wordEnd, gather)
 
     if (query.sort !== false) completions.sort(compareCompletions);
     srv.cx.completingProperty = null;
@@ -759,11 +803,11 @@
       infer.resetGuessing();
       type = infer.expressionType(expr);
     }
-    if (srv.passes["typeAt"]) {
-      var pos = resolvePos(file, query.end);
-      srv.passes["typeAt"].forEach(function(hook) {
-        type = hook(file, pos, expr, type);
-      });
+    var typeHandlers = srv.hasHandler("typeAt")
+    if (typeHandlers) {
+      var pos = resolvePos(file, query.end)
+      for (var i = 0; i < typeHandlers.length; i++)
+        type = typeHandlers[i](file, pos, expr, type)
     }
     if (!type) throw ternError("No type found at the given position.");
 
@@ -804,9 +848,10 @@
     var result = {guess: infer.didGuess(),
                   type: infer.toString(exprType, query.depth),
                   name: type && type.name,
-                  exprName: exprName};
+                  exprName: exprName,
+                  doc: exprType.doc,
+                  url: exprType.url};
     if (type) storeTypeDocs(query, type, result);
-    if (!result.doc && exprType.doc) result.doc = parseDoc(query, exprType.doc);
 
     return clean(result);
   }
@@ -902,7 +947,7 @@
     var name = expr.node.name;
 
     for (var scope = expr.state; scope && !(name in scope.props); scope = scope.prev) {}
-    if (!scope) throw ternError("Could not find a definition for " + name + " " + !!srv.cx.topScope.props.x);
+    if (!scope) throw ternError("Could not find a definition for " + name);
 
     var type, refs = [];
     function storeRef(file) {
@@ -1004,5 +1049,5 @@
     return {files: srv.files.map(function(f){return f.name;})};
   }
 
-  exports.version = "0.11.1";
+  exports.version = "0.15.0";
 });

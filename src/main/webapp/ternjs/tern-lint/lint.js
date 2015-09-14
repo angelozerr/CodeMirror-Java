@@ -1,10 +1,10 @@
-(function(mod) {
+(function(root, mod) {
   if (typeof exports == "object" && typeof module == "object") // CommonJS
-    return mod(require("tern/lib/infer"), require("tern/lib/tern"), require("acorn/dist/walk"));
+    return mod(exports, require("tern/lib/infer"), require("tern/lib/tern"), require("acorn/dist/walk"));
   if (typeof define == "function" && define.amd) // AMD
-    return define(["tern/lib/infer", "tern/lib/tern", "acorn/dist/walk"], mod);
-  mod(tern, tern, acorn.walk);
-})(function(infer, tern, walk) {
+    return define(["exports", "tern/lib/infer", "tern/lib/tern", "acorn/dist/walk"], mod);
+  mod(root.tern || (root.tern = {}), tern, tern, acorn.walk);
+})(this, function(exports, infer, tern, walk) {
   "use strict";
   
   var defaultRules = {
@@ -13,17 +13,12 @@
     "NotAFunction" : {"severity" : "error"},
     "InvalidArgument" : {"severity" : "error"},
     "UnusedVariable" : {"severity" : "warning"},
-    "UnknownModule" : {"severity" : "error"}
+    "UnknownModule" : {"severity" : "error"},
+    "MixedReturnTypes": {"severity" : "warning"},
+    "ObjectLiteral": {"severity" : "error"},
+    "TypeMismatch": {"severity" : "warning"},
+    "Array": {"severity" : "error"},
   };
-  
-  function outputPos(query, file, pos) {
-    if (query.lineCharPositions) {
-      var out = file.asLineChar(pos);
-      return out;
-    } else {
-      return pos;
-    }
-  }
 
   function makeVisitors(server, query, file, messages) {
 	
@@ -36,10 +31,13 @@
       var pos = getPosition(node);
       var error = {
           message: msg,
-          from: outputPos(query, file, pos.start),
-          to: outputPos(query, file, pos.end),
+          from: tern.outputPos(query, file, pos.start),
+          to: tern.outputPos(query, file, pos.end),
           severity: severity
       };
+      if (query.lineNumber) {
+        error.lineNumber = query.lineCharPositions ? error.from.line : tern.outputPos({lineCharPositions: true}, file, pos.start).line; 
+      }
       if (!query.groupByFiles) error.file = file.name;
       return error;
     }
@@ -95,8 +93,21 @@
     }
     
     function getTypeName(type) {
-      if (!type || !type.proto) return "Unknown type";
-      return type.proto.name;
+      if (!type) return "Unknown type";
+      if (type.types) {
+        // multiple types
+        var types = type.types, s = "";
+        for (var i = 0; i < types.length; i++) {
+          if (i > 0) s +="|";
+          var t = getTypeName(types[i]);
+          if (t != "Unknown type") s+= t;
+        }
+        return s == "" ? "Unknown type" : s; 
+      }
+      if (type.name) {
+        return type.name;
+      }
+      return (type.proto) ? type.proto.name : "Unknown type";
     }
     
     function hasProto(expectedType, name) {
@@ -108,10 +119,31 @@
     function isRegexExpected(expectedType) {
       return hasProto(expectedType, 'RegExp.prototype');
     }
+
+    function isEmptyType(val) {
+      return (!val || (val.types && val.types.length == 0));
+    }
     
-    function compareType(expectedType, actualType) {
-      if (!expectedType) return true;
-      if (!actualType) return true;
+    function compareType(expected, actual) {
+      if (isEmptyType(expected) || isEmptyType(actual)) return true;
+      if (expected.types) {
+        for (var i = 0; i < expected.types.length; i++) {
+          if (actual.types) {
+            for (var j = 0; j < actual.types.length; j++) {
+              if (compareType(expected.types[i], actual.types[j])) return true;
+            }
+          } else {
+            if (compareType(expected.types[i], actual.getType())) return true;
+          }
+        }
+        return false;
+      } else if (actual.types) {
+        for (var i = 0; i < actual.types.length; i++) {
+          if (compareType(expected.getType(), actual.types[i])) return true;
+        }
+      }
+      var expectedType = expected.getType(), actualType = actual.getType();
+      if (!expectedType || !actualType) return true;
       var currentProto = actualType.proto;
       while(currentProto) {
         if (expectedType.proto && expectedType.proto.name === currentProto.name) return true;
@@ -120,24 +152,39 @@
       return false;
     }
     
-    function checkPropsInObject(i, node, expectedArg, actualObj, invalidArgument) {
-      var
-        object = expectedArg.getType().proto.props,
-        expectedArgType = expectedArg.getType(),
-        props = actualObj.props,
-        prop_count = 0;
-      for (var prop in props) {
-        if (! ( prop in object ) ) {
-          addMessage(node.properties[prop_count].key, "Invalid argument at " + (i+1) + ": " + prop + " is not a property in " + getTypeName(expectedArgType), invalidArgument.severity);
-        } else {
-          // test that each object literal prop is the correct type
-          var actualType = actualObj.props[prop].getType();
-          if (getTypeName(expectedArgType.proto.props[prop].getType()) !== getTypeName(actualType)) {
-            addMessage(node.properties[prop_count].value, "Invalid argument at " + (i+1) + ": cannot convert from " + getTypeName(actualType) + " to " + getTypeName(object[prop].getType()), invalidArgument.severity);
+    function checkPropsInObject(node, expectedArg, actualObj, invalidArgument) {
+      var properties = node.properties, expectedObj = expectedArg.getType();
+      for (var i = 0; i < properties.length; i++) {
+        var property = properties[i], key = property.key, prop = key && key.name, value = property.value;
+        if (prop) {
+          var expectedType = expectedObj.hasProp(prop);
+          if (!expectedType) {
+            // key doesn't exists
+            addMessage(key, "Invalid property at " + (i+1) + ": " + prop + " is not a property in " + getTypeName(expectedArg), invalidArgument.severity);
+          } else {
+            // test that each object literal prop is the correct type
+            var actualType = actualObj.props[prop];
+            if (!compareType(expectedType, actualType)) {
+              addMessage(value, "Invalid property at " + (i+1) + ": cannot convert from " + getTypeName(actualType) + " to " + getTypeName(expectedType), invalidArgument.severity);
+            }
           }
         }
-        prop_count++;
       }
+    }
+    
+    function checkItemInArray(node, expectedArg, state, invalidArgument) {
+      var elements = node.elements, expectedType = expectedArg.hasProp("<i>");
+      for (var i = 0; i < elements.length; i++) {
+        var elt = elements[i], actualType = infer.expressionType({node: elt, state: state});
+        if (!compareType(expectedType, actualType)) {
+          addMessage(elt, "Invalid item at " + (i+1) + ": cannot convert from " + getTypeName(actualType) + " to " + getTypeName(expectedType), invalidArgument.severity);
+        }
+      }
+    }    
+    
+    function isObjectLiteral(type) {
+      var objType = type.getObjType();
+      return objType && objType.proto && objType.proto.name == "Object.prototype"; 
     }
 
     function getFunctionLint(fnType) {
@@ -146,6 +193,15 @@
         fnType.lint = getLint(fnType.metaData["!lint"]);
         return fnType.lint;
       };
+    }
+    
+    function isFunctionType(type) {
+      if (type.types) {
+        for (var i = 0; i < type.types.length; i++) {
+          if (isFunctionType(type.types[i])) return true;
+        }
+      }
+      return type.proto && type.proto.name == "Function.prototype";
     }
 
     function validateCallExpression(node, state, c) {
@@ -159,11 +215,12 @@
         // If one of them is a function, type.getFunctionType() will return it.
         var fnType = type.getFunctionType();
         if(fnType == null) {
-          if (notAFunctionRule) addMessage(node, "'" + getNodeName(node) + "' is not a function", notAFunctionRule.severity);                           
-        } else if (getFunctionLint(fnType)) {
-           // custom lint for function
-          getFunctionLint(fnType)(node, addMessage, getRule);
-        } else if (fnType.args) {
+          if (notAFunctionRule && !isFunctionType(type)) addMessage(node, "'" + getNodeName(node) + "' is not a function", notAFunctionRule.severity);
+          return;
+        }
+        var fnLint = getFunctionLint(fnType);
+        var continueLint = fnLint ? fnLint(node, addMessage, getRule) : true;
+        if (continueLint && fnType.args) {
           // validate parameters of the function 
           if (!invalidArgument) return;
           var actualArgs = node.arguments;
@@ -186,30 +243,12 @@
               } else { 
                 //console.error(file.name)
                 var actualArg = infer.expressionType({node: actualNode, state: state});
-                if (!compareType(expectedArg.getType(), actualArg.getType())) {
-                  // Type check an object literal in a parameter, see tests labeled #JSObjectLiteralInParameter
-                  // often an object literal is used to express bunch of optional arguments to a function
-                  // this has a low overhead because Object Literals (typed as a function argument) rarely have more than 20 properties
-                  var notCheckableOLTypes = ["Object.prototype", // because their would be no properties to check
-                                            ,"Boolean.prototype"
-                                            ,"Function.prototype"
-                                            ,"String.prototype"
-                                            ]
-                  var canBeOL = notCheckableOLTypes.indexOf(getTypeName(expectedArg.getType())) === -1;
-                  if ( actualNode.type === "ObjectExpression" && canBeOL) {
-                    checkPropsInObject(i, actualNode, expectedArg, actualArg, invalidArgument);
-                  // handle the case where the identifier points to an object literal
-                  } else if ((actualNode.type === "Identifier") && canBeOL) {
-                    // logic from findDef
-                    // first we have to find the object literal
-                    var query = {type: "definition", start: actualNode.start, end: actualNode.end};
-                    var expr = tern.findQueryExpr(file, query);
-                    var type = infer.expressionType(expr);
-                    var objExpr = type.getType();
-                    if (objExpr.originNode && objExpr.originNode.type === "ObjectExpression")
-                      checkPropsInObject(i, objExpr.originNode, expectedArg, objExpr, invalidArgument);
-                  } else
-                    addMessage(actualNode, "Invalid argument at " + (i+1) + ": cannot convert from " + getTypeName(actualArg.getType()) + " to " + getTypeName(expectedArg.getType()), invalidArgument.severity);
+                // if actual type is an Object literal and expected type is an object, we ignore 
+                // the comparison type since object literal properties validation is done inside "ObjectExpression".
+                if (!(expectedArg.getObjType() && isObjectLiteral(actualArg))) {
+                  if (!compareType(expectedArg, actualArg)) {
+                    addMessage(actualNode, "Invalid argument at " + (i+1) + ": cannot convert from " + getTypeName(actualArg) + " to " + getTypeName(expectedArg), invalidArgument.severity);
+                  }
                 }
               }
             }      
@@ -268,13 +307,36 @@
       }      
     }
     
+    function getArrType(type) {
+      if (type instanceof infer.Arr) {
+        return type.getObjType(); 
+      } else if (type.types) {
+        for (var i = 0; i < type.types.length; i++) {
+          if (getArrType(type.types[i])) return type.types[i];
+        }
+      }
+    }
+    
     var visitors = {
       VariableDeclaration: validateDeclaration,
       FunctionDeclaration: validateDeclaration,
+      ReturnStatement: function(node, state, c) {
+        if (!node.argument) return;
+        var rule = getRule("MixedReturnTypes");
+        if (!rule) return;
+        if (state.fnType && state.fnType.retval) {
+          var actualType = infer.expressionType({node: node.argument, state: state}), expectedType = state.fnType.retval;
+          if (!compareType(expectedType, actualType)) {
+            addMessage(node, "Invalid return type : cannot convert from " + getTypeName(actualType) + " to " + getTypeName(expectedType), rule.severity);
+          }
+        }
+      },
       // Detects expressions of the form `object.property`
       MemberExpression: function(node, state, c) {
         var rule = getRule("UnknownProperty");
         if (!rule) return;
+        var prop = node.property && node.property.name;
+        if (!prop || prop == "✖") return;
         var type = infer.expressionType({node: node, state: state});
         var parentType = infer.expressionType({node: node.object, state: state});
 
@@ -303,7 +365,7 @@
             // this may contain properties that are not really defined.
             parentType.types.forEach(function(potentialType) {
               // Obj#hasProp checks the prototype as well
-              if(typeof potentialType.hasProp == 'function' && potentialType.hasProp(node.property.name, true)) {
+              if(typeof potentialType.hasProp == 'function' && potentialType.hasProp(prop, true)) {
                 propertyDefined = true;
               }
             });
@@ -337,7 +399,47 @@
       // `node.callee` is the expression (Identifier or MemberExpression)
       // the is called as a function.
       NewExpression: validateCallExpression,
-      CallExpression: validateCallExpression
+      CallExpression: validateCallExpression,
+      AssignmentExpression: function(node, state, c) {
+        if (!node.left || !node.right) return;
+        var rule = getRule("TypeMismatch");
+        if (!rule) return;
+        var leftType = infer.expressionType({node: node.left, state: state}), 
+            rightType = infer.expressionType({node: node.right, state: state});
+        if (!compareType(leftType, rightType)) {
+          addMessage(node.right, "Type mismatch: cannot convert from " + getTypeName(leftType) + " to " + getTypeName(rightType), rule.severity);
+        }        
+      },
+      ObjectExpression: function(node, state, c) {
+        // validate properties of the object literal
+        var rule = getRule("ObjectLiteral");
+        if (!rule) return;
+        var actualType = node.objType;
+        var ctxType = infer.typeFromContext(file.ast, {node: node, state: state}), expectedType = null;
+        if (ctxType instanceof infer.Obj) {
+          expectedType = ctxType.getObjType(); 
+        } else if (ctxType && ctxType.makeupType) {
+          var objType = ctxType.makeupType();
+          if (objType && objType.getObjType()) {
+            expectedType = objType.getObjType();
+          }
+        }
+        if (expectedType && expectedType != actualType) {
+          // expected type is known. Ex: config object of RequireJS
+          checkPropsInObject(node, expectedType, actualType, rule);
+        }
+      },
+      ArrayExpression: function(node, state, c) {
+        // validate elements of the Arrray
+        var rule = getRule("Array");
+        if (!rule) return;
+        //var actualType = infer.expressionType({node: node, state: state});
+        var ctxType = infer.typeFromContext(file.ast, {node: node, state: state}), expectedType = getArrType(ctxType);        
+        if (expectedType /*&& expectedType != actualType*/) {
+          // expected type is known. Ex: config object of RequireJS
+          checkItemInArray(node, expectedType, state, rule);
+        }        
+      }
     };
 
     return visitors;
@@ -348,50 +450,59 @@
   // VariableDeclaration in infer.searchVisitor breaks things for us.
   var scopeVisitor = walk.make({
     Function: function(node, _st, c) {
-      var scope = node.body.scope;
+      var scope = node.scope;
       if (node.id) c(node.id, scope);
       for (var i = 0; i < node.params.length; ++i)
         c(node.params[i], scope);
       c(node.body, scope, "ScopeBody");
+    },
+    Statement: function(node, st, c) {
+      c(node, node.scope || st)
     }
   });
 
-  // Other alternative bases:
-  //   walk.base (no scope handling)
-  //   infer.searchVisitor
-  //   infer.fullVisitor
-  var base = scopeVisitor;
+  // Validate one file
+  
+  var validateFile = exports.validateFile = function(server, query, file) {
+    try {
+      var messages = [], ast = file.ast, state = file.scope;
+      var visitors = makeVisitors(server, query, file, messages);
+      walk.simple(ast, visitors, infer.searchVisitor, state);
+      return {messages: messages};
+    } catch(err) {
+      console.error(err.stack);
+      return {messages: []};
+    }
+  }
   
   tern.defineQueryType("lint", {
     takesFile: true,
     run: function(server, query, file) {
-      try {
-        var messages = [], ast = file.ast, state = file.scope;
-        var visitors = makeVisitors(server, query, file, messages);
-        walk.simple(ast, visitors, base, state);
-        return {messages: messages};
-      } catch(err) {
-        console.error(err.stack);
-        return {messages: []};
-      }
+      return validateFile(server, query, file);  
     }
   });
 
+  // Validate the whole files of the server
+  
+  var validateFiles = exports.validateFiles = function(server, query) {
+    try {
+      var messages = [], files = server.files, groupByFiles = query.groupByFiles == true;
+      for (var i = 0; i < files.length; ++i) {
+        var messagesFile = groupByFiles ? [] : messages, file = files[i], ast = file.ast, state = file.scope;
+        var visitors = makeVisitors(server, query, file, messagesFile);
+        walk.simple(ast, visitors, infer.searchVisitor, state);
+        if (groupByFiles) messages.push({file:file.name, messages: messagesFile});
+      }        
+      return {messages: messages};
+    } catch(err) {
+      console.error(err.stack);
+      return {messages: []};
+    }
+  }
+  
   tern.defineQueryType("lint-full", {
     run: function(server, query) {
-      try {
-        var messages = [], files = server.files, groupByFiles = query.groupByFiles == true;
-        for (var i = 0; i < files.length; ++i) {
-          var messagesFile = groupByFiles ? [] : messages, file = files[i], ast = file.ast, state = file.scope;
-          var visitors = makeVisitors(server, query, file, messagesFile);
-          walk.simple(ast, visitors, base, state);
-          if (groupByFiles) messages.push({file:file.name, messages: messagesFile});
-        }        
-        return {messages: messages};
-      } catch(err) {
-        console.error(err.stack);
-        return {messages: []};
-      }
+      return validateFiles(server, query);
     }
   });
   
@@ -400,7 +511,7 @@
     lints[name] = lint;  
   };
   
-  function getLint(name) {
+  var getLint = tern.getLint = function(name) {
     if (!name) return null;
     return lints[name];
   }
@@ -410,7 +521,8 @@
       rules: getRules(options)	
     };
     return {
-    	passes: {}
+    	passes: {},
+    	loadFirst: true
     };
   });
   

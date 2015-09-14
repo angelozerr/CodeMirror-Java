@@ -128,13 +128,8 @@
     }
   };
 
-  infer.registerFunction("requireJS", function(_self, args, argNodes) {
-    var server = infer.cx().parent, data = server && server._requireJS;
-    if (!data || !args.length) return infer.ANull;
-
-    var name = data.currentFile;
-    var out = getModule(name, data);
-
+  function runModule(server, args, argNodes, out) {
+    var data = server.mod.requireJS;
     var deps = [], fn, exports, mod;
 
     function interf(name) {
@@ -146,15 +141,20 @@
 
     if (argNodes && args.length > 1) {
       var node = argNodes[args.length == 2 ? 0 : 1];
-      var base = path.relative(server.options.projectDir, path.dirname(node.sourceFile.name));
+      var base = path.relative(server.projectDir, path.dirname(node.sourceFile.name));
       if (node.type == "Literal" && typeof node.value == "string") {
-        deps.push(interf(path.join(base, node.value), data));
+        node.required = interf(path.join(base, node.value), data);
+        deps.push(node.required);
       } else if (node.type == "ArrayExpression") for (var i = 0; i < node.elements.length; ++i) {
         var elt = node.elements[i];
-        if (elt.type == "Literal" && typeof elt.value == "string")
-          deps.push(interf(path.join(base, elt.value), data));
+        if (elt.type == "Literal" && typeof elt.value == "string") {
+          elt.required = interf(path.join(base, elt.value), data);
+          deps.push(elt.required);
+        }
       }
-    } else if (argNodes && args.length == 1 && argNodes[0].type == "FunctionExpression" && argNodes[0].params.length) {
+    } else if (argNodes && args.length == 1 &&
+               /FunctionExpression/.test(argNodes[0].type) &&
+               argNodes[0].params.length) {
       // Simplified CommonJS call
       deps.push(interf("require", data), interf("exports", data), interf("module", data));
       fn = args[0];
@@ -165,10 +165,26 @@
       if (!fn.isEmpty() && !fn.getFunctionType()) fn = null;
     }
 
-    if (fn) fn.propagate(new infer.IsCallee(infer.ANull, deps, null, out));
-    else if (args.length) args[0].propagate(out);
+    if (fn) {
+      fn.propagate(new infer.IsCallee(infer.ANull, deps, null, out || infer.ANull));
+      if (out) out.originNode = fn.originNode;
+    } else if (out) {
+      args[0].propagate(out)
+    }
 
     return infer.ANull;
+  }
+
+  infer.registerFunction("requirejs_define", function(_self, args, argNodes) {
+    if (!args.length) return infer.ANull
+
+    var server = infer.cx().parent, data = server.mod.requireJS
+    return runModule(server, args, argNodes, getModule(data.currentFile, data))
+  });
+
+  infer.registerFunction("requirejs_require", function(_self, args, argNodes) {
+    if (!args.length) return infer.ANull
+    return runModule(infer.cx().parent, args, argNodes)
   });
 
   // Parse simple ObjectExpression AST nodes to their corresponding JavaScript objects.
@@ -188,8 +204,8 @@
     }
   }
 
-  infer.registerFunction("requireJSConfig", function(_self, _args, argNodes) {
-    var server = infer.cx().parent, data = server && server._requireJS;
+  infer.registerFunction("requirejs_config", function(_self, _args, argNodes) {
+    var server = infer.cx().parent, data = server && server.mod.requireJS;
     if (data && argNodes && argNodes.length && argNodes[0].type == "ObjectExpression") {
       var config = parseExprNode(argNodes[0]);
       for (var key in config) if (config.hasOwnProperty(key)) {
@@ -206,7 +222,7 @@
   });
 
   function preCondenseReach(state) {
-    var interfaces = infer.cx().parent._requireJS.interfaces;
+    var interfaces = infer.cx().parent.mod.requireJS.interfaces;
     var rjs = state.roots["!requirejs"] = new infer.Obj(null);
     for (var name in interfaces) {
       var prop = rjs.defProp(name.replace(/\./g, "`"));
@@ -217,14 +233,14 @@
 
   function postLoadDef(data) {
     var cx = infer.cx(), interfaces = cx.definitions[data["!name"]]["!requirejs"];
-    var data = cx.parent._requireJS;
+    var data = cx.parent.mod.requireJS;
     if (interfaces) for (var name in interfaces.props) {
       interfaces.props[name].propagate(getInterface(name, data));
     }
   }
 
   tern.registerPlugin("requirejs", function(server, options) {
-    server._requireJS = {
+    server.mod.requireJS = {
       interfaces: Object.create(null),
       options: options || {},
       currentFile: null,
@@ -232,36 +248,52 @@
     };
 
     server.on("beforeLoad", function(file) {
-      this._requireJS.currentFile = file.name;
+      this.mod.requireJS.currentFile = file.name;
     });
     server.on("reset", function() {
-      this._requireJS.interfaces = Object.create(null);
-      this._requireJS.require = null;
+      this.mod.requireJS.interfaces = Object.create(null);
+      this.mod.requireJS.require = null;
     });
-    return {
-      defs: defs,
-      passes: {
-        preCondenseReach: preCondenseReach,
-        postLoadDef: postLoadDef,
-        completion: findCompletions
-      }
-    };
+
+    server.on("preCondenseReach", preCondenseReach)
+    server.on("postLoadDef", postLoadDef)
+    server.on("typeAt", findTypeAt)
+    server.on("completion", findCompletions)
+
+    server.addDefs(defs)
   });
+
+  function findTypeAt(_file, _pos, expr, type) {
+    if (!expr || expr.node.type != "Literal" ||
+        typeof expr.node.value != "string" || !expr.node.required)
+      return type;
+
+    // The `type` is a value shared for all string literals.
+    // We must create a copy before modifying `origin` and `originNode`.
+    // Otherwise all string literals would point to the last jump location
+    type = Object.create(type);
+
+    // Provide a custom origin location pointing to the require()d file
+    var exportedType = expr.node.required;
+    type.origin = exportedType.origin;
+    type.originNode = exportedType.originNode;
+    return type;
+  }
 
   function findCompletions(file, query) {
     var wordEnd = tern.resolvePos(file, query.end);
     var callExpr = infer.findExpressionAround(file.ast, null, wordEnd, file.scope, "CallExpression");
     if (!callExpr) return;
     var callNode = callExpr.node;
-    if (callNode.callee.type != "Identifier" || 
-    	!(callNode.callee.name == "define" || callNode.callee.name == "require")||
+    if (callNode.callee.type != "Identifier" ||
+        !(callNode.callee.name == "define" || callNode.callee.name == "require" || callNode.callee.name == "requirejs")||
         callNode.arguments.length < 1 || callNode.arguments[0].type != "ArrayExpression") return;
     var argNode = findRequireModule(callNode.arguments[0].elements, wordEnd);
     if (!argNode) return;
     var word = argNode.raw.slice(1, wordEnd - argNode.start), quote = argNode.raw.charAt(0);
     if (word && word.charAt(word.length - 1) == quote)
       word = word.slice(0, word.length - 1);
-    var completions = completeModuleName(query, file, word);
+    var completions = completeModuleName(query, word, file.name);
     if (argNode.end == wordEnd + 1 && file.text.charAt(wordEnd) == quote)
       ++wordEnd;
     return {
@@ -280,7 +312,7 @@
       })
     };
   }
-  
+
   function findRequireModule(argsNode, wordEnd) {
     for (var i = 0; i < argsNode.length; i++) {
       var argNode = argsNode[i];
@@ -288,51 +320,28 @@
           argNode.start < wordEnd && argNode.end > wordEnd) return argNode;
     }
   }
-  
-  function completeModuleName(query, file, word) {
-    var completions = [];
-    var cx = infer.cx(), server = cx.parent, data = server._requireJS;
-    var currentFile = null; //data.currentFile || resolveProjectPath(server, file.name);
-    var wrapAsObjs = query.types || query.depths || query.docs || query.urls || query.origins;
 
-    function maybeSet(obj, prop, val) {
-      if (val != null) obj[prop] = val;
-    }
-    
-    function gather(modules) {
-      for (var name in modules) {
-        if (name == currentFile) continue;
-
-        var moduleName = name; //resolveModulePath(name, currentFile);
-        if (moduleName &&
-            !(query.filter !== false && word &&
-              (query.caseInsensitive ? moduleName.toLowerCase() : moduleName).indexOf(word) !== 0)) {
-          var rec = wrapAsObjs ? {name: moduleName} : moduleName;
-          completions.push(rec);
-
-          if (query.types || query.docs || query.urls || query.origins) {
-            var val = modules[name];
-            infer.resetGuessing();
-            var type = val.getType();
-            rec.guess = infer.didGuess();
-            if (query.types)
-              rec.type = infer.toString(val);
-            if (query.docs)
-              maybeSet(rec, "doc", val.doc || type && type.doc);
-            if (query.urls)
-              maybeSet(rec, "url", val.url || type && type.url);
-            if (query.origins)
-              maybeSet(rec, "origin", val.origin || type && type.origin);
-          }
-        }
-      }
-    }
+  function completeModuleName(query, word, parentFile) {
+    var cx = infer.cx(), server = cx.parent, data = server.mod.requireJS;
+    var currentName = stripJSExt(parentFile);
+    var base = data.options.baseURL || "";
+    if (base && base.charAt(base.length - 1) != "/") base += "/";
 
     if (query.caseInsensitive) word = word.toLowerCase();
-    gather(data.interfaces);
+
+    var completions = [], modules = data.interfaces;
+    for (var name in modules) {
+      if (name == currentName || !modules[name].getType()) continue;
+
+      var moduleName = name.substring(base.length, name.length);
+      if (moduleName &&
+          !(query.filter !== false && word &&
+            (query.caseInsensitive ? moduleName.toLowerCase() : moduleName).indexOf(word) !== 0))
+        tern.addCompletion(query, completions, moduleName, modules[name]);
+    }
     return completions;
   }
-  
+
   var defs = {
     "!name": "requirejs",
     "!define": {
@@ -423,25 +432,40 @@
           "!doc": "Introduced in RequireJS 2.1.9: If set to true, skips the data-main attribute scanning done to start module loading. Useful if RequireJS is embedded in a utility library that may interact with other RequireJS library on the page, and the embedded version should not do data-main loading.",
           "!url": "http://requirejs.org/docs/api.html#config-skipDataMain"
         }
+      },
+      RequireJSError: {
+        "prototype" : {
+          "!proto": "Error.prototype",
+          "requireType": {
+            "!type": "string",
+            "!doc": "A string value with a general classification, like 'timeout', 'nodefine', 'scripterror'.",
+            "!url": "http://requirejs.org/docs/api.html#errors"
+          },
+          "requireModules": {
+            "!type": "[string]",
+            "!doc": "An array of module names/URLs that timed out.",
+            "!url": "http://requirejs.org/docs/api.html#errors"
+          }
+        }
       }
     },
     requirejs: {
-      "!type": "fn(deps: [string], callback: fn(), errback: fn()) -> !custom:requireJS",
+      "!type": "fn(deps: [string], callback: fn(), errback?: fn(err: +RequireJSError)) -> !custom:requirejs_require",
       onError: {
-        "!type": "fn(err: +Error)",
+        "!type": "fn(err: +RequireJSError)",
         "!doc": "To detect errors that are not caught by local errbacks, you can override requirejs.onError()",
         "!url": "http://requirejs.org/docs/api.html#requirejsonerror"
       },
       load: {
         "!type": "fn(context: ?, moduleName: string, url: string)"
       },
-      config: "fn(config: config) -> !custom:requireJSConfig",
+      config: "fn(config: config) -> !custom:requirejs_config",
       version: "string",
       isBrowser: "bool"
     },
     require: "requirejs",
     define: {
-      "!type": "fn(deps: [string], callback: fn()) -> !custom:requireJS",
+      "!type": "fn(deps: [string], callback: fn()) -> !custom:requirejs_define",
       amd: {
         jQuery: "bool"
       }

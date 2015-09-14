@@ -1,0 +1,29 @@
+{
+  "name": "codemirror-extension",
+  "license": "MIT",
+  "version": "0.1.0",
+  "author": {
+    "name": "Angelo ZERR",
+    "email": "angelo.zerr@gmail.com"
+  },
+  "description": "CodeMirror Extension",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/angelozerr/codemirror-extension.git"
+  },
+  "dependencies": {
+    "codemirror": "^5.6.0"
+  },
+  "keywords": [
+    "CodeMirror"
+  ],
+  "readme": "CodeMirror-Extension\n=================\n\n[![NPM version](https://img.shields.io/npm/v/codemirror-extension.svg)](https://www.npmjs.org/package/codemirror-extension)\n\n[CodeMirror](https://github.com/marijnh/CodeMirror) is JavaScript component that provides a code editor in the browser. \n\n[CodeMirror-Extension](https://github.com/angelozerr/CodeMirror-Extension) provides missing features of CodeMirror like:\n\n* Advanced completion : \n * Completion with Templates\n * Context information\n\n* Hyperlink\n \n* Hover",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/angelozerr/codemirror-extension/issues"
+  },
+  "homepage": "https://github.com/angelozerr/codemirror-extension",
+  "_id": "codemirror-extension@0.1.0",
+  "_shasum": "fbda34f4e3be237ccbcb5f389475c7e7aa42b90e",
+  "_from": "codemirror-extension@^0.1.0"
+}

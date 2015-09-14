@@ -198,13 +198,14 @@
       var marker = state.selectableMarkers[state.varIndex];
       var pos = marker.find();
       cm.setSelection(pos.from, pos.to);
-      var templateVar = marker._templateVar;
+      var templateVar = marker._templateVar, templateHint;
       for ( var i = 0; i < state.marked.length; i++) {
         var m = state.marked[i];
         if (m == marker) {
           m.className = "";
           m.startStyle = "";
           m.endStyle = "";
+          templateHint = m._templateHint;
         } else {
           if (m._templateVar == marker._templateVar) {
             m.className = "CodeMirror-templates-variable-selected";
@@ -217,7 +218,12 @@
           }
         }
       }
-      cm.refresh();
+      cm.refresh();            
+      if (templateHint) {
+	    // Open completion with completion list items
+        templateHint.async = true;
+        cm.showHint({hint: templateHint, somethingSelected: false});
+      }
     } else {
       // No tokens - exit.
       exit(cm);
@@ -259,7 +265,8 @@
           from : from,
           to : to,
           variable : token.variable,
-          selectable : selectable
+          selectable : selectable,
+          list: token.list
         });
         variables[token.variable] = false;
       } else if(token.cursor) {
@@ -272,7 +279,7 @@
     var from = data.from;
     var to = data.to;
     var startLine = from.line;
-    cm.replaceRange(content, from, to);
+	cm.replaceRange(content, from, to);
 
     for ( var i = 0; i < markers.length; i++) {
       var marker = markers[i], from = marker.from, to = marker.to;
@@ -283,7 +290,8 @@
         inclusiveLeft : true,
         inclusiveRight : true,
         clearWhenEmpty: false,  // Works in CodeMirror 4.6
-        _templateVar : marker.variable
+        _templateVar : marker.variable,
+        _templateHint : marker.list ? getHints(marker.list, from) : null
       });
       state.marked.push(markText);
       if (marker.selectable == true) {
@@ -314,6 +322,18 @@
     selectNextVariable(cm, true);
   }
 
+  function getHints(list, from) {
+    return function(cm, c) {    
+      var completions = [], to = cm.getCursor("end"), word = cm.somethingSelected() ? "" : cm.getTokenAt(to).string;          
+      for (var j = 0; j < list.length; j++) {
+        var name = list[j]; 
+        if (name.toLowerCase().indexOf(word.toLowerCase()) == 0) completions.push(name);            
+      }
+      var obj = {from: from, to: to, list: completions};
+      c(obj);
+    }
+  }
+  
   function exit(cm) {
     // Move to ${cursor} in the template, then uninstall.
     var cursor = cm._templateState.cursor;
