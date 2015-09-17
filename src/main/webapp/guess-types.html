@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Phaser Tern Demo</title>
+    <title>CodeMirror: Javascript - Lint + Hint with Tern demo</title>
     
-   <!-- CodeMirror -->
+    <!-- CodeMirror -->
     <link rel="stylesheet" href="codemirror/lib/codemirror.css">
     <script src="codemirror/lib/codemirror.js"></script>
     <link rel="stylesheet" href="codemirror/theme/eclipse.css">
@@ -29,8 +29,7 @@
   <script src="ternjs/tern/lib/def.js"></script>
   <script src="ternjs/tern/lib/comment.js"></script>
   <script src="ternjs/tern/lib/infer.js"></script>
-  <script src="ternjs/tern-phaser/phaser.js"></script>
-  
+
   <!-- Official CodeMirror Tern addon -->
   <script src="codemirror/addon/tern/tern.js"></script>   
 
@@ -38,7 +37,6 @@
   <link rel="stylesheet" href="codemirror-javascript/addon/hint/tern/tern-extension.css">
   <script src="codemirror-javascript/addon/hint/tern/tern-extension.js"></script>    
   <script src="codemirror-javascript/demo/defs/ecma5.json.js"></script>
-  <script src="codemirror-javascript/demo/defs/browser.json.js"></script>
 
   <!-- CodeMirror Extension -->  
   
@@ -50,100 +48,22 @@
   <script src="codemirror-extension/addon/hint/templates-hint.js"></script>
   
   <!-- CodeMirror Javascript -->
-  <script src="codemirror-javascript/addon/hint/javascript/javascript-templates.js"></script>
+  <script src="ternjs/tern-guess-types/guess-types.js"></script>
 
   <!-- Tern Hover -->
   <link rel="stylesheet" href="codemirror-extension/addon/hover/text-hover.css">
   <script src="codemirror-extension/addon/hover/text-hover.js"></script>
   <script src="codemirror-javascript/addon/hint/tern/tern-hover.js"></script>
-
-	<!-- Tern Lint -->    	
-	<script src="codemirror/addon/lint/lint.js"></script>
-    <link rel="stylesheet" href="codemirror/addon/lint/lint.css">
-    <script src="ternjs/tern-lint/lint.js"></script>
-    <script src="ternjs/tern-lint/codemirror/addon/lint/tern-lint.js"></script>
     		          
-      </head>
+  </head>
   <body>
     
-    <h1>Demo with Phaser Tern plugin</h1>
-	<p>See <a href="https://github.com/angelozerr/tern-phaser">https://github.com/angelozerr/tern-phaser</a> for more infos.</p>  
-    <form><textarea id="code" name="code">P //<-Ctrl+Space shows Phaser
-new Phaser.T // here Ctrl + spaces show Text    
-new Phaser.Text(game, x, y, text, {
-  align: 10,
-  XXXX: "",
-  // here Ctrl+Spaces shows style properties
-})
+    <h1>JavaScript - Completion Guess demo</h1>
+    </div>
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
-
-function preload() {
-
-    game.load.image('lazur', 'assets/pics/thorn_lazur.png');
-    game.load.spritesheet('mummy', 'assets/sprites/metalslug_mummy37x45.png', 37, 45, 18);
-
-}
-
-var back;
-var mummy;
-var anim;
-var loopText;
-
-function create() {
-
-    back = game.add.image(0, -400, 'lazur');
-    back.scale.set(2);
-    back.smoothed = false;
-
-    mummy = game.add.sprite(200, 360, 'mummy', 5);
-    mummy.scale.set(4);
-    mummy.smoothed = false;
-    anim = mummy.animations.add('walk');
-
-    anim.onStart.add(animationStarted, this);
-    anim.onLoop.add(animationLooped, this);
-    anim.onComplete.add(animationStopped, this);
-
-    anim.play(10, true);
-
-}
-
-function animationStarted(sprite, animation) {
-
-    game.add.text(32, 32, 'Animation started', { fill: 'white' });
-
-}
-
-function animationLooped(sprite, animation) {
-
-    if (animation.loopCount === 1)
-    {
-        loopText = game.add.text(32, 64, 'Animation looped', { fill: 'white' });
-    }
-    else
-    {
-        loopText.text = 'Animation looped x2';
-        animation.loop = false;
-    }
-
-}
-
-function animationStopped(sprite, animation) {
-
-    game.add.text(32, 64+32, 'Animation stopped', { fill: 'white' });
-
-}
-
-function update() {
-
-    if (anim.isPlaying)
-    {
-        back.x -= 1;
-    }
-
-}
-    </textarea></form>
+    <form><textarea id="code" name="code">var i = 0, j = 1, s = "";
+s.char // Do Ctrl+Space and select charAt or charCodeAt, apply completion, a second popup completion will shows i, j which are Number type waited by charAt/charCodeAt function parameter  
+</textarea></form>
     <script type="text/javascript">
        
       function passAndHint(cm) {
@@ -177,12 +97,11 @@ function update() {
 	        "Alt-,": function(cm) { CodeMirror.tern.jumpBack(cm); },
 	        "Ctrl-Q": function(cm) { CodeMirror.tern.rename(cm); }
         },
-        gutters: ["CodeMirror-linenumbers", "CodeMirror-lint-markers"],
-    	textHover: {delay:300},
-    	ternWith: { plugins: {"lint":{}, "phaser" : {}}}
+        gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers"],
+    	lintWith: CodeMirror.javascriptValidator,
+    	ternWith: {"plugins": {"guess-types": {}}},
+    	textHover: {delay:300}
       });
-      
-      editor.setOption("lint", {getAnnotations: CodeMirror.ternLint, async : true, server: CodeMirror.tern.getServer(editor)})
     </script>
     
   </body>

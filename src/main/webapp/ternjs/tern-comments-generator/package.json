@@ -1,0 +1,26 @@
+{
+  "name": "tern-comments-generator",
+  "license": "MIT",
+  "version": "0.1.0",
+  "main": "comments-generator.js",
+  "author": "Angelo ZERR <angelo.zerr@gmail.com>",
+  "description": "A Tern plugin to generate JSDoc.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/angelozerr/tern-comments-generator.git"
+  },
+  "scripts": {
+    "test": "node ./test/all.js"
+  },  
+  "dependencies": {
+    "tern": "^0.15.0",
+    "acorn": "^2.4.0"
+  },
+  "devDependencies": { 
+    "test": ">=0.0.5",
+    "codemirror": ">=5.3.0"
+  },  
+  "keywords": [
+    "tern"
+  ]
+}

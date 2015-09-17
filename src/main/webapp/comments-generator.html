@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Phaser Tern Demo</title>
+    <title>Comments Generator Tern Demo</title>
     
-   <!-- CodeMirror -->
+    <!-- CodeMirror -->
     <link rel="stylesheet" href="codemirror/lib/codemirror.css">
     <script src="codemirror/lib/codemirror.js"></script>
     <link rel="stylesheet" href="codemirror/theme/eclipse.css">
@@ -16,9 +16,6 @@
     <script src="codemirror/addon/runmode/runmode.js"></script>
         
     <script src="codemirror/mode/javascript/javascript.js"></script>    
-	<script src="codemirror/addon/lint/lint.js"></script>
-    <link rel="stylesheet" href="codemirror/addon/lint/lint.css">
-	<script src="codemirror/addon/lint/javascript-lint.js"></script>
 
   <!-- Tern JS -->
   <script src="ternjs/acorn/dist/acorn.js"></script>
@@ -29,7 +26,6 @@
   <script src="ternjs/tern/lib/def.js"></script>
   <script src="ternjs/tern/lib/comment.js"></script>
   <script src="ternjs/tern/lib/infer.js"></script>
-  <script src="ternjs/tern-phaser/phaser.js"></script>
   
   <!-- Official CodeMirror Tern addon -->
   <script src="codemirror/addon/tern/tern.js"></script>   
@@ -56,102 +52,45 @@
   <link rel="stylesheet" href="codemirror-extension/addon/hover/text-hover.css">
   <script src="codemirror-extension/addon/hover/text-hover.js"></script>
   <script src="codemirror-javascript/addon/hint/tern/tern-hover.js"></script>
-
-	<!-- Tern Lint -->    	
-	<script src="codemirror/addon/lint/lint.js"></script>
-    <link rel="stylesheet" href="codemirror/addon/lint/lint.css">
-    <script src="ternjs/tern-lint/lint.js"></script>
-    <script src="ternjs/tern-lint/codemirror/addon/lint/tern-lint.js"></script>
-    		          
-      </head>
+  
+  <script src="ternjs/tern-comments-generator/codemirror/addon/comments-generator/tern-comments-generator.js"></script>
+  <script src="ternjs/tern-comments-generator/comments-generator.js"></script>
+  
+  
+  </head>
   <body>
     
-    <h1>Demo with Phaser Tern plugin</h1>
-	<p>See <a href="https://github.com/angelozerr/tern-phaser">https://github.com/angelozerr/tern-phaser</a> for more infos.</p>  
-    <form><textarea id="code" name="code">P //<-Ctrl+Space shows Phaser
-new Phaser.T // here Ctrl + spaces show Text    
-new Phaser.Text(game, x, y, text, {
-  align: 10,
-  XXXX: "",
-  // here Ctrl+Spaces shows style properties
-})
+    <h1>Demo with Comments Generator Tern plugin </h1>
+	<p>See <a href="https://github.com/angelozerr/tern-comments-generator">https://github.com/angelozerr/tern-comments-generator</a> for more infos.</p>  
+    <form>
+    Select your cursor after the first /** and type Enter to generate JSDoc for the function f.
+    <table style="width: 100%;height: 500px">
+    	<tr>
+    		<td valign="top" style="width: 50%">
+<textarea id="code" name="code">/**function f(a, b) {
+  if ( a > b) return 0;
+  if ( a < b) return true;
+  return "";
+};
 
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update });
+f(5, "");
+f("", "");
 
-function preload() {
+</textarea>    		
+    		</td>
+    	</tr>
+    
+    </table>
+  
 
-    game.load.image('lazur', 'assets/pics/thorn_lazur.png');
-    game.load.spritesheet('mummy', 'assets/sprites/metalslug_mummy37x45.png', 37, 45, 18);
 
-}
-
-var back;
-var mummy;
-var anim;
-var loopText;
-
-function create() {
-
-    back = game.add.image(0, -400, 'lazur');
-    back.scale.set(2);
-    back.smoothed = false;
-
-    mummy = game.add.sprite(200, 360, 'mummy', 5);
-    mummy.scale.set(4);
-    mummy.smoothed = false;
-    anim = mummy.animations.add('walk');
-
-    anim.onStart.add(animationStarted, this);
-    anim.onLoop.add(animationLooped, this);
-    anim.onComplete.add(animationStopped, this);
-
-    anim.play(10, true);
-
-}
-
-function animationStarted(sprite, animation) {
-
-    game.add.text(32, 32, 'Animation started', { fill: 'white' });
-
-}
-
-function animationLooped(sprite, animation) {
-
-    if (animation.loopCount === 1)
-    {
-        loopText = game.add.text(32, 64, 'Animation looped', { fill: 'white' });
-    }
-    else
-    {
-        loopText.text = 'Animation looped x2';
-        animation.loop = false;
-    }
-
-}
-
-function animationStopped(sprite, animation) {
-
-    game.add.text(32, 64+32, 'Animation stopped', { fill: 'white' });
-
-}
-
-function update() {
-
-    if (anim.isPlaying)
-    {
-        back.x -= 1;
-    }
-
-}
-    </textarea></form>
+</form>
     <script type="text/javascript">
        
       function passAndHint(cm) {
      	setTimeout(function() {cm.execCommand("autocomplete");}, 100);
       	return CodeMirror.Pass;
       }
-       
-      
       
       function myHint(cm) {
       	return CodeMirror.showHint(cm, CodeMirror.ternHint, {async: true}); 
@@ -164,6 +103,7 @@ function update() {
       var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
         mode: 'application/javascript',
         theme : "eclipse",
+        autofocus: true,
         styleActiveLine: true,
         lineNumbers: true,
         lineWrapping: true,
@@ -175,14 +115,15 @@ function update() {
         	"Ctrl-I": function(cm) { CodeMirror.tern.showType(cm); },
   	        "Alt-.": function(cm) { CodeMirror.tern.jumpToDef(cm); },
 	        "Alt-,": function(cm) { CodeMirror.tern.jumpBack(cm); },
-	        "Ctrl-Q": function(cm) { CodeMirror.tern.rename(cm); }
+	        "Ctrl-Q": function(cm) { CodeMirror.tern.rename(cm); },
+	        "Enter": function(cm) { return CodeMirror.tern.comments(cm, true); }
         },
-        gutters: ["CodeMirror-linenumbers", "CodeMirror-lint-markers"],
+        gutters: ["CodeMirror-linenumbers"],
     	textHover: {delay:300},
-    	ternWith: { plugins: {"lint":{}, "phaser" : {}}}
-      });
+    	ternWith: { plugins: {"comments-generator" : {}}}    	
+      });      
+      editor.setCursor(0, 3);
       
-      editor.setOption("lint", {getAnnotations: CodeMirror.ternLint, async : true, server: CodeMirror.tern.getServer(editor)})
     </script>
     
   </body>
