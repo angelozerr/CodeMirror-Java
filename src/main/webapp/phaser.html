@@ -29,6 +29,8 @@
   <script src="ternjs/tern/lib/def.js"></script>
   <script src="ternjs/tern/lib/comment.js"></script>
   <script src="ternjs/tern/lib/infer.js"></script>
+  <script src="ternjs/tern/plugin/doc_comment.js"></script>
+  
   <script src="ternjs/tern-phaser/phaser.js"></script>
   
   <!-- Official CodeMirror Tern addon -->
@@ -179,7 +181,7 @@ function update() {
         },
         gutters: ["CodeMirror-linenumbers", "CodeMirror-lint-markers"],
     	textHover: {delay:300},
-    	ternWith: { plugins: {"lint":{}, "phaser" : {}}}
+    	ternWith: { plugins: {"doc_comment": {}, "lint":{}, "phaser" : {}}}
       });
       
       editor.setOption("lint", {getAnnotations: CodeMirror.ternLint, async : true, server: CodeMirror.tern.getServer(editor)})
