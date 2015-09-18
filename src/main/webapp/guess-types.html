@@ -29,6 +29,7 @@
   <script src="ternjs/tern/lib/def.js"></script>
   <script src="ternjs/tern/lib/comment.js"></script>
   <script src="ternjs/tern/lib/infer.js"></script>
+  <script src="ternjs/tern/plugin/doc_comment.js"></script>
 
   <!-- Official CodeMirror Tern addon -->
   <script src="codemirror/addon/tern/tern.js"></script>   
@@ -99,7 +100,7 @@ s.char // Do Ctrl+Space and select charAt or charCodeAt, apply completion, a sec
         },
         gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers"],
     	lintWith: CodeMirror.javascriptValidator,
-    	ternWith: {"plugins": {"guess-types": {}}},
+    	ternWith: {"plugins": {"doc_comment": {}, "guess-types": {}}},
     	textHover: {delay:300}
       });
     </script>
